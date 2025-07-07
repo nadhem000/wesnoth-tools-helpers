@@ -5,7 +5,7 @@ window.event_message_extractorTemplate = `
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="../styles/Wesnoth_Scenario_Event_Message_Extractor.css">
+<link rel="stylesheet" href="styles/Wesnoth_Scenario_Event_Message_Extractor.css">
 <title>Wesnoth Scenario Event & Message Extractor</title>
 </head>
 <body>
@@ -186,7 +186,7 @@ Discard Changes
 </div>
 
 <div class="footer">
-<p>Wesnoth Scenario Event & Message Extractor &copy; 2023 | Parses Wesnoth Markup Language files</p>
+<p>Wesnoth Scenario Event & Message Extractor &copy; 2025 | Parses Wesnoth Markup Language files</p>
 </div>
 </div>
 <script src="scripts/event_message_extractor.js"></script>
