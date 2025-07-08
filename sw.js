@@ -5,10 +5,11 @@ const urlsToCache = [
     '/scripts/main.js',
     '/scripts/moduleLoader.js',
     '/scripts/event_message_extractor.js',
-    '/scripts/story_extractor.js',
     '/styles/dashboard.css',
     '/styles/Wesnoth_Scenario_Event_Message_Extractor.css',
     '/styles/Wesnoth_Scenario_Story_Extractor.css',
+    '/modules/story_extractor.html',
+    '/scripts/story_extractor.js'
     // Fallback page
     '/offline.html'
 ];

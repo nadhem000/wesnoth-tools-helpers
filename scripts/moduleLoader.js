@@ -5,8 +5,8 @@ class ModuleLoader {
         this.spinner = document.createElement('div');
         this.spinner.className = 'dashboard-main-spinner';
         this.spinner.innerHTML = `
-		<div class="dashboard-main-spinner-icon"></div>
-		<div class="dashboard-main-spinner-text">Loading...</div>
+        <div class="dashboard-main-spinner-icon"></div>
+        <div class="dashboard-main-spinner-text">Loading...</div>
         `;
         document.body.appendChild(this.spinner);
         
@@ -14,12 +14,12 @@ class ModuleLoader {
         const toolsContainer = document.querySelector('.dashboard-main-tools-container');
         if (toolsContainer) {
             this.dashboardContent = toolsContainer.innerHTML;
-		}
-	}
+        }
+    }
     
     async loadModule(moduleName) {
         if (moduleName === this.currentModule) return;
-		
+        
         try {
             this.currentModule = moduleName;
             this.spinner.style.display = 'flex';
@@ -31,41 +31,57 @@ class ModuleLoader {
                 script.src = `scripts/${moduleName}.js`;
                 
                 await new Promise((resolve, reject) => {
-                    script.onload = () => {
-						const templateName = `${moduleName}Template`;
-						if (window[templateName]) {
-							let templateContent = window[templateName];
-							if (window.location.protocol === 'file:') {
-								templateContent = templateContent.replace(
-									/(href|src)="([^"]*)"/g, 
-									(match, attr, path) => {
-										if (path.includes('styles/')) {
-											return `${attr}="${window.location.pathname.replace(/\/[^/]*$/, '')}/${path}"`;
-										}
-										return match;
-									}
-								);
-							}
-							this.container.innerHTML = templateContent;
-						}
-						const initFuncName = `init${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}`;
-						if (window[initFuncName]) {
-							window[initFuncName]();
-						}
-    if (moduleName) {
-        const backButton = `<button class="dashboard-main-btn" id="return-dashboard" style="margin-bottom: 20px;">
-            ← Back to Dashboard
-        </button>`;
-        this.container.innerHTML = backButton + this.container.innerHTML;
+    const script = document.createElement('script');
+    script.src = `scripts/${moduleName}.js`;
+    
+    script.onload = () => {
+        const templateName = `${moduleName}Template`;
+        if (window[templateName]) {
+            let templateContent = window[templateName];
+            if (window.location.protocol === 'file:') {
+                templateContent = templateContent.replace(
+                    /(href|src)="([^"]*)"/g, 
+                    (match, attr, path) => {
+                        if (path.includes('styles/')) {
+                            return `${attr}="${window.location.pathname.replace(/\/[^/]*$/, '')}/${path}"`;
+                        }
+                        return match;
+                    }
+                );
+            }
+            
+            // Inject CSS dynamically for all modes
+            if (moduleName === 'story_extractor') {
+    const cssId = 'wesnoth-story-extractor-css';
+    if (!document.getElementById(cssId)) {
+        const link = document.createElement('link');
+        link.id = cssId;
+        link.rel = 'stylesheet';
+        link.href = 'styles/Wesnoth_Scenario_Story_Extractor.css';
+        document.head.appendChild(link);
     }
-						resolve();
-					};
-                    script.onerror = () => {
-                        reject(new Error(`Failed to load script: scripts/${moduleName}.js`));
-					};
-                    document.body.appendChild(script);
-				});
-				} else {
+}
+            
+            this.container.innerHTML = templateContent;
+        }
+        const initFuncName = `init${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)}`;
+        if (window[initFuncName]) {
+            window[initFuncName]();
+        }
+        if (moduleName) {
+            const backButton = `<button class="dashboard-main-btn" id="return-dashboard" style="margin-bottom: 20px;">
+                ← Back to Dashboard
+            </button>`;
+            this.container.innerHTML = backButton + this.container.innerHTML;
+        }
+        resolve();
+    };
+    script.onerror = () => {
+        reject(new Error(`Failed to load script: scripts/${moduleName}.js`));
+    };
+    document.body.appendChild(script);
+});
+            } else {
                 const response = await fetch(`modules/${moduleName}.html`);
                 if (!response.ok) throw new Error('Module not found');
                 this.container.innerHTML = await response.text();
@@ -76,35 +92,35 @@ class ModuleLoader {
                     script.onload = resolve;
                     script.onerror = reject;
                     document.body.appendChild(script);
-				});
-			}
+                });
+            }
             
             history.pushState({ module: moduleName }, '', `#${moduleName}`);
-			} catch (error) {
+        } catch (error) {
             console.error('Failed to load module:', error);
             this.container.innerHTML = `
-			<div class="error-message">
-			<h3>Module Load Error</h3>
-			<p>${error.message}</p>
-			<button class="dashboard-main-btn" id="return-dashboard">Back to Dashboard</button>
-			</div>`;
+            <div class="error-message">
+            <h3>Module Load Error</h3>
+            <p>${error.message}</p>
+            <button class="dashboard-main-btn" id="return-dashboard">Back to Dashboard</button>
+            </div>`;
             document.getElementById('return-dashboard').addEventListener('click', () => this.showDashboard());
-			} finally {
+        } finally {
             this.spinner.style.display = 'none';
-		}
-	}
+        }
+    }
     
     init() {
         if (window.location.protocol === 'file:') {
             console.warn('Running in local file mode - some features may be limited');
-		}
+        }
         
         this.handleHashChange();
         
         window.addEventListener('popstate', (e) => {
             this.handleHashChange();
-		});
-	}
+        });
+    }
     
     handleHashChange() {
         const hash = window.location.hash.substring(1);
@@ -113,10 +129,10 @@ class ModuleLoader {
         
         if (hash) {
             this.loadModule(hash);
-			} else {
+        } else {
             this.showDashboard();
-		}
-	}
+        }
+    }
     
     showDashboard() {
         this.container.innerHTML = '';
@@ -132,14 +148,14 @@ class ModuleLoader {
                 button.addEventListener('click', (e) => {
                     const moduleName = e.target.closest('.dashboard-main-tool-card').dataset.module;
                     window.location.hash = moduleName;
-				});
-			});
-			} else {
+                });
+            });
+        } else {
             if (window.location.protocol === 'file:') {
                 window.location.href = 'index.html';
-			}
-		}
+            }
+        }
         
         history.pushState({}, '', window.location.pathname);
-	}
+    }
 }

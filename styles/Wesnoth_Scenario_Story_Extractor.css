@@ -424,3 +424,13 @@ textarea {
         margin-top: 10px;
     }
 }
+.story-manager-notification.story-manager-show {
+    transform: translateX(0);
+}
+
+.story-manager-notification {
+    /* Existing styles PLUS: */
+    display: block;
+    transform: translateX(200%);
+    transition: transform 0.3s ease;
+}

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Wesnoth Scenario Story Extractor</title>
+	</head>
+	<body>
+		<div class="story-manager-container">
+			<header>
+				<h1>Wesnoth Scenario Story Extractor</h1>
+				<p class="story-manager-subtitle">Upload or paste .cfg scenario files to extract and organize story content, character dialogues, and scenario information from Wesnoth campaigns</p>
+			</header>
+			
+			<div class="story-manager-how-to-use">
+				<h3>How to Use This Tool</h3>
+				<ul>
+					<li><strong>Upload Files</strong>: Select .cfg scenario files from your computer</li>
+					<li><strong>Paste Content</strong>: Copy and paste scenario file contents directly</li>
+					<li>Click "Extract Story Content" to process the files</li>
+					<li>Story text will be formatted with proper sentence breaks</li>
+					<li>Dialogues are grouped by event name with speaker information</li>
+					<li>Use the "Back to Input" button to analyze more scenarios</li>
+				</ul>
+				<p>Note: This tool extracts story parts from [story] tags and dialogues from [message] tags within [event] sections.</p>
+			</div>
+			<section class="story-manager-input-section">
+				<div class="story-manager-input-options">
+					<div class="story-manager-input-option story-manager-active" data-target="upload">
+						<h3>Upload Files</h3>
+						<p>Select one or multiple .cfg scenario files from your computer</p>
+					</div>
+					<div class="story-manager-input-option" data-target="paste">
+						<h3>Paste Content</h3>
+						<p>Copy and paste the content of your .cfg scenario file directly</p>
+					</div>
+				</div>
+				
+				<div class="story-manager-input-content story-manager-active" id="upload-content">
+					<div class="story-manager-file-upload">
+						<h3>Select Scenario Files</h3>
+						<p>Choose .cfg files to extract story and dialogue content</p>
+						<input type="file" id="file-input" accept=".cfg" multiple>
+					</div>
+					<div class="story-manager-controls">
+						<button class="story-manager-btn" id="process-btn">Extract Story Content</button>
+						<button class="story-manager-btn story-manager-btn-secondary" id="reset-btn">Reset</button>
+					</div>
+				</div>
+				
+				<div class="story-manager-input-content" id="paste-content">
+					<textarea id="paste-input" placeholder="Paste the content of your .cfg scenario file here..."></textarea>
+					<div class="story-manager-controls">
+						<button class="story-manager-btn" id="paste-process-btn">Extract Story Content</button>
+						<button class="story-manager-btn story-manager-btn-secondary" id="paste-reset-btn">Clear</button>
+					</div>
+				</div>
+			</section>
+			
+			<section class="story-manager-output-section" id="output-section">
+				<div id="output-content"></div>
+				<div class="story-manager-controls">
+					<button class="story-manager-btn story-manager-btn-secondary" id="back-btn">Back to Input</button>
+				</div>
+			</section>
+		</div>
+		
+		<div class="story-manager-notification" id="notification"></div>
+		
+		<script src="scripts/story_extractor.js"></script>
+	</body>
+</html>
