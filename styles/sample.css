@@ -1,0 +1,11 @@
+/* SAMPLE PAGE STYLES */
+.wts-sample-body {
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background-color: #f4e8f0;
+    color: #5a2d5a;
+}
+
+/* Add sample-specific styles with wts-sample prefix */
+.wts-sample-tooltip {
+    /* Tooltip styles */
+}
