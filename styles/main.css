@@ -24,11 +24,11 @@
 [data-theme="dark"] {
     /* Dark theme */
     --bg-primary: #1a1a2e;
-    --text-primary: #e6e6e6;
+    --text-primary: #f0f0f0;  
     --header-bg: #16213e;
     --header-text: #e6e6e6;
     --card-bg: #0f3460;
-    --card-text: #e6e6e6;
+    --card-text: #f0f0f0;
     --card-header: #1a508b;
     --footer-bg: #16213e;
     --footer-text: #e6e6e6;
@@ -40,8 +40,8 @@
     --outline-button-hover: #203a43;
     --feature-icon: #4da8da;
     --link-color: #5cb85c;
-    --text-secondary: #b0b0b0;
-    --text-tertiary: #d0d0d0;
+    --text-secondary: #d0d0d0;
+    --text-tertiary: #e0e0e0;
 }
 /* INDEX PAGE STYLES */
 .wts-index-body {

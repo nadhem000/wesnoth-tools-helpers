@@ -1,11 +1,11 @@
 
-i18n.init();
 /** 
 	* Main JavaScript for Index Page 
 	* @file Handles core functionality for the main dashboard 
 	* @version 1.1 
 */ 
 
+i18n.init();
 // DOM Ready Handler 
 document.addEventListener('DOMContentLoaded', () => { 
     // Tooltip initialization 
@@ -62,14 +62,16 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Add tooltip for theme button
 	themeToggle.title = savedTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
     // Navigation handlers
-    document.getElementById('wts-index-tools').addEventListener('click', () => {
-        window.location.href = 'ressources/documentation.html';
-	});
+    const toolsBtn = document.getElementById('wts-index-tools');
+    const docsBtn = document.getElementById('wts-index-documentation');
     
-    // Documentation button
-    document.getElementById('wts-index-documentation').addEventListener('click', () => {
+    if (toolsBtn) toolsBtn.addEventListener('click', () => {
+        window.location.href = 'ressources/sample.html';
+    });
+    
+    if (docsBtn) docsBtn.addEventListener('click', () => {
         window.location.href = 'ressources/documentation.html';
-	});
+    });
 	
     // Offline detection
     if (!navigator.onLine) {

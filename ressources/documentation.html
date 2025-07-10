@@ -2,15 +2,234 @@
 <html lang="en" data-i18n="documentation">
 <head>
     <meta charset="UTF-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JBwKALHDmFa+QdmzXszG0pttDwUdVY0pcINcf7LdbB8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src *;">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JBwKALHDmFa+QdmzXszG0pttDwUdVY0pcINcf7LdbB8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src *;"> -->
     <title data-i18n="title">Documentation - Wesnoth Tools</title>
-    <link rel="stylesheet" href="../styles/documentation.css">
+<link rel="stylesheet" href="../styles/main.css">
+<link rel="stylesheet" href="../styles/documentation.css">
+<script src="../scripts/i18n.js"></script>
+    
 </head>
 <body class="wts-doc-body">
-    <!-- Page-specific content -->
-    <h1 data-i18n="heading">Documentation</h1>
-    <p data-i18n="intro">Welcome to the Wesnoth Tools documentation</p>
+    <header class="wts-index-header">
+        <nav class="wts-index-nav">
+            <div>
+                <button id="wts-doc-dashboard" class="wts-index-tooltip" data-i18n="nav.dashboard">Dashboard</button>
+                <button id="wts-doc-tools" class="wts-index-tooltip" data-i18n="nav.tools">Tools</button>
+                <button id="wts-doc-community" class="wts-index-tooltip" data-i18n="nav.community">Community</button>
+                <button id="wts-doc-documentation" class="wts-index-tooltip active" data-i18n="nav.documentation">Documentation</button>
+                <button id="wts-doc-about" class="wts-index-tooltip" data-i18n="nav.about">About</button>
+            </div>
+            <div class="wts-index-nav-right">
+                <button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme">
+                    <svg viewBox="0 0 24 24" width="24" height="24">
+                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/>
+                    </svg>
+                </button>
+                <div class="wts-index-dropdown">
+                    <button id="wts-doc-languages" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.languages">Languages</button>
+                    <div class="wts-index-dropdown-content">
+                        <a href="#" data-lang="en" data-i18n="lang.en">English</a>
+                        <a href="#" data-lang="fr" data-i18n="lang.fr">Français</a>
+                        <a href="#" data-lang="de" data-i18n="lang.de">Deutsch</a>
+                        <a href="#" data-lang="es" data-i18n="lang.es">Español</a>
+                        <a href="#" data-lang="it" data-i18n="lang.it">Italiano</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="wts-doc-main">
+        <aside class="wts-doc-sidebar">
+            <h2 data-i18n="doc.toc">Table of Contents</h2>
+            <ul>
+                <li><a href="#introduction" data-i18n="doc.introduction">Introduction</a></li>
+                <li><a href="#unit-editor" data-i18n="doc.unit_editor">Unit Editor</a></li>
+                <li><a href="#scenario-builder" data-i18n="doc.scenario_builder">Scenario Builder</a></li>
+                <li><a href="#wml-validator" data-i18n="doc.wml_validator">WML Validator</a></li>
+<li><a href="#events-manager" data-i18n="doc.events_manager">Events Manager</a></li>
+                <li><a href="#best-practices" data-i18n="doc.best_practices">Best Practices</a></li>
+                <li><a href="#api-reference" data-i18n="doc.api_reference">API Reference</a></li>
+                <li><a href="#faq" data-i18n="doc.faq">FAQ</a></li>
+            </ul>
+        </aside>
+
+        <div class="wts-doc-content">
+            <section id="introduction">
+                <h2 data-i18n="doc.introduction">Introduction</h2>
+                <p data-i18n="doc.intro_p1">Welcome to the Wesnoth Campaign Tools Suite documentation. This comprehensive guide will help you effectively use our tools to create and manage Battle for Wesnoth campaigns.</p>
+                <p data-i18n="doc.intro_p2">The suite includes three main tools: Unit Editor for creating custom units, Scenario Builder for designing campaign scenarios, and WML Validator for ensuring your code is error-free.</p>
+                
+                <div class="wts-doc-feature">
+                    <h3 data-i18n="doc.key_features">Key Features</h3>
+                    <ul>
+                        <li data-i18n="doc.feature1">Real-time preview of units and scenarios</li>
+                        <li data-i18n="doc.feature2">Drag-and-drop interface for map creation</li>
+                        <li data-i18n="doc.feature3">Advanced WML validation with error highlighting</li>
+                        <li data-i18n="doc.feature4">Multi-language support for international campaigns</li>
+                        <li data-i18n="doc.feature5">Export functionality for Wesnoth-compatible files</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="unit-editor">
+                <h2 data-i18n="doc.unit_editor">Unit Editor</h2>
+                <p data-i18n="doc.unit_editor_desc">Create and customize units with detailed statistics and abilities for your campaign.</p>
+                
+                <h3 data-i18n="doc.creating_units">Creating Units</h3>
+                <ol>
+                    <li data-i18n="doc.unit_step1">Click 'New Unit' from the dashboard</li>
+                    <li data-i18n="doc.unit_step2">Set base attributes: HP, movement, cost</li>
+                    <li data-i18n="doc.unit_step3">Add attacks with type, damage, and specials</li>
+                    <li data-i18n="doc.unit_step4">Define resistances and vulnerabilities</li>
+                    <li data-i18n="doc.unit_step5">Add abilities and traits</li>
+                    <li data-i18n="doc.unit_step6">Preview and save unit</li>
+                </ol>
+                
+                <div class="wts-doc-note">
+                    <strong data-i18n="doc.note">Note:</strong>
+                    <span data-i18n="doc.unit_note">All units must have a unique ID. Use the 'Validate' button to check for compatibility issues.</span>
+                </div>
+            </section>
+
+            <section id="scenario-builder">
+                <h2 data-i18n="doc.scenario_builder">Scenario Builder</h2>
+                <p data-i18n="doc.scenario_desc">Design and build engaging scenarios with terrain, units, and events for your campaign.</p>
+                
+                <h3 data-i18n="doc.terrain_placement">Terrain Placement</h3>
+                <p data-i18n="doc.terrain_desc">Use the terrain palette to paint maps. Right-click to sample terrain, left-click to paint.</p>
+                
+                <h3 data-i18n="doc.unit_placement">Unit Placement</h3>
+                <p data-i18n="doc.unit_placement_desc">Drag units from the sidebar onto the map. Set ownership, starting positions, and AI behavior.</p>
+                
+                <h3 data-i18n="doc.event_scripting">Event Scripting</h3>
+                <pre><code>[event]
+    name=start
+    [message]
+        speaker=narrator
+        message= _ "The battle begins!"
+    [/message]
+[/event]</code></pre>
+            </section>
+
+            <section id="wml-validator">
+                <h2 data-i18n="doc.wml_validator">WML Validator</h2>
+                <p data-i18n="doc.validator_desc">Validate your WML code for errors and optimize performance before deployment.</p>
+                
+                <h3 data-i18n="doc.common_errors">Common Errors</h3>
+                <table class="wts-doc-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="doc.error">Error</th>
+                            <th data-i18n="doc.description">Description</th>
+                            <th data-i18n="doc.solution">Solution</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-i18n="doc.error1">Missing closing tag</td>
+                            <td data-i18n="doc.desc1">Tag opened but not closed</td>
+                            <td data-i18n="doc.sol1">Add matching closing tag</td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="doc.error2">Invalid attribute</td>
+                            <td data-i18n="doc.desc2">Attribute not recognized in context</td>
+                            <td data-i18n="doc.sol2">Check spelling and valid attributes</td>
+                        </tr>
+                        <tr>
+                            <td data-i18n="doc.error3">Deprecated feature</td>
+                            <td data-i18n="doc.desc3">Using outdated WML syntax</td>
+                            <td data-i18n="doc.sol3">Consult latest WML reference</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+<section id="events-manager">
+    <h2 data-i18n="doc.events_manager">Events Manager</h2>
+    <p data-i18n="doc.events_manager_desc">The Events Manager tool allows you to extract, edit, and manage events and messages from Wesnoth scenario files.</p>
     
-    <script nonce="{NONCE} src="../scripts/documentation.js"></script>
+    <h3 data-i18n="doc.using_events_manager">Using the Events Manager</h3>
+    <ol>
+        <li data-i18n="doc.em_step1">Upload scenario files (.cfg) using the drag-and-drop zone or the browse button</li>
+        <li data-i18n="doc.em_step2">Paste WML content directly into the text area and click 'Process Pasted Content'</li>
+        <li data-i18n="doc.em_step3">Switch between Events View and Messages View using the toggle buttons</li>
+        <li data-i18n="doc.em_step4">Edit event code and message text directly in the editors</li>
+        <li data-i18n="doc.em_step5">Save changes and download the edited files</li>
+    </ol>
+    
+    <h3 data-i18n="doc.key_features">Key Features</h3>
+    <ul>
+        <li data-i18n="doc.em_feature1">Extract events and messages from multiple scenario files</li>
+        <li data-i18n="doc.em_feature2">Group content by file or view combined results</li>
+        <li data-i18n="doc.em_feature3">Real-time statistics on events and messages</li>
+        <li data-i18n="doc.em_feature4">Direct editing of WML event code</li>
+        <li data-i18n="doc.em_feature5">Message translation and editing interface</li>
+    </ul>
+    
+    <div class="wts-doc-note">
+        <strong data-i18n="doc.note">Note:</strong>
+        <span data-i18n="doc.em_note">The Events Manager preserves your original files and only modifies content when you explicitly save changes.</span>
+    </div>
+    
+    <h3 data-i18n="doc.troubleshooting">Troubleshooting</h3>
+    <p data-i18n="doc.em_trouble1">If events aren't showing up, ensure your files contain valid [event] tags. The parser looks for these tags to identify events.</p>
+</section>
+            <section id="best-practices">
+                <h2 data-i18n="doc.best_practices">Best Practices</h2>
+                <ul>
+                    <li data-i18n="doc.bp1">Use meaningful IDs for all elements</li>
+                    <li data-i18n="doc.bp2">Comment complex WML sections</li>
+                    <li data-i18n="doc.bp3">Test scenarios with different difficulty levels</li>
+                    <li data-i18n="doc.bp4">Balance unit statistics carefully</li>
+                    <li data-i18n="doc.bp5">Use the validator before each export</li>
+                </ul>
+            </section>
+
+            <section id="api-reference">
+                <h2 data-i18n="doc.api_reference">API Reference</h2>
+                <p data-i18n="doc.api_desc">Advanced users can extend functionality using our JavaScript API:</p>
+                
+                <h3 data-i18n="doc.core_methods">Core Methods</h3>
+                <dl>
+                    <dt><code>WTS.Unit.create(config)</code></dt>
+                    <dd data-i18n="doc.method1">Creates a new unit programmatically</dd>
+                    
+                    <dt><code>WTS.Scenario.validate()</code></dt>
+                    <dd data-i18n="doc.method2">Validates current scenario</dd>
+                    
+                    <dt><code>WTS.exportWML(options)</code></dt>
+                    <dd data-i18n="doc.method3">Exports current project to WML</dd>
+                </dl>
+            </section>
+
+            <section id="faq">
+                <h2 data-i18n="doc.faq">Frequently Asked Questions</h2>
+                
+                <h3 data-i18n="doc.faq1">Can I import existing WML files?</h3>
+                <p data-i18n="doc.ans1">Yes! Use the 'Import' option from the File menu. The tool will parse and convert existing WML into editable objects.</p>
+                
+                <h3 data-i18n="doc.faq2">How do I contribute to the project?</h3>
+                <p data-i18n="doc.ans2">Visit our GitHub repository to report issues, suggest features, or submit pull requests.</p>
+                
+                <h3 data-i18n="doc.faq3">Are there any sample campaigns?</h3>
+                <p data-i18n="doc.ans3">Yes, under 'Templates' you'll find several sample campaigns demonstrating various features.</p>
+            </section>
+        </div>
+    </main>
+
+    <footer class="wts-index-footer">
+        <div class="wts-index-footer-links">
+            <a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
+            <a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
+            <a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
+        </div>
+        <span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025 | Created for Battle for Wesnoth developers</span>
+    </footer>
+
+<script src="../scripts/documentation.js"></script>
+<script src="../scripts/main.js"></script>
+    
 </body>
 </html>

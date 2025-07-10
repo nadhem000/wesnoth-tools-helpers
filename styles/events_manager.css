@@ -1,0 +1,364 @@
+/* Added manager-event- prefix to all classes */
+:root {
+	--primary: #3498db;
+	--secondary: #2c3e50;
+	--success: #27ae60;
+	--warning: #f39c12;
+	--danger: #e74c3c;
+	--light: #ecf0f1;
+	--dark: #34495e;
+}
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	line-height: 1.6;
+	color: #333;
+	background-color: #f5f7fa;
+	padding: 20px;
+}
+
+.manager-event-container {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.manager-event-header {
+	text-align: center;
+	margin-bottom: 30px;
+	padding: 20px;
+	background: linear-gradient(135deg, var(--secondary), var(--dark));
+	color: white;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.manager-event-svg-icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: middle;
+    margin-right: 0.5em;
+    fill: currentColor;
+}
+
+#manager-event-dropZone .manager-event-svg-icon,
+.manager-event-empty-state .manager-event-svg-icon {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 15px;
+}
+.manager-event-header .manager-event-svg-icon {
+    width: 1.5em;
+    height: 1.5em;
+    margin-right: 10px;
+}
+.manager-event-header h1 {
+	margin-bottom: 10px;
+}
+
+.manager-event-upload-section {
+	background-color: white;
+	border-radius: 8px;
+	padding: 25px;
+	margin-bottom: 25px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.manager-event-section-title {
+	display: flex;
+	align-items: center;
+	margin-bottom: 15px;
+	color: var(--secondary);
+}
+
+.manager-event-section-title i {
+	margin-right: 10px;
+	font-size: 1.2em;
+}
+
+.manager-event-drop-zone {
+	border: 2px dashed #3498db;
+	border-radius: 8px;
+	padding: 30px;
+	text-align: center;
+	cursor: pointer;
+	transition: all 0.3s;
+	background-color: rgba(52, 152, 219, 0.05);
+	margin-bottom: 20px;
+}
+
+.manager-event-drop-zone:hover, .manager-event-drop-zone.manager-event-dragover {
+	background-color: rgba(52, 152, 219, 0.1);
+	border-color: #2980b9;
+}
+
+.manager-event-drop-zone i {
+	font-size: 48px;
+	color: #3498db;
+	margin-bottom: 15px;
+}
+
+.manager-event-btn {
+	display: inline-block;
+	padding: 10px 20px;
+	background-color: var(--primary);
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	font-size: 16px;
+	transition: background-color 0.3s;
+	margin: 5px;
+}
+
+.manager-event-btn:hover {
+	background-color: #2980b9;
+}
+
+.manager-event-btn-warning {
+	background-color: var(--warning);
+}
+
+.manager-event-btn-warning:hover {
+	background-color: #e67e22;
+}
+
+.manager-event-btn-danger {
+	background-color: var(--danger);
+}
+
+.manager-event-btn-danger:hover {
+	background-color: #c0392b;
+}
+
+.manager-event-btn-success {
+	background-color: var(--success);
+}
+
+.manager-event-btn-success:hover {
+	background-color: #219653;
+}
+
+.manager-event-hidden {
+	display: none;
+}
+
+.manager-event-textarea, .manager-event-input[type="text"] {
+	width: 100%;
+	padding: 12px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	font-family: monospace;
+	font-size: 14px;
+	margin-bottom: 15px;
+}
+
+.manager-event-controls {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	margin: 20px 0;
+	padding: 15px;
+	background-color: white;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.manager-event-view-controls, .manager-event-mode-controls {
+	display: flex;
+	gap: 10px;
+}
+
+.manager-event-btn.manager-event-active {
+	background-color: var(--secondary);
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.manager-event-results-section {
+	background-color: white;
+	border-radius: 8px;
+	padding: 25px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.manager-event-stats-panel {
+	background-color: #f8f9fa;
+	border-left: 4px solid var(--primary);
+	padding: 15px;
+	margin-bottom: 20px;
+	border-radius: 4px;
+}
+
+.manager-event-stat-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 15px;
+	margin-top: 15px;
+}
+
+.manager-event-stat-card {
+	background-color: white;
+	padding: 15px;
+	border-radius: 8px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+	text-align: center;
+}
+
+.manager-event-stat-value {
+	font-size: 24px;
+	font-weight: bold;
+	color: var(--primary);
+}
+
+.manager-event-stat-label {
+	font-size: 14px;
+	color: #7f8c8d;
+}
+
+.manager-event-file-group {
+	margin-bottom: 30px;
+	border: 1px solid #eee;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.manager-event-file-header {
+	background-color: var(--secondary);
+	color: white;
+	padding: 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.manager-event-event-card {
+	background-color: #f8f9fa;
+	border-radius: 8px;
+	overflow: hidden;
+	margin-bottom: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.manager-event-event-header {
+	background-color: var(--primary);
+	color: white;
+	padding: 15px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.manager-event-event-content {
+	padding: 20px;
+}
+
+.manager-event-event-block {
+	background-color: white;
+	border: 1px solid #eee;
+	border-radius: 4px;
+	padding: 15px;
+	margin-bottom: 15px;
+	font-family: monospace;
+	white-space: pre-wrap;
+	max-height: 300px;
+	overflow-y: auto;
+}
+
+.manager-event-message-item {
+	background-color: white;
+	border: 1px solid #eee;
+	border-radius: 4px;
+	padding: 15px;
+	margin-bottom: 15px;
+}
+
+.manager-event-message-speaker {
+	font-weight: bold;
+	color: var(--primary);
+	margin-bottom: 8px;
+}
+
+.manager-event-message-text {
+	font-family: monospace;
+	white-space: pre-wrap;
+}
+
+.manager-event-file-stats {
+	background-color: #f8f9fa;
+	border-top: 1px solid #eee;
+	padding: 15px;
+}
+
+.manager-event-file-stat-item {
+	display: flex;
+	justify-content: space-between;
+	padding: 10px 0;
+	border-bottom: 1px solid #eee;
+}
+
+.manager-event-empty-state {
+	text-align: center;
+	padding: 40px;
+	color: #7f8c8d;
+}
+
+.manager-event-empty-state i {
+	font-size: 48px;
+	margin-bottom: 20px;
+	color: #bdc3c7;
+}
+
+.manager-event-editor-container {
+	margin: 20px 0;
+}
+
+.manager-event-editor-header {
+	background-color: var(--dark);
+	color: white;
+	padding: 10px 15px;
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.manager-event-editor-body {
+	border: 1px solid #ddd;
+	border-top: none;
+	border-bottom-left-radius: 4px;
+	border-bottom-right-radius: 4px;
+}
+
+.manager-event-code-editor {
+	width: 100%;
+	height: 300px;
+	font-family: monospace;
+	padding: 15px;
+	border: none;
+	resize: vertical;
+}
+
+.manager-event-message-editor {
+	width: 100%;
+	height: 150px;
+	font-family: inherit;
+	padding: 15px;
+	border: none;
+	resize: vertical;
+}
+
+.manager-event-save-section {
+	background-color: #fff3cd;
+	border-left: 4px solid var(--warning);
+	padding: 15px;
+	margin: 20px 0;
+	border-radius: 4px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}

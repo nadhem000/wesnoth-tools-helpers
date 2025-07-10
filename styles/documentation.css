@@ -1,11 +1,151 @@
-/* documentation PAGE STYLES */
-.wts-doc-body {
-    font-family: 'Segoe UI', Tahoma, sans-serif;
-    background-color: #e8f4f0;
-    color: #2d5a5a;
+/* Documentation Styles */
+.wts-doc-main {
+    display: flex;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 20px;
+    gap: 2rem;
 }
 
-/* Add document-specific styles with wts-doc prefix */
-.wts-doc-tooltip {
-    /* Tooltip styles */
+.wts-doc-sidebar {
+    flex: 0 0 250px;
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    height: fit-content;
+}
+
+.wts-doc-sidebar h2 {
+    margin-top: 0;
+    color: var(--card-header);
+    border-bottom: 2px solid var(--feature-icon);
+    padding-bottom: 0.5rem;
+}
+
+.wts-doc-sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.wts-doc-sidebar li {
+    margin-bottom: 0.8rem;
+}
+
+.wts-doc-sidebar a {
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: block;
+    padding: 0.3rem 0;
+}
+
+.wts-doc-sidebar a:hover {
+    color: var(--card-header);
+}
+
+.wts-doc-content {
+    flex: 1;
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+.wts-doc-content section.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+.wts-doc-content section {
+    margin-bottom: 3rem;
+    display: none;
+}
+
+.wts-doc-content h2 {
+    color: var(--card-header);
+    border-bottom: 1px solid var(--feature-icon);
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+.wts-doc-content h3 {
+    color: var(--text-tertiary);
+}
+
+.wts-doc-feature {
+    background: rgba(52, 152, 219, 0.05);
+    border-left: 4px solid var(--card-header);
+    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    border-radius: 0 4px 4px 0;
+}
+
+.wts-doc-note {
+    background: rgba(241, 196, 15, 0.1);
+    border-left: 4px solid #f1c40f;
+    padding: 1rem;
+    border-radius: 0 4px 4px 0;
+    margin: 1.5rem 0;
+}
+
+.wts-doc-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.wts-doc-table th, 
+.wts-doc-table td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.wts-doc-table th {
+    background-color: var(--card-header);
+    color: white;
+}
+
+.wts-doc-table tr:nth-child(even) {
+    background-color: rgba(0,0,0,0.02);
+}
+
+pre {
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+}
+
+code {
+    font-family: 'Courier New', monospace;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+
+.wts-doc-content p {
+    color: var(--text-secondary) !important;
+}
+
+.wts-doc-content li {
+    color: var(--text-secondary);
+}
+
+.wts-doc-note span {
+    color: var(--text-secondary);
+}
+@media (max-width: 768px) {
+    .wts-doc-main {
+        flex-direction: column;
+    }
+    
+    .wts-doc-sidebar {
+        flex: 1;
+        width: 100%;
+    }
 }

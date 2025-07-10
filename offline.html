@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JBwKALHDmFa+QdmzXszG0pttDwUdVY0pcINcf7LdbB8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src *;">
+    <!-- <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-JBwKALHDmFa+QdmzXszG0pttDwUdVY0pcINcf7LdbB8='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src *;"> -->
     <title data-i18n="title">Wesnoth Tools Suite</title>
     <link rel="stylesheet" href="styles/main.css">
     <link rel="manifest" href="manifest.json">
     <script src="scripts/i18n.js"></script>
-    <script>
+    <!-- <script>
         i18n.init();
-    </script>
+    </script> -->
 </head>
 <body class="wts-index-body">
     <header class="wts-index-header">
@@ -23,6 +23,11 @@
                 <button id="wts-index-about" class="wts-index-tooltip" data-i18n="nav.about">About</button>
             </div>
             <div class="wts-index-nav-right">
+    <button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/>
+        </svg>
+    </button>
                 <div class="wts-index-dropdown">
                     <button id="wts-index-languages" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.languages">Languages</button>
                     <div class="wts-index-dropdown-content">
