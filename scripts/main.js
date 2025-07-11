@@ -5,22 +5,24 @@
 */ 
 
 // handle navigation
+// main.js - Update the setupNavigation function
 function setupNavigation() {
     const isInRessources = window.location.pathname.includes('ressources');
+    const basePath = window.location.protocol === 'file:' ? '' : '/';
 
     // Dashboard button
     document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
-        window.location.href = isInRessources ? '../index.html' : 'index.html';
+        window.location.href = isInRessources ? `${basePath}../index.html` : `${basePath}index.html`;
     });
 
     // Documentation button
     document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
-        window.location.href = isInRessources ? 'documentation.html' : 'ressources/documentation.html';
+        window.location.href = isInRessources ? `${basePath}documentation.html` : `${basePath}ressources/documentation.html`;
     });
 
     // About button
     document.getElementById('wts-index-about')?.addEventListener('click', () => {
-        window.location.href = isInRessources ? 'about.html' : 'ressources/about.html';
+        window.location.href = isInRessources ? `${basePath}about.html` : `${basePath}ressources/about.html`;
     });
 }
 // DOM Ready Handler 
@@ -131,13 +133,15 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Service Worker Registration
+// main.js - Service Worker Registration
 if ('serviceWorker' in navigator) {
-	const protocol = window.location.protocol;
-	const swPath = protocol === 'file:' ? 'sw.js' : '/sw.js';
-	
-	window.addEventListener('load', () => {
-		navigator.serviceWorker.register(swPath)
-		.then(reg => console.log('SW registered: ', reg))
-		.catch(err => console.log('SW registration failed: ', err));
-	});
+    window.addEventListener('load', () => {
+        const swPath = window.location.pathname.includes('ressources') 
+            ? '../sw.js' 
+            : '/sw.js';
+            
+        navigator.serviceWorker.register(swPath)
+            .then(reg => console.log('SW registered: ', reg))
+            .catch(err => console.log('SW registration failed: ', err));
+    });
 }
