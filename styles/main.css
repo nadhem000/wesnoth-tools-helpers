@@ -79,6 +79,7 @@
 
 .wts-index-main {
     padding: 2rem;
+  padding-bottom: 1rem;
 }
 
 .wts-index-cards {
@@ -302,4 +303,9 @@
 
 #wts-theme-toggle svg {
     fill: var(--header-text);
+}
+/* Add this new rule */
+.wts-content-container {
+  padding-bottom: 100px; /* Space for footer */
+  min-height: 100vh; /* Ensure container fills viewport */
 }

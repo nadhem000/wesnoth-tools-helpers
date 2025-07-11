@@ -1,13 +1,31 @@
-
 /** 
 	* Main JavaScript for Index Page 
 	* @file Handles core functionality for the main dashboard 
 	* @version 1.1 
 */ 
 
-i18n.init();
+// handle navigation
+function setupNavigation() {
+    const isInRessources = window.location.pathname.includes('ressources');
+
+    // Dashboard button
+    document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
+        window.location.href = isInRessources ? '../index.html' : 'index.html';
+    });
+
+    // Documentation button
+    document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
+        window.location.href = isInRessources ? 'documentation.html' : 'ressources/documentation.html';
+    });
+
+    // About button
+    document.getElementById('wts-index-about')?.addEventListener('click', () => {
+        window.location.href = isInRessources ? 'about.html' : 'ressources/about.html';
+    });
+}
 // DOM Ready Handler 
 document.addEventListener('DOMContentLoaded', () => { 
+/* i18n.init(); */
     // Tooltip initialization 
     document.querySelectorAll('.wts-index-tooltip').forEach(el => {
 		const key = el.getAttribute('data-i18n');
@@ -61,17 +79,9 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	// Add tooltip for theme button
 	themeToggle.title = savedTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
+    
     // Navigation handlers
-    const toolsBtn = document.getElementById('wts-index-tools');
-    const docsBtn = document.getElementById('wts-index-documentation');
-    
-    if (toolsBtn) toolsBtn.addEventListener('click', () => {
-        window.location.href = 'ressources/sample.html';
-    });
-    
-    if (docsBtn) docsBtn.addEventListener('click', () => {
-        window.location.href = 'ressources/documentation.html';
-    });
+    setupNavigation();
 	
     // Offline detection
     if (!navigator.onLine) {

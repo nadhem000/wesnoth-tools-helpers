@@ -3,6 +3,20 @@
 	* @file Script for documentation page
 	* @version 1.1
 */
+function setupNavigation() {
+    // Dashboard button
+    document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
+        window.location.href = '../index.html';
+    });
+
+    // Documentation button (already on this page)
+    document.getElementById('wts-index-documentation')?.classList.add('active');
+
+    // About button
+    document.getElementById('wts-index-about')?.addEventListener('click', () => {
+        window.location.href = 'about.html';
+    });
+}
 function updateActiveSection() {
     // Remove all active classes first
     document.querySelectorAll('.wts-doc-content section').forEach(section => {
@@ -39,16 +53,16 @@ document.addEventListener('DOMContentLoaded', () => {
             el.title = el.getAttribute('data-i18n');
 		}
 	});
-	// Set active page in navigation
-	document.getElementById('wts-doc-documentation').classList.add('active');
+	/* // Set active page in navigation
+	document.getElementById('wts-index-documentation').classList.add('active');
 	
 	// Navigation handlers
-	document.getElementById('wts-doc-dashboard').addEventListener('click', () => {
+	document.getElementById('wts-index-dashboard').addEventListener('click', () => {
 		window.location.href = '../index.html';
 	});
-	document.getElementById('wts-doc-tools').addEventListener('click', () => {
+	document.getElementById('wts-index-tools').addEventListener('click', () => {
 		window.location.href = '../ressources/sample.html';
-	});
+	}); */
 	
 	// handle display
     const style = document.createElement('style');
@@ -82,5 +96,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     // Initialize section visibility
     updateActiveSection();
+    // navigation setup
+    setupNavigation();
+    // Set Documentation as active page
+    document.getElementById('wts-index-documentation')?.classList.add('active');
 	
 });

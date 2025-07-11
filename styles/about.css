@@ -1,0 +1,176 @@
+/* About Page Styles */
+.wts-about-main {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 20px;
+}
+
+.about-hero {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+.about-section {
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+.about-section-title {
+    color: var(--card-header);
+    border-bottom: 2px solid var(--feature-icon);
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.about-section-title svg {
+    width: 24px;
+    height: 24px;
+    fill: var(--feature-icon);
+}
+
+.about-features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.about-feature-card {
+    background: rgba(var(--feature-icon-rgb), 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.about-feature-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--card-header);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+}
+
+.about-feature-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: white;
+}
+
+.about-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.about-stat-card {
+    background: var(--bg-primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid var(--feature-icon);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--feature-icon);
+}
+
+.about-stat-value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--card-header);
+    margin: 0.5rem 0;
+}
+
+.about-stat-label {
+    color: var(--text-secondary);
+}
+
+.about-team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.about-team-card {
+    background: var(--bg-primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid var(--feature-icon);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--feature-icon);
+}
+
+.about-team-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    background: var(--card-header);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: white;
+}
+
+.about-contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+.about-contact-card {
+    background: var(--bg-primary);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    border: 1px solid var(--feature-icon);
+    transition: transform 0.3s;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    border-color: var(--feature-icon);
+}
+
+.about-contact-card:hover {
+    transform: translateY(-5px);
+}
+
+.about-contact-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--card-header);
+}
+
+@media (max-width: 768px) {
+    .about-hero {
+        padding: 2rem 1rem;
+    }
+    
+    .about-section {
+        padding: 1.5rem;
+    }
+}

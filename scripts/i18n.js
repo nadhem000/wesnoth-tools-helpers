@@ -61,7 +61,6 @@ const i18n = {
             install: {
                 button: "Install App"
 			},
-			// Add to translations.en object
 			doc: {
 				toc: "Table of Contents",
 				introduction: "Introduction",
@@ -138,7 +137,47 @@ const i18n = {
 				em_feature4: "Direct editing of WML event code",
 				em_feature5: "Message translation and editing interface",
 				em_note: "The Events Manager preserves your original files and only modifies content when you explicitly save changes.",
-				em_trouble1: "If events aren't showing up, ensure your files contain valid [event] tags. The parser looks for these tags to identify events."
+				em_trouble1: "If events aren't showing up, ensure your files contain valid [event] tags. The parser looks for these tags to identify events.",
+            story_manager: "Story Manager",
+            story_manager_desc: "The Story Manager tool helps you create and manage narrative sequences, dialogues, and branching story paths for your campaigns.",
+            using_story_manager: "Using the Story Manager",
+            sm_step1: "Create a new story or open an existing campaign",
+            sm_step2: "Add characters with portraits and dialogue styles",
+            sm_step3: "Build dialogue trees with player choices and consequences",
+            sm_step4: "Connect story segments to scenario events",
+            sm_step5: "Preview the narrative flow and character interactions",
+            sm_step6: "Export to WML for use in your campaign",
+            sm_feature1: "Visual dialogue tree editor with drag-and-drop interface",
+            sm_feature2: "Character library with portrait management",
+            sm_feature3: "Branching narrative paths with conditional logic",
+            sm_feature4: "Integration with Events Manager for in-game triggers",
+            sm_feature5: "Export to WML [story] format",
+            export_example: "Export Example",
+            sm_note: "The Story Manager maintains character consistency across your campaign scenarios. Use the \"Link to Event\" feature to connect dialogue choices with game events."
+			},
+			about: {
+				title: "About Wesnoth Tools Suite",
+				mission_title: "Our Mission",
+				mission_desc: "To empower Wesnoth campaign developers with intuitive tools that streamline the creation process.",
+				features_title: "Key Features",
+				feature1: "Open-source and community-driven development",
+				feature2: "Modern, responsive interface",
+				feature3: "Progressive Web App functionality",
+				feature4: "Multi-language support",
+				stats_title: "Project Statistics",
+				downloads: "Downloads",
+				active_users: "Active Users",
+				github_stars: "GitHub Stars",
+				team_title: "Development Team",
+				team_desc: "Passionate developers contributing to the project",
+				contributor: "Contributor",
+				contact_title: "Contact & Support",
+				contact_desc: "Reach out to us for questions or support",
+				forum: "Wesnoth Forums",
+				discord: "Discord Server",
+				email: "Email Support",
+				license_title: "License",
+				license_desc: "This project is licensed under the GPLv3 license."
 			}
 		}
 	},
