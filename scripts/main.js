@@ -9,25 +9,25 @@
 function setupNavigation() {
     const isInRessources = window.location.pathname.includes('ressources');
     const basePath = window.location.protocol === 'file:' ? '' : '/';
-
+	
     // Dashboard button
     document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
         window.location.href = isInRessources ? `${basePath}../index.html` : `${basePath}index.html`;
-    });
-
+	});
+	
     // Documentation button
     document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
         window.location.href = isInRessources ? `${basePath}documentation.html` : `${basePath}ressources/documentation.html`;
-    });
-
+	});
+	
     // About button
     document.getElementById('wts-index-about')?.addEventListener('click', () => {
         window.location.href = isInRessources ? `${basePath}about.html` : `${basePath}ressources/about.html`;
-    });
+	});
 }
 // DOM Ready Handler 
 document.addEventListener('DOMContentLoaded', () => { 
-/* i18n.init(); */
+	/* i18n.init(); */
     // Tooltip initialization 
     document.querySelectorAll('.wts-index-tooltip').forEach(el => {
 		const key = el.getAttribute('data-i18n');
@@ -42,31 +42,21 @@ document.addEventListener('DOMContentLoaded', () => {
 	const themeIcon = themeToggle.querySelector('svg'); 
 	
 	// Function to set theme 
-	function setTheme(theme) { 
-    if (theme === 'dark') { 
-        document.documentElement.setAttribute('data-theme', 'dark'); 
-    } else { 
-        document.documentElement.removeAttribute('data-theme'); 
-    } 
-    localStorage.setItem('wts-theme', theme); 
-    
-    // Define path data for both themes
-    const newPath = theme === 'dark' ? 
-        "M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" : 
-        "M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z";
-
-    // Get SVG path element
-    const path = themeIcon.querySelector('path');
-    
-    if (path) {
-        path.setAttribute('d', newPath);
-    } else {
-        themeIcon.innerHTML = `<path d="${newPath}"/>`;
-    }
-    
-    // Update tooltip 
-    themeToggle.title = theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'; 
-}
+	function setTheme(theme) {
+		if (theme === 'dark') {
+			document.documentElement.setAttribute('data-theme', 'dark');
+			// Update toggle button SVG for dark mode
+			const themeToggle = document.getElementById('wts-theme-toggle');
+			themeToggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>`;
+			} else {
+			document.documentElement.removeAttribute('data-theme');
+			// Update toggle button SVG for light mode
+			const themeToggle = document.getElementById('wts-theme-toggle');
+			themeToggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/></svg>`;
+		}
+		localStorage.setItem('wts-theme', theme);
+		themeToggle.title = theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
+	}
 	
 	// Initialize theme 
 	const savedTheme = localStorage.getItem('wts-theme') || 'light'; 
@@ -137,11 +127,11 @@ document.addEventListener('DOMContentLoaded', () => {
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         const swPath = window.location.pathname.includes('ressources') 
-            ? '../sw.js' 
-            : '/sw.js';
-            
+		? '../sw.js' 
+		: '/sw.js';
+		
         navigator.serviceWorker.register(swPath)
-            .then(reg => console.log('SW registered: ', reg))
-            .catch(err => console.log('SW registration failed: ', err));
-    });
+		.then(reg => console.log('SW registered: ', reg))
+		.catch(err => console.log('SW registration failed: ', err));
+	});
 }

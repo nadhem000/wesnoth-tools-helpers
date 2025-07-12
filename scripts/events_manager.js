@@ -1,5 +1,7 @@
-
-        document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function() {
+            // Initialize i18n
+            i18n.init();
+            
             // Elements
             const fileInput = document.getElementById('manager-event-fileInput');
             const dropZone = document.getElementById('manager-event-dropZone');
@@ -21,6 +23,9 @@
             const saveSection = document.getElementById('manager-event-saveSection');
             const saveChangesBtn = document.getElementById('manager-event-saveChangesBtn');
             const discardChangesBtn = document.getElementById('manager-event-discardChangesBtn');
+            const fileCount = document.getElementById('manager-event-fileCount');
+            const totalEvents = document.getElementById('manager-event-totalEvents');
+            const totalMessages = document.getElementById('manager-event-totalMessages');
             const statFiles = document.getElementById('manager-event-statFiles');
             const statEvents = document.getElementById('manager-event-statEvents');
             const statMessages = document.getElementById('manager-event-statMessages');
@@ -52,20 +57,6 @@
             saveChangesBtn.addEventListener('click', saveChanges);
             discardChangesBtn.addEventListener('click', discardChanges);
             
-            // Theme toggle
-            document.getElementById('wts-theme-toggle').addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-            });
-            
-            // Load theme preference
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.documentElement.setAttribute('data-theme', savedTheme);
-            }
-            
             // Function to handle drag over event
             function handleDragOver(e) {
                 e.preventDefault();
@@ -78,7 +69,6 @@
                 e.preventDefault();
                 e.stopPropagation();
                 dropZone.style.backgroundColor = '';
-                
                 const files = e.dataTransfer.files;
                 if (files.length > 0) {
                     processFiles(files);
@@ -103,14 +93,13 @@
                     };
                     processPseudoFiles([pseudoFile]);
                 } else {
-                    alert("Please paste some .cfg content first!");
+                    alert(i18n.t('events_manager.paste_alert'));
                 }
             }
             
             // Function to process uploaded files
             function processFiles(files) {
                 const newFilesData = [];
-                
                 for (let i = 0; i < files.length; i++) {
                     const file = files[i];
                     if (file.name.endsWith('.cfg')) {
@@ -120,13 +109,11 @@
                             originalFiles[file.name] = content;
                             const events = extractEvents(content);
                             const messages = extractMessages(content, events);
-                            
                             newFilesData.push({
                                 fileName: file.name,
                                 events: events,
                                 messages: messages
                             });
-                            
                             if (newFilesData.length > 0) {
                                 allFilesData = allFilesData.concat(newFilesData);
                                 updateUI();
@@ -143,14 +130,12 @@
                     originalFiles[file.name] = file.content;
                     const events = extractEvents(file.content);
                     const messages = extractMessages(file.content, events);
-                    
                     allFilesData.push({
                         fileName: file.name,
                         events: events,
                         messages: messages
                     });
                 });
-                
                 if (allFilesData.length > 0) {
                     updateUI();
                 }
@@ -167,55 +152,101 @@
             
             // Function to extract events from content
             function extractEvents(content) {
-                // Simplified event extraction logic
                 const events = [];
-                const eventRegex = /\[event\]([\s\S]*?)\[\/event\]/g;
+                const eventRegex = /\[event\b[^\]]*\]([\s\S]*?)\[\/event\]/gi;
                 let match;
+                let eventIndex = 0;
                 
                 while ((match = eventRegex.exec(content)) !== null) {
                     const eventBlock = match[0];
-                    const nameMatch = /name\s*=\s*"([^"]*)"/.exec(eventBlock);
-                    const filterMatch = /first_time_only\s*=\s*(true|false)/.exec(eventBlock);
+                    const start = match.index;
+                    const end = start + eventBlock.length;
+                    
+                    // Extract event name
+                    const nameMatch = eventBlock.match(
+                        /name\s*=\s*"((?:\\"|[^"])*)"|name\s*=\s*'((?:\\'|[^'])*)'|name\s*=\s*([^\s#\[]+)/i
+                    );
+                    let eventName = "unnamed";
+                    if (nameMatch) {
+                        eventName = (nameMatch[1] || nameMatch[2] || nameMatch[3] || "").trim();
+                    }
+                    
+                    // Handle multi-line names
+                    if (eventName.includes('\n')) {
+                        eventName = eventName.split('\n')[0].trim();
+                    }
+                    
+                    // Extract filter content
+                    let filterContent = "";
+                    const filterMatch = eventBlock.match(/\[filter\]([\s\S]*?)\[\/filter\]/i);
+                    if (filterMatch && filterMatch[1]) {
+                        filterContent = filterMatch[1].replace(/\s+/g, " ").trim();
+                    }
                     
                     events.push({
-                        id: `event-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-                        name: nameMatch ? nameMatch[1] : 'Unnamed Event',
-                        filter: filterMatch ? `first_time_only=${filterMatch[1]}` : '',
+                        id: `event-${eventIndex++}`,
+                        name: eventName,
+                        filter: filterContent,
                         block: eventBlock,
-                        messages: []
+                        start: start,
+                        end: end
                     });
                 }
-                
                 return events;
             }
             
             // Function to extract messages from content
             function extractMessages(content, events) {
                 const allMessages = [];
+                const messageRegex = /\[message\b[^\]]*\]([\s\S]*?)\[\/message\]/gi;
+                let match;
                 
-                events.forEach(event => {
-                    const messageRegex = /\[message\]([\s\S]*?)\[\/message\]/g;
-                    let msgMatch;
+                while ((match = messageRegex.exec(content)) !== null) {
+                    const messageBlock = match[0];
+                    const messageStart = match.index;
+                    const messageEnd = messageStart + messageBlock.length;
                     
-                    while ((msgMatch = messageRegex.exec(event.block)) !== null) {
-                        const msgBlock = msgMatch[0];
-                        const speakerMatch = /speaker\s*=\s*"([^"]*)"/.exec(msgBlock);
-                        const textMatch = /message\s*=\s*_?\s*"([^"]*)"/.exec(msgBlock);
-                        
-                        if (textMatch) {
-                            const msg = {
-                                id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
-                                speaker: speakerMatch ? speakerMatch[1] : 'narrator',
-                                text: textMatch[1],
-                                eventName: event.name,
-                                eventId: event.id
-                            };
-                            
-                            allMessages.push(msg);
-                            event.messages.push(msg);
+                    // Extract speaker
+                    const speakerMatch = messageBlock.match(/speaker\s*=\s*"([^"]*)"|speaker\s*=\s*'([^']*)'|speaker\s*=\s*(\S+)/i);
+                    let speaker = "narrator";
+                    if (speakerMatch) {
+                        speaker = speakerMatch[1] || speakerMatch[2] || speakerMatch[3] || "narrator";
+                    }
+                    
+                    // Extract message text
+                    const messageMatch = messageBlock.match(/message\s*=\s*_?\s*"([^"]*)"|message\s*=\s*_?\s*'([^']*)'|message\s*=\s*_?\s*(\S+)/i);
+                    let messageText = "";
+                    if (messageMatch) {
+                        messageText = messageMatch[1] || messageMatch[2] || messageMatch[3] || "";
+                    }
+                    
+                    // Clean up message text
+                    messageText = messageText.trim().replace(/^_ /, '');
+                    
+                    // Find event context and filter
+                    let eventContext = "No event context";
+                    let eventName = "unnamed";
+                    let eventFilter = "";
+                    
+                    // Find the event that contains this message
+                    for (const event of events) {
+                        if (messageStart >= event.start && messageEnd <= event.end) {
+                            eventContext = event.name;
+                            eventName = event.name;
+                            eventFilter = event.filter;
+                            break;
                         }
                     }
-                });
+                    
+                    allMessages.push({
+                        event: eventContext,
+                        eventName: eventName,
+                        eventFilter: eventFilter,
+                        speaker,
+                        message: messageText,
+                        id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`
+                    });
+                }
                 
                 return allMessages;
             }
@@ -240,6 +271,15 @@
                         renderMessagesCombined();
                     }
                 }
+                
+                // Make content editable
+                setTimeout(() => {
+                    if (viewMode === 'events') {
+                        makeEventsEditable();
+                    } else {
+                        makeMessagesEditable();
+                    }
+                }, 100);
             }
             
             // Function to render events grouped by file
@@ -259,13 +299,27 @@
                             </svg>
                             ${fileData.fileName}
                         </div>
-                        <div>${fileData.events.length} event(s)</div>
+                        <div>${fileData.events.length} ${i18n.t('events_manager.events')}</div>
                     `;
                     
                     const content = document.createElement('div');
                     content.className = 'manager-event-events-container-inner';
                     
+                    // Group events by name AND filter
+                    const groupedEvents = {};
                     fileData.events.forEach(event => {
+                        const groupKey = `${event.name}|${event.filter}`;
+                        if (!groupedEvents[groupKey]) {
+                            groupedEvents[groupKey] = [];
+                        }
+                        groupedEvents[groupKey].push(event);
+                    });
+                    
+                    // Render grouped events
+                    for (const [groupKey, eventGroup] of Object.entries(groupedEvents)) {
+                        // Split groupKey back into name and filter
+                        const [eventName, eventFilter] = groupKey.split('|');
+                        
                         const eventCard = document.createElement('div');
                         eventCard.className = 'manager-event-event-card';
                         
@@ -273,89 +327,37 @@
                         cardHeader.className = 'manager-event-event-header';
                         cardHeader.innerHTML = `
                             <div>
-                                <span>${event.name}</span>
-                                ${event.filter ? `<div>Filter: ${event.filter}</div>` : ''}
+                                <div class="manager-event-event-name">${eventName || 'Unnamed Event'}</div>
+                                ${eventFilter ? `<div class="manager-event-event-filter">${i18n.t('events_manager.filter_label')}: ${eventFilter}</div>` : ''}
                             </div>
-                            <span>${event.messages.length} message(s)</span>
+                            <span class="manager-event-event-count">${eventGroup.length} ${i18n.t('events_manager.events')}</span>
                         `;
                         
                         const cardContent = document.createElement('div');
                         cardContent.className = 'manager-event-event-content';
                         
-                        // Event editor
-                        const editorContainer = document.createElement('div');
-                        editorContainer.className = 'manager-event-editor-container';
-                        
-                        const editorHeader = document.createElement('div');
-                        editorHeader.className = 'manager-event-editor-header';
-                        editorHeader.innerHTML = `
-                            <span>Event Code Editor</span>
-                            <span>
-                                <svg class="svg-icon" viewBox="0 0 448 512">
-                                    <path d="M432 256c0 17.7-14.3 32-32 32L48 288c-17.7 0-32-14.3-32-32s14.3-32 32-32l352 0c17.7 0 32 14.3 32 32z"/>
-                                </svg>
-                            </span>
-                        `;
-                        
-                        const editorBody = document.createElement('div');
-                        editorBody.className = 'manager-event-editor-body';
-                        
-                        const textarea = document.createElement('textarea');
-                        textarea.className = 'manager-event-code-editor';
-                        textarea.value = editedEvents[event.id] || event.block;
-                        textarea.dataset.id = event.id;
-                        textarea.addEventListener('input', handleEventEdit);
-                        
-                        editorBody.appendChild(textarea);
-                        editorContainer.appendChild(editorHeader);
-                        editorContainer.appendChild(editorBody);
-                        cardContent.appendChild(editorContainer);
-                        
-                        // Messages in this event
-                        if (event.messages.length > 0) {
-                            const messagesHeader = document.createElement('h4');
-                            messagesHeader.style.margin = '15px 0 10px';
-                            messagesHeader.innerHTML = `
-                                <svg class="svg-icon" viewBox="0 0 512 512">
-                                    <path d="M160 368c26.5 0 48 21.5 48 48s-21.5 48-48 48s-48-21.5-48-48s21.5-48 48-48zm-96 0c26.5 0 48 21.5 48 48s-21.5 48-48 48s-48-21.5-48-48s21.5-48 48-48zm368 0c26.5 0 48 21.5 48 48s-21.5 48-48 48s-48-21.5-48-48s21.5-48 48-48zm96-304v256c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V64c0-26.5 21.5-48 48-48h416c26.5 0 48 21.5 48 48zm-48 64H48v192h416V128zm0-64H48v32h416V64z"/>
-                                </svg>
-                                Messages in this event:
-                            `;
-                            cardContent.appendChild(messagesHeader);
+                        eventGroup.forEach((event, index) => {
+                            const blockDiv = document.createElement('div');
+                            blockDiv.className = 'manager-event-event-block';
                             
-                            event.messages.forEach(msg => {
-                                const messageItem = document.createElement('div');
-                                messageItem.className = 'manager-event-message-item';
-                                
-                                const speaker = document.createElement('div');
-                                speaker.className = 'manager-event-message-speaker';
-                                speaker.innerHTML = `
-                                    <svg class="svg-icon" viewBox="0 0 448 512">
-                                        <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
-                                    </svg>
-                                    ${msg.speaker || 'narrator'}
-                                `;
-                                
-                                const editorBody = document.createElement('div');
-                                editorBody.className = 'manager-event-editor-body';
-                                
-                                const textarea = document.createElement('textarea');
-                                textarea.className = 'manager-event-message-editor';
-                                textarea.value = editedMessages[msg.id] || msg.text;
-                                textarea.dataset.id = msg.id;
-                                textarea.addEventListener('input', handleMessageEdit);
-                                
-                                editorBody.appendChild(textarea);
-                                messageItem.appendChild(speaker);
-                                messageItem.appendChild(editorBody);
-                                cardContent.appendChild(messageItem);
-                            });
-                        }
+                            const blockHeader = document.createElement('div');
+                            blockHeader.className = 'manager-event-event-subheader';
+                            blockHeader.textContent = `${i18n.t('events_manager.event')} #${index + 1}`;
+                            
+                            const code = document.createElement('pre');
+                            code.className = 'manager-event-event-code';
+                            code.textContent = event.block;
+                            code.dataset.id = event.id;
+                            
+                            blockDiv.appendChild(blockHeader);
+                            blockDiv.appendChild(code);
+                            cardContent.appendChild(blockDiv);
+                        });
                         
                         eventCard.appendChild(cardHeader);
                         eventCard.appendChild(cardContent);
                         content.appendChild(eventCard);
-                    });
+                    }
                     
                     fileGroup.appendChild(header);
                     fileGroup.appendChild(content);
@@ -363,45 +365,150 @@
                 });
             }
             
-            // Function to handle event editing
-            function handleEventEdit(e) {
-                const eventId = e.target.dataset.id;
-                editedEvents[eventId] = e.target.value;
-                hasUnsavedChanges = true;
-                saveSection.style.display = 'flex';
+            // Function to make events editable
+            function makeEventsEditable() {
+                document.querySelectorAll('.manager-event-event-code').forEach(pre => {
+                    const textarea = document.createElement('textarea');
+                    textarea.className = 'manager-event-editable';
+                    textarea.dataset.id = pre.dataset.id;
+                    textarea.value = editedEvents[pre.dataset.id] || pre.textContent;
+                    pre.replaceWith(textarea);
+                    
+                    textarea.addEventListener('input', function(e) {
+                        const eventId = e.target.dataset.id;
+                        editedEvents[eventId] = e.target.value;
+                        hasUnsavedChanges = true;
+                        saveSection.style.display = 'flex';
+                    });
+                });
             }
             
-            // Function to handle message editing
-            function handleMessageEdit(e) {
-                const messageId = e.target.dataset.id;
-                editedMessages[messageId] = e.target.value;
-                hasUnsavedChanges = true;
-                saveSection.style.display = 'flex';
+            // Function to make messages editable
+            function makeMessagesEditable() {
+                document.querySelectorAll('.manager-event-message-text').forEach(div => {
+                    const textarea = document.createElement('textarea');
+                    textarea.className = 'manager-event-message-editable';
+                    textarea.dataset.id = div.dataset.id;
+                    textarea.value = editedMessages[div.dataset.id] || div.textContent;
+                    div.replaceWith(textarea);
+                    
+                    textarea.addEventListener('input', function(e) {
+                        const messageId = e.target.dataset.id;
+                        editedMessages[messageId] = e.target.value;
+                        hasUnsavedChanges = true;
+                        saveSection.style.display = 'flex';
+                    });
+                });
+            }
+            
+            // Function to render messages grouped by file
+            function renderMessagesGrouped() {
+                allFilesData.forEach(fileData => {
+                    if (fileData.messages.length === 0) return;
+                    
+                    const fileGroup = document.createElement('div');
+                    fileGroup.className = 'manager-event-file-group';
+                    
+                    const header = document.createElement('div');
+                    header.className = 'manager-event-file-header';
+                    header.innerHTML = `
+                        <div>
+                            <svg class="svg-icon" viewBox="0 0 384 512">
+                                <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128z"/>
+                            </svg>
+                            ${fileData.fileName}
+                        </div>
+                        <div>${fileData.messages.length} ${i18n.t('events_manager.messages')}</div>
+                    `;
+                    
+                    const content = document.createElement('div');
+                    content.className = 'manager-event-messages-container-inner';
+                    
+                    // Group messages by event name AND filter
+                    const groupedMessages = {};
+                    fileData.messages.forEach(msg => {
+                        const groupKey = `${msg.eventName}|${msg.eventFilter}`;
+                        if (!groupedMessages[groupKey]) {
+                            groupedMessages[groupKey] = [];
+                        }
+                        groupedMessages[groupKey].push(msg);
+                    });
+                    
+                    // Render grouped messages
+                    for (const [groupKey, messageGroup] of Object.entries(groupedMessages)) {
+                        // Split groupKey back into name and filter
+                        const [eventName, eventFilter] = groupKey.split('|');
+                        
+                        const messageCard = document.createElement('div');
+                        messageCard.className = 'manager-event-message-card';
+                        
+                        const cardHeader = document.createElement('div');
+                        cardHeader.className = 'manager-event-message-header';
+                        cardHeader.innerHTML = `
+                            <div>
+                                <div class="manager-event-event-name">${eventName || 'Unnamed Event'}</div>
+                                ${eventFilter ? `<div class="manager-event-event-filter">${i18n.t('events_manager.filter_label')}: ${eventFilter}</div>` : ''}
+                            </div>
+                            <span class="manager-event-event-count">${messageGroup.length} ${i18n.t('events_manager.messages')}</span>
+                        `;
+                        
+                        const cardContent = document.createElement('div');
+                        cardContent.className = 'manager-event-message-content';
+                        
+                        messageGroup.forEach(msg => {
+                            const messageItem = document.createElement('div');
+                            messageItem.className = 'manager-event-message-item';
+                            
+                            const speaker = document.createElement('div');
+                            speaker.className = 'manager-event-message-speaker';
+                            speaker.innerHTML = `
+                                <svg class="svg-icon" viewBox="0 0 448 512">
+                                    <path d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+                                </svg>
+                                ${msg.speaker || 'narrator'}
+                            `;
+                            
+                            const text = document.createElement('div');
+                            text.className = 'manager-event-message-text';
+                            text.textContent = msg.message;
+                            text.dataset.id = msg.id;
+                            
+                            messageItem.appendChild(speaker);
+                            messageItem.appendChild(text);
+                            cardContent.appendChild(messageItem);
+                        });
+                        
+                        messageCard.appendChild(cardHeader);
+                        messageCard.appendChild(cardContent);
+                        content.appendChild(messageCard);
+                    }
+                    
+                    fileGroup.appendChild(header);
+                    fileGroup.appendChild(content);
+                    messagesContainer.appendChild(fileGroup);
+                });
             }
             
             // Function to switch between views
             function switchView(view) {
                 viewMode = view;
-                
                 if (view === 'events') {
                     eventsViewBtn.classList.add('manager-event-active');
                     messagesViewBtn.classList.remove('manager-event-active');
-                    eventsContainer.style.display = 'block';
-                    messagesContainer.style.display = 'none';
+                    eventsContainer.classList.add('active');
+                    messagesContainer.classList.remove('active');
                 } else {
                     messagesViewBtn.classList.add('manager-event-active');
                     eventsViewBtn.classList.remove('manager-event-active');
-                    eventsContainer.style.display = 'none';
-                    messagesContainer.style.display = 'block';
+                    messagesContainer.classList.add('active');
+                    eventsContainer.classList.remove('active');
                 }
-                
                 renderContent();
             }
             
             // Function to switch group mode
             function switchGroupMode(mode) {
                 groupMode = mode;
-                
                 if (mode === 'grouped') {
                     groupFilesBtn.classList.add('manager-event-active');
                     combineFilesBtn.classList.remove('manager-event-active');
@@ -409,7 +516,6 @@
                     combineFilesBtn.classList.add('manager-event-active');
                     groupFilesBtn.classList.remove('manager-event-active');
                 }
-                
                 renderContent();
             }
             
@@ -417,19 +523,31 @@
             function toggleStats() {
                 statsVisible = !statsVisible;
                 statsPanel.style.display = statsVisible ? 'block' : 'none';
-                statsToggleBtn.textContent = statsVisible ? 'Hide Statistics' : 'Show Statistics';
+                statsToggleBtn.innerHTML = statsVisible ? 
+                    `<svg class="svg-icon" viewBox="0 0 512 512">
+                        <path d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"/>
+                    </svg>
+                    <span data-i18n="events_manager.hide_stats">Hide Statistics</span>` : 
+                    `<svg class="svg-icon" viewBox="0 0 512 512">
+                        <path d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"/>
+                    </svg>
+                    <span data-i18n="events_manager.show_stats">Show Statistics</span>`;
             }
             
             // Function to update file info
             function updateFileInfo() {
+                fileCount.textContent = allFilesData.length;
+                
                 // Calculate total events and messages
                 let totalEventsCount = 0;
                 let totalMessagesCount = 0;
-                
                 allFilesData.forEach(file => {
                     totalEventsCount += file.events.length;
                     totalMessagesCount += file.messages.length;
                 });
+                
+                totalEvents.textContent = totalEventsCount;
+                totalMessages.textContent = totalMessagesCount;
             }
             
             // Function to update statistics
@@ -438,7 +556,6 @@
                 
                 let totalEventsCount = 0;
                 let totalMessagesCount = 0;
-                
                 allFilesData.forEach(file => {
                     totalEventsCount += file.events.length;
                     totalMessagesCount += file.messages.length;
@@ -480,7 +597,7 @@
             
             // Function to download files
             function downloadFiles() {
-                alert("Files would be downloaded in a real implementation. This is a demo.");
+                alert(i18n.t('events_manager.download_success'));
             }
             
             // Function to clear results
@@ -497,8 +614,10 @@
                 fileInput.value = '';
                 statsPanel.style.display = 'block';
                 statsVisible = true;
-                statsToggleBtn.textContent = 'Hide Statistics';
-                saveSection.style.display = 'none';
+                statsToggleBtn.innerHTML = `<svg class="svg-icon" viewBox="0 0 512 512">
+                    <path d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"/>
+                </svg>
+                <span data-i18n="events_manager.show_stats">Show Statistics</span>`;
                 switchView('events');
                 switchGroupMode('grouped');
             }
@@ -507,32 +626,4 @@
             switchView('events');
             switchGroupMode('grouped');
             toggleStats();
-            
-            // Demo data to show the UI functionality
-            setTimeout(() => {
-                const demoContent = `
-                    [event]
-                        name="start"
-                        first_time_only=yes
-                        [message]
-                            speaker="King"
-                            message= _ "Welcome to our kingdom, brave warrior!"
-                        [/message]
-                        [message]
-                            speaker="Warrior"
-                            message= _ "I am ready for battle!"
-                        [/message]
-                    [/event]
-                    
-                    [event]
-                        name="victory"
-                        [message]
-                            speaker="Narrator"
-                            message= _ "The battle was won, but the war continues..."
-                        [/message]
-                    [/event]
-                `;
-                
-                processPseudoFiles([{name: "demo_scenario.cfg", content: demoContent}]);
-            }, 1000);
         });

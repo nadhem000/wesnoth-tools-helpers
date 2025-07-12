@@ -47,7 +47,14 @@ const i18n = {
                 wml_validator_description: "Validate your WML code for errors and optimize performance before deployment.",
                 wml_validator_feature1: "Syntax error detection",
                 wml_validator_feature2: "Performance optimization",
-                wml_validator_feature3: "Compatibility checks"
+                wml_validator_feature3: "Compatibility checks",
+				story_manager: "Story Manager",
+                
+                // Story Manager
+      story_manager_description: "Create and manage narrative sequences and dialogues",
+      story_manager_feature1: "Create branching dialogue trees",
+      story_manager_feature2: "Manage character dialogues",
+      story_manager_feature3: "Export to WML story format"
 			},
             footer: {
                 github: "GitHub",
@@ -139,21 +146,21 @@ const i18n = {
 				em_note: "The Events Manager preserves your original files and only modifies content when you explicitly save changes.",
 				em_trouble1: "If events aren't showing up, ensure your files contain valid [event] tags. The parser looks for these tags to identify events.",
             story_manager: "Story Manager",
-            story_manager_desc: "The Story Manager tool helps you create and manage narrative sequences, dialogues, and branching story paths for your campaigns.",
-            using_story_manager: "Using the Story Manager",
-            sm_step1: "Create a new story or open an existing campaign",
-            sm_step2: "Add characters with portraits and dialogue styles",
-            sm_step3: "Build dialogue trees with player choices and consequences",
-            sm_step4: "Connect story segments to scenario events",
-            sm_step5: "Preview the narrative flow and character interactions",
-            sm_step6: "Export to WML for use in your campaign",
-            sm_feature1: "Visual dialogue tree editor with drag-and-drop interface",
-            sm_feature2: "Character library with portrait management",
-            sm_feature3: "Branching narrative paths with conditional logic",
-            sm_feature4: "Integration with Events Manager for in-game triggers",
-            sm_feature5: "Export to WML [story] format",
-            export_example: "Export Example",
-            sm_note: "The Story Manager maintains character consistency across your campaign scenarios. Use the \"Link to Event\" feature to connect dialogue choices with game events."
+      story_manager_desc: "The Story Manager tool helps you create and manage narrative sequences, dialogues, and branching story paths for your campaigns.",
+      using_story_manager: "Using the Story Manager",
+      sm_step1: "Create a new story or open an existing campaign",
+      sm_step2: "Add characters with portraits and dialogue styles",
+      sm_step3: "Build dialogue trees with player choices and consequences",
+      sm_step4: "Connect story segments to scenario events",
+      sm_step5: "Preview the narrative flow and character interactions",
+      sm_step6: "Export to WML for use in your campaign",
+      sm_feature1: "Visual dialogue tree editor with drag-and-drop interface",
+      sm_feature2: "Character library with portrait management",
+      sm_feature3: "Branching narrative paths with conditional logic",
+      sm_feature4: "Integration with Events Manager for in-game triggers",
+      sm_feature5: "Export to WML [story] format",
+      export_example: "Export Example",
+      sm_note: "The Story Manager maintains character consistency across your campaign scenarios. Use the \"Link to Event\" feature to connect dialogue choices with game events."
 			},
 			about: {
 				title: "About Wesnoth Tools Suite",

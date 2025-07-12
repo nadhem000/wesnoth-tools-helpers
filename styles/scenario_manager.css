@@ -1,0 +1,89 @@
+.manager-scenario-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.manager-scenario-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.manager-scenario-how-to-use {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--card-shadow);
+}
+
+.manager-scenario-input-options {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.manager-scenario-input-option {
+    flex: 1;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.manager-scenario-input-option.active {
+    border-color: var(--primary);
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.manager-scenario-input-content {
+    display: none;
+}
+
+.manager-scenario-input-content.active {
+    display: block;
+}
+
+.manager-scenario-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.manager-scenario-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.manager-scenario-btn-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.manager-scenario-btn-secondary {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+}
+
+.manager-scenario-output-section {
+    display: none;
+    margin-top: 2rem;
+}
+
+.manager-scenario-output-section.active {
+    display: block;
+}
+
+/* Card styles for scenario display */
+.manager-scenario-scenario-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--card-shadow);
+}
