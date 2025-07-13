@@ -601,3 +601,9 @@ textarea {
     padding: 20px;
   }
 }
+.manager-event-message-file {
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin-left: 8px;
+    font-style: italic;
+}

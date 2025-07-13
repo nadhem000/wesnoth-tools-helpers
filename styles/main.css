@@ -35,6 +35,8 @@
             --forest: #27ae60;
             --desert: #d35400;
             --water: #3498db;
+    --special-card-1: #3470db;
+    --special-card-2: #27ae85;
 }
 
 [data-theme="dark"] {
@@ -58,6 +60,8 @@
     --link-color: #5cb85c;
   --text-secondary: #d0d0d0;
     --text-tertiary: #e0e0e0;
+    --special-card-1: #4da8da;
+    --special-card-2: #2ecc76;
 }
 /* INDEX PAGE STYLES */
 .wts-index-body {
@@ -104,7 +108,6 @@
     gap: 2rem;
 }
 
-/* NEW CARD STYLES */
 .wts-index-card {
     background: var(--card-bg);
     color: var(--card-text);
@@ -128,6 +131,17 @@
     padding: 1.5rem;
     background: var(--card-header);
     color: white;
+}
+
+.wts-index-card[data-card="events"] .wts-index-card-header {
+    background: var(--special-card-1);
+}
+
+.wts-index-card[data-card="story"] .wts-index-card-header {
+    background: var(--special-card-1);
+}
+.wts-index-card[data-card="sound"] .wts-index-card-header {
+    background: var(--special-card-2);
 }
 
 .wts-index-card-icon {
@@ -324,4 +338,19 @@
 .wts-content-container {
   padding-bottom: 100px; /* Space for footer */
   min-height: 100vh; /* Ensure container fills viewport */
+}
+
+.wts-index-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: var(--header-bg);
+    min-width: 160px;
+    box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+    z-index: 1000;
+    border-radius: 4px;
+    overflow: visible;
+}
+
+.wts-index-dropdown:hover .wts-index-dropdown-content {
+    display: block;
 }
