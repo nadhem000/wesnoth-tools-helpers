@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.0
+	* Version: 1.3
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v2';
+const CACHE_NAME = 'wesnoth-tools-v3';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -12,15 +12,21 @@ const PRECACHE_URLS = [
 	'/ressources/about.html',
 	'/ressources/documentation.html',
 	'/ressources/events_manager.html',
+	'/ressources/scenario_manager.html',
+	'/ressources/sounds_manager.html',
 	'/styles/main.css',
 	'/styles/about.css',
 	'/styles/documentation.css',
 	'/styles/events_manager.css',
+	'/styles/scenario_manager.css',
+	'/styles/sounds_manager.css',
 	'/scripts/main.js',
 	'/scripts/about.js',
 	'/scripts/navigation.js',
 	'/scripts/documentation.js',
 	'/scripts/events_manager.js',
+	'/scripts/scenario_manager.js',
+	'/scripts/sounds_manager.js',
 	'/scripts/wesnoth-wml-utils.js',
 	'/scripts/i18n.js',
 	'/templates/header.html',
