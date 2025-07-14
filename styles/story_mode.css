@@ -1,0 +1,202 @@
+.mode-story-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.mode-story-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.mode-story-how-to-use {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--card-shadow);
+}
+
+.mode-story-input-options {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.mode-story-input-option {
+    flex: 1;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.mode-story-input-option.active {
+    border-color: var(--primary);
+    background-color: rgba(52, 152, 219, 0.1);
+}
+
+.mode-story-input-content {
+    display: none;
+}
+
+.mode-story-input-content.active {
+    display: block;
+}
+
+.mode-story-controls {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.mode-story-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.mode-story-btn-primary {
+    background-color: var(--primary);
+    color: white;
+}
+
+.mode-story-btn-secondary {
+    background-color: var(--secondary-bg);
+    color: var(--text-color);
+}
+
+.mode-story-output-section {
+    display: none;
+    margin-top: 2rem;
+}
+
+.mode-story-output-section.active {
+    display: block;
+}
+
+/* Card styles for scenario display */
+.mode-story-scenario-card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--card-shadow);
+}
+.mode-story-story-part {
+    background-color: var(--card-bg-secondary);
+    border-left: 4px solid var(--primary);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0 4px 4px 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.mode-story-speaker {
+    background-color: var(--primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    display: inline-block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.mode-story-message {
+    background-color: var(--card-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    position: relative;
+    margin-left: 1rem;
+}
+
+.mode-story-message:before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 12px;
+    width: 0;
+    height: 0;
+    border-top: 8px solid transparent;
+    border-right: 10px solid var(--card-bg);
+    border-bottom: 8px solid transparent;
+}
+
+.mode-story-condition-group {
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+}
+
+.mode-story-condition-header {
+    background-color: var(--card-bg-secondary);
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mode-story-condition-header:before {
+    content: '';
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background-color: var(--primary);
+}
+
+.mode-story-condition-content {
+    padding: 0.75rem 1rem;
+    background-color: var(--card-bg);
+    font-family: monospace;
+    font-size: 0.9em;
+    border-top: 1px solid var(--border-color);
+}
+
+.mode-story-message-container {
+    padding: 0.5rem;
+    background-color: var(--body-bg);
+}
+
+.mode-story-event-group {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    background-color: var(--card-bg);
+}
+
+.mode-story-event-title {
+    margin-top: 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.mode-story-event-count {
+    background-color: var(--primary);
+    color: white;
+    padding: 0.1rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    vertical-align: middle;
+}
+
+.mode-story-event-filter pre {
+    background-color: var(--card-bg-secondary);
+    padding: 0.75rem;
+    border-radius: 4px;
+    font-size: 0.85em;
+    margin: 0.5rem 0;
+}
+
+/* New icon styling */
+.mode-story-icon {
+    margin-right: 0.5rem;
+    vertical-align: text-bottom;
+}

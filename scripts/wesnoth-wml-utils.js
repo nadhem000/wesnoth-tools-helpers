@@ -150,28 +150,41 @@ function parseEventContent(eventContent) {
                 }
             }
         }
-        // Handle messages
-        else if (tagName === 'message' && !isClosing) {
-            const closingTag = '[/message]';
-            const endIndex = eventContent.indexOf(closingTag, nextTagEnd + 1);
+        
+    // Handle messages
+    else if (tagName === 'message' && !isClosing) {
+        const closingTag = '[/message]';
+        const endIndex = eventContent.indexOf(closingTag, nextTagEnd + 1);
+        
+        if (endIndex !== -1) {
+            const messageContent = eventContent.substring(nextTagStart, endIndex + closingTag.length);
             
-            if (endIndex !== -1) {
-                const messageContent = eventContent.substring(nextTagStart, endIndex + closingTag.length);
-                const speaker = extractValue(messageContent, /speaker\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n]+.*?))(?=[\s#]|\r|\n|$)/i) || 'narrator';
-                const messageTextMatch = /message\s*=\s*_?\s*"([^"]*)"/.exec(messageContent);
-                
-                if (messageTextMatch) {
-                    result.push({
-                        type: 'message',
-                        speaker: speaker,
-                        text: messageTextMatch[1]
-                    });
-                }
-                
-                currentIndex = endIndex + closingTag.length;
-                continue;
+            // Improved speaker extraction
+            let speaker = 'narrator';
+            const speakerMatch = messageContent.match(/speaker\s*=\s*("([^"]*)"|'([^']*)'|([^\s#]+))/);
+            if (speakerMatch) {
+                speaker = (speakerMatch[2] || speakerMatch[3] || speakerMatch[4] || '').trim();
             }
+            
+            // Improved message extraction
+            let messageText = '';
+            const messageMatch = messageContent.match(/message\s*=\s*_?\s*"((?:\\"|[^"])*)"/);
+            if (messageMatch) {
+                messageText = messageMatch[1].replace(/\\"/g, '"');
+            }
+            
+            if (messageText) {
+                result.push({
+                    type: 'message',
+                    speaker: speaker,
+                    text: messageText
+                });
+            }
+            
+            currentIndex = endIndex + closingTag.length;
+            continue;
         }
+    }
         
         // Move to next position if no valid tag was processed
         currentIndex = nextTagEnd + 1;

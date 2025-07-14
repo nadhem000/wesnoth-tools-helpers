@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-i18n="manager_sounds">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title data-i18n="sounds_manager.title">Wesnoth Sound Manager</title>
+		<link rel="stylesheet" href="../styles/main.css">
+		<link rel="stylesheet" href="../styles/sounds_manager.css">
+		<script src="../scripts/i18n.js"></script>
+	</head>
+	
+	<body class="wts-doc-body">
+		<header class="wts-index-header">
+			<nav class="wts-index-nav">
+				<div>
+					<button id="wts-index-dashboard" class="wts-index-tooltip" data-i18n="nav.dashboard">Dashboard</button>
+					<!-- Updated Tools Dropdown -->
+					<div class="wts-index-dropdown">
+						<button id="wts-index-tools" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.tools">Tools</button>
+						<div class="wts-index-dropdown-content">
+							<a href="ressources/events_manager.html" data-i18n="card.events_manager">Events Manager</a>
+							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
+							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
+							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
+							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
+							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
+						</div>
+					</div>
+					<button id="wts-index-community" class="wts-index-tooltip" data-i18n="nav.community">Community</button>
+					<button id="wts-index-documentation" class="wts-index-tooltip" data-i18n="nav.documentation">Documentation</button>
+					<button id="wts-index-about" class="wts-index-tooltip" data-i18n="nav.about">About</button>
+				</div>
+				<div class="wts-index-nav-right">
+					<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme">
+						<svg viewBox="0 0 24 24" width="24" height="24">
+							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/>
+						</svg>
+					</button>
+					<div class="wts-index-dropdown">
+						<button id="wts-index-languages" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.languages">Languages</button>
+						<div class="wts-index-dropdown-content">
+							<a href="#" data-lang="en" data-i18n="lang.en">English</a>
+							<a href="#" data-lang="fr" data-i18n="lang.fr">Français</a>
+							<a href="#" data-lang="de" data-i18n="lang.de">Deutsch</a>
+							<a href="#" data-lang="es" data-i18n="lang.es">Español</a>
+							<a href="#" data-lang="it" data-i18n="lang.it">Italiano</a>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</header>
+		
+		<div class="manager-sound-container">
+			<header>
+				<h1 data-i18n="sounds_manager.title">Wesnoth Sound Manager</h1>
+				<p class="manager-sound-subtitle" data-i18n="sounds_manager.subtitle">Manage and organize your Battle for Wesnoth game audio assets</p>
+				<div class="manager-sound-tooltip">
+					<button class="manager-sound-btn manager-sound-btn-help" id="manager-sound-help-btn" data-i18n="sounds_manager.help_btn">How to Use</button>
+					<span class="manager-sound-tooltiptext" data-i18n="sounds_manager.help_tooltip">Show instructions for using the sound manager</span>
+				</div>
+			</header>
+			
+			<div class="manager-sound-feature-controls">
+				<div class="manager-sound-control-group">
+					<label for="manager-sound-organization-method" data-i18n="sounds_manager.organize_by">Organize By:</label>
+					<select id="manager-sound-organization-method">
+						<option value="folder" data-i18n="sounds_manager.source_folder">Source Folder</option>
+						<option value="type" data-i18n="sounds_manager.sound_type">Sound Type</option>
+						<option value="size" data-i18n="sounds_manager.file_size">File Size</option>
+						<option value="date" data-i18n="sounds_manager.creation_date">Creation Date</option>
+					</select>
+				</div>
+				
+				<div class="manager-sound-control-group">
+					<label for="manager-sound-sound-filter" data-i18n="sounds_manager.filter_by_type">Filter by Type:</label>
+					<select id="manager-sound-sound-filter">
+						<option value="all" data-i18n="sounds_manager.all_sounds">All Sounds</option>
+						<option value="effects" data-i18n="sounds_manager.sound_effects">Sound Effects</option>
+						<option value="music" data-i18n="sounds_manager.music">Music</option>
+						<option value="voices" data-i18n="sounds_manager.voice_acting">Voice Acting</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="manager-sound-controls">
+				<div class="manager-sound-path-input-container">
+					<div class="manager-sound-path-display" id="manager-sound-directory-path-display" data-i18n="sounds_manager.no_directories">
+						No directories selected
+					</div>
+					<div class="manager-sound-tooltip">
+						<button class="manager-sound-btn manager-sound-btn-add" id="manager-sound-choose-directory" data-i18n="sounds_manager.add_directory">Add Directory</button>
+						<span class="manager-sound-tooltiptext" data-i18n="sounds_manager.add_directory_tooltip">Select a directory containing Wesnoth sounds</span>
+					</div>
+				</div>
+				
+				<div id="manager-sound-directories-list" class="manager-sound-directory-list" style="display: none;">
+					<!-- Directories will be listed here -->
+				</div>
+				
+				<div class="manager-sound-progress-container">
+					<div class="manager-sound-progress-bar" id="manager-sound-loading-progress"></div>
+				</div>
+				
+				<div class="manager-sound-btn-group">
+					<div class="manager-sound-tooltip">
+						<button class="manager-sound-btn" id="manager-sound-clear-all" data-i18n="sounds_manager.clear_all">Clear All</button>
+						<span class="manager-sound-tooltiptext" data-i18n="sounds_manager.clear_all_tooltip">Remove all directories and sounds</span>
+					</div>
+					<div class="manager-sound-tooltip">
+						<button class="manager-sound-btn" id="manager-sound-sample-data" data-i18n="sounds_manager.load_sample">Load Sample Data</button>
+						<span class="manager-sound-tooltiptext" data-i18n="sounds_manager.load_sample_tooltip">Load sample Wesnoth sounds for demonstration</span>
+					</div>
+				</div>
+				
+				<div class="manager-sound-status-bar">
+					<div id="manager-sound-status-message" data-i18n="sounds_manager.ready">Ready to load sounds</div>
+					<div id="manager-sound-sound-count" data-i18n="sounds_manager.sound_count">0 sounds loaded</div>
+				</div>
+			</div>
+			
+			<div id="manager-sound-directories-container">
+				<div class="manager-sound-empty-state">
+					<h3 data-i18n="sounds_manager.no_directories_title">No directories added yet</h3>
+					<p data-i18n="sounds_manager.no_directories_desc">Add directories containing your Wesnoth game sounds using the button above. Sounds will be displayed here organized by directory.</p>
+					<p data-i18n="sounds_manager.copy_paths">You can then copy their paths for use in game configuration files.</p>
+					<div class="manager-sound-tooltip">
+						<button class="manager-sound-btn manager-sound-btn-add" id="manager-sound-load-sample" data-i18n="sounds_manager.load_sample">Load Sample Wesnoth Sounds</button>
+						<span class="manager-sound-tooltiptext" data-i18n="sounds_manager.load_sample_tooltip">Load sample Wesnoth sounds for demonstration</span>
+					</div>
+				</div>
+			</div>
+			
+			<div class="manager-sound-help-section">
+				<h3 data-i18n="sounds_manager.how_to_use">How to Use the Wesnoth Sound Manager</h3>
+				<div class="manager-sound-help-content">
+					<ol>
+						<li><strong data-i18n="sounds_manager.step1_title">Add Directories</strong>: <span data-i18n="sounds_manager.step1_desc">Click the "Add Directory" button to select folders containing your Wesnoth sounds. You can add multiple directories.</span></li>
+						<li><strong data-i18n="sounds_manager.step2_title">Manage Sounds</strong>: <span data-i18n="sounds_manager.step2_desc">Sounds will be displayed in a grid. Click any sound to preview it.</span></li>
+						<li><strong data-i18n="sounds_manager.step3_title">Copy Paths</strong>: <span data-i18n="sounds_manager.step3_desc">Click the "Copy Path" button below any sound to copy its relative path to your clipboard for use in game configuration files.</span></li>
+						<li><strong data-i18n="sounds_manager.step4_title">Remove Directories</strong>: <span data-i18n="sounds_manager.step4_desc">Use the "Remove" button on a directory card to remove it, or "Clear All" to remove everything.</span></li>
+						<li><strong data-i18n="sounds_manager.step5_title">Sample Data</strong>: <span data-i18n="sounds_manager.step5_desc">Use the "Load Sample Data" button to see how the manager works with example sounds.</span></li>
+						<li><strong data-i18n="sounds_manager.step6_title">Configuration</strong>: <span data-i18n="sounds_manager.step6_desc">Use copied sound paths in your Wesnoth configuration files like:</span> 
+						<br><code>sound="sounds/weapons/sword.ogg"</code></li>
+					</ol>
+					<p data-i18n="sounds_manager.note">Note: This tool runs entirely in your browser. No sounds are uploaded to any server.</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="manager-sound-notification" id="manager-sound-notification">
+			<span data-i18n="sounds_manager.path_copied">Path copied to clipboard!</span>
+		</div>
+		
+		<!-- Sound Modal -->
+		<div class="manager-sound-modal-overlay" id="manager-sound-modal">
+			<div class="manager-sound-modal-content">
+				<div class="manager-sound-modal-header">
+					<h3 class="manager-sound-modal-title" data-i18n="sounds_manager.sound_details">Sound Details</h3>
+					<button class="manager-sound-close-modal">&times;</button>
+				</div>
+				
+				<div class="manager-sound-modal-body">
+					<div class="manager-sound-modal-sound-info">
+						<div class="manager-sound-modal-sound-path" id="manager-sound-modal-sound-path"></div>
+						
+						<div class="manager-sound-sound-info-grid">
+							<div class="manager-sound-sound-info-item">
+								<span class="manager-sound-sound-info-label" data-i18n="sounds_manager.name">Name:</span>
+								<div class="manager-sound-sound-info-value" id="manager-sound-modal-sound-name"></div>
+							</div>
+							
+							<div class="manager-sound-sound-info-item">
+								<span class="manager-sound-sound-info-label" data-i18n="sounds_manager.type">Type:</span>
+								<div class="manager-sound-sound-info-value" id="manager-sound-modal-sound-type"></div>
+							</div>
+							
+							<div class="manager-sound-sound-info-item">
+								<span class="manager-sound-sound-info-label" data-i18n="sounds_manager.size">Size:</span>
+								<div class="manager-sound-sound-info-value" id="manager-sound-modal-sound-size"></div>
+							</div>
+							
+							<div class="manager-sound-sound-info-item">
+								<span class="manager-sound-sound-info-label" data-i18n="sounds_manager.format">Format:</span>
+								<div class="manager-sound-sound-info-value" id="manager-sound-modal-sound-format"></div>
+							</div>
+						</div>
+						
+						<div class="manager-sound-modal-actions">
+							<button class="manager-sound-btn manager-sound-btn-copy" id="manager-sound-modal-copy-path" data-i18n="sounds_manager.copy_path">Copy Path</button>
+							<button class="manager-sound-btn manager-sound-btn-download" id="manager-sound-modal-download" data-i18n="sounds_manager.download">Download</button>
+						</div>
+					</div>
+					
+					<div class="manager-sound-modal-audio-player">
+						<div class="manager-sound-audio-player-large">
+							<audio controls id="manager-sound-modal-audio"></audio>
+						</div>
+						
+						<div class="manager-sound-modal-controls">
+							<h4 data-i18n="sounds_manager.sound_settings">Sound Settings</h4>
+							
+							<div class="manager-sound-modal-form-group">
+								<label for="manager-sound-volume-control" data-i18n="sounds_manager.volume">Volume:</label>
+								<input type="range" id="manager-sound-volume-control" min="0" max="1" step="0.05" value="1">
+							</div>
+							
+							<div class="manager-sound-modal-form-group">
+								<label for="manager-sound-playback-speed" data-i18n="sounds_manager.playback_speed">Playback Speed:</label>
+								<select id="manager-sound-playback-speed">
+									<option value="0.5" data-i18n="sounds_manager.speed_0_5">0.5x</option>
+									<option value="0.75" data-i18n="sounds_manager.speed_0_75">0.75x</option>
+									<option value="1" selected data-i18n="sounds_manager.speed_normal">Normal</option>
+									<option value="1.25" data-i18n="sounds_manager.speed_1_25">1.25x</option>
+									<option value="1.5" data-i18n="sounds_manager.speed_1_5">1.5x</option>
+									<option value="2" data-i18n="sounds_manager.speed_2">2x</option>
+								</select>
+							</div>
+							
+							<!-- Advanced sound processing controls -->
+							<div class="manager-sound-advanced-controls">
+								<h4 data-i18n="sounds_manager.advanced_processing">Advanced Processing</h4>
+								
+								<div class="manager-sound-modal-form-group">
+									<label for="manager-sound-pitch-shift" data-i18n="sounds_manager.pitch_shift">Pitch Shift:</label>
+									<input type="range" id="manager-sound-pitch-shift" min="0.5" max="2.0" step="0.1" value="1.0">
+									<span id="manager-sound-pitch-value">1.0x</span>
+								</div>
+								
+								<div class="manager-sound-modal-form-group">
+									<label for="manager-sound-bass-boost" data-i18n="sounds_manager.bass_boost">Bass Boost:</label>
+									<input type="range" id="manager-sound-bass-boost" min="0" max="100" step="5" value="0">
+									<span id="manager-sound-bass-value">0%</span>
+								</div>
+								
+								<div class="manager-sound-modal-form-group">
+									<label for="manager-sound-treble-boost" data-i18n="sounds_manager.treble_boost">Treble Boost:</label>
+									<input type="range" id="manager-sound-treble-boost" min="0" max="100" step="5" value="0">
+									<span id="manager-sound-treble-value">0%</span>
+								</div>
+								
+								<div class="manager-sound-modal-form-group">
+									<label for="manager-sound-reverb" data-i18n="sounds_manager.reverb">Reverb:</label>
+									<input type="range" id="manager-sound-reverb" min="0" max="100" step="5" value="0">
+									<span id="manager-sound-reverb-value">0%</span>
+								</div>
+								
+								<div class="manager-sound-checkbox-container">
+									<input type="checkbox" id="manager-sound-normalize">
+									<label for="manager-sound-normalize" data-i18n="sounds_manager.normalize">Normalize Volume</label>
+								</div>
+								
+								<div class="manager-sound-checkbox-container">
+									<input type="checkbox" id="manager-sound-reverse">
+									<label for="manager-sound-reverse" data-i18n="sounds_manager.reverse">Reverse Sound</label>
+								</div>
+							</div>
+							<button class="manager-sound-btn manager-sound-btn-save" id="manager-sound-save-changes" data-i18n="sounds_manager.save_changes">Save Changes</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="wts-content-container">
+			<footer class="wts-index-footer">
+				<div class="wts-index-footer-links">
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
+					<a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
+				</div>
+				<span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025 | Created for Battle for Wesnoth developers</span>
+				<button id="wts-install-btn" class="wts-index-tooltip" data-i18n="install.button" style="display:none">Install App</button>
+			</footer>
+		</div>
+		<script src="../scripts/sounds_manager.js"></script>
+		<script src="../scripts/main.js"></script>
+	</body>
+</html>
