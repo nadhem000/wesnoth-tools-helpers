@@ -3,7 +3,7 @@
 	* Version: 1.0
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v1';
+const CACHE_NAME = 'wesnoth-tools-v2';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
