@@ -90,28 +90,39 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function parseScenario(content, fileName) {
-        // Extract scenario metadata using robust patterns
-        const id = extractValue(content, /id\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n\s]+))/);
-        const name = extractValue(content, /name\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n\s]+))/);
-        const nextScenario = extractValue(content, /next_scenario\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n\s]+))/);
+        // Helper function to extract values (from old version)
+        const extractValue = (regex, str) => {
+            const match = regex.exec(str);
+            if (!match) return '';
+            const value = match[1] || match[2] || match[3] || '';
+            return value.split('#')[0].trim();
+        };
 
         const scenario = {
             fileName: fileName,
-            id: id,
-            name: name,
-            nextScenario: nextScenario,
-            storyParts: extractStoryParts(content),
+            id: '',
+            name: '',
+            nextScenario: '',
+            storyParts: [],
             events: []
         };
+
+        // Extract scenario metadata using robust patterns from old version
+        scenario.id = extractValue(/id\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n]+[^\s#]*))/, content);
+        scenario.name = extractValue(/name\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n]+[^\s#]*))/, content);
+        scenario.nextScenario = extractValue(/next_scenario\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n]+[^\s#]*))/, content);
         
-        // Extract events and their messages
+        // Extract story parts using utility function
+        scenario.storyParts = extractStoryParts(content);
+        
+        // Extract events using utility function
         const events = extractEvents(content);
         const filterTypes = ['filter', 'filter_second', 'filter_side', 'filter_location'];
         
         events.forEach(event => {
             const eventContent = event.block;
             
-            // Extract filters
+            // Extract filters using robust method from old version
             const allFilters = [];
             for (const filterType of filterTypes) {
                 const filterRegex = new RegExp(`\\[${filterType}\\]([\\s\\S]*?)\\[\\/${filterType}\\]`, 'gi');
