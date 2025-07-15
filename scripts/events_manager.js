@@ -1,255 +1,251 @@
 document.addEventListener('DOMContentLoaded', function() {
 	// Initialize i18n
-	i18n.init();
+    i18n.init();
+    
+    // Elements
+    const fileInput = document.getElementById('manager-event-fileInput');
+    const dropZone = document.getElementById('manager-event-dropZone');
+    const browseBtn = document.getElementById('manager-event-browseBtn');
+    const pasteArea = document.getElementById('manager-event-pasteArea');
+    const processPasteBtn = document.getElementById('manager-event-processPasteBtn');
+    const resultsSection = document.getElementById('manager-event-resultsSection');
+    const emptyState = document.getElementById('manager-event-emptyState');
+    const eventsContainer = document.getElementById('manager-event-eventsContainer');
+    const messagesContainer = document.getElementById('manager-event-messagesContainer');
+    const clearResultsBtn = document.getElementById('manager-event-clearResultsBtn');
+    const eventsViewBtn = document.getElementById('manager-event-eventsViewBtn');
+    const messagesViewBtn = document.getElementById('manager-event-messagesViewBtn');
+    const statsPanel = document.getElementById('manager-event-statsPanel');
+    const statsToggleBtn = document.getElementById('manager-event-statsToggleBtn');
+    const groupFilesBtn = document.getElementById('manager-event-groupFilesBtn');
+    const combineFilesBtn = document.getElementById('manager-event-combineFilesBtn');
+    const downloadEditedBtn = document.getElementById('manager-event-downloadEditedBtn');
+    const saveSection = document.getElementById('manager-event-saveSection');
+    const saveChangesBtn = document.getElementById('manager-event-saveChangesBtn');
+    const discardChangesBtn = document.getElementById('manager-event-discardChangesBtn');
+    const fileCount = document.getElementById('manager-event-fileCount');
+    const totalEvents = document.getElementById('manager-event-totalEvents');
+    const totalMessages = document.getElementById('manager-event-totalMessages');
+    const statFiles = document.getElementById('manager-event-statFiles');
+    const statEvents = document.getElementById('manager-event-statEvents');
+    const statMessages = document.getElementById('manager-event-statMessages');
+    const statAvgEvents = document.getElementById('manager-event-statAvgEvents');
+    
+    // Current data
+    let allFilesData = [];
+    let viewMode = 'events';
+    let groupMode = 'grouped';
+    let statsVisible = true;
+    let originalFiles = {};
+    let hasUnsavedChanges = false;
+    let editedEvents = {};
+    let editedMessages = {};
+    
+    // Event Listeners
+    browseBtn.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', handleFileUpload);
+    dropZone.addEventListener('dragover', handleDragOver);
+    dropZone.addEventListener('drop', handleDrop);
+    processPasteBtn.addEventListener('click', processPastedContent);
+    clearResultsBtn.addEventListener('click', clearResults);
+    eventsViewBtn.addEventListener('click', () => switchView('events'));
+    messagesViewBtn.addEventListener('click', () => switchView('messages'));
+    statsToggleBtn.addEventListener('click', toggleStats);
+    groupFilesBtn.addEventListener('click', () => switchGroupMode('grouped'));
+    combineFilesBtn.addEventListener('click', () => switchGroupMode('combined'));
+    downloadEditedBtn.addEventListener('click', handleDownload);
+    saveChangesBtn.addEventListener('click', saveChanges);
+    discardChangesBtn.addEventListener('click', discardChanges);
 	
-	// Elements
-	const fileInput = document.getElementById('manager-event-fileInput');
-	const dropZone = document.getElementById('manager-event-dropZone');
-	const browseBtn = document.getElementById('manager-event-browseBtn');
-	const pasteArea = document.getElementById('manager-event-pasteArea');
-	const processPasteBtn = document.getElementById('manager-event-processPasteBtn');
-	const resultsSection = document.getElementById('manager-event-resultsSection');
-	const emptyState = document.getElementById('manager-event-emptyState');
-	const eventsContainer = document.getElementById('manager-event-eventsContainer');
-	const messagesContainer = document.getElementById('manager-event-messagesContainer');
-	const clearResultsBtn = document.getElementById('manager-event-clearResultsBtn');
-	const eventsViewBtn = document.getElementById('manager-event-eventsViewBtn');
-	const messagesViewBtn = document.getElementById('manager-event-messagesViewBtn');
-	const statsPanel = document.getElementById('manager-event-statsPanel');
-	const statsToggleBtn = document.getElementById('manager-event-statsToggleBtn');
-	const groupFilesBtn = document.getElementById('manager-event-groupFilesBtn');
-	const combineFilesBtn = document.getElementById('manager-event-combineFilesBtn');
-	const downloadEditedBtn = document.getElementById('manager-event-downloadEditedBtn');
-	const saveSection = document.getElementById('manager-event-saveSection');
-	const saveChangesBtn = document.getElementById('manager-event-saveChangesBtn');
-	const discardChangesBtn = document.getElementById('manager-event-discardChangesBtn');
-	const fileCount = document.getElementById('manager-event-fileCount');
-	const totalEvents = document.getElementById('manager-event-totalEvents');
-	const totalMessages = document.getElementById('manager-event-totalMessages');
-	const statFiles = document.getElementById('manager-event-statFiles');
-	const statEvents = document.getElementById('manager-event-statEvents');
-	const statMessages = document.getElementById('manager-event-statMessages');
-	const statAvgEvents = document.getElementById('manager-event-statAvgEvents');
 	
-	// Current data
-	let allFilesData = [];
-	let viewMode = 'events';
-	let groupMode = 'grouped';
-	let statsVisible = true;
-	let originalFiles = {};
-	let hasUnsavedChanges = false;
-	let editedEvents = {};
-	let editedMessages = {};
-	
-	// Event Listeners
-	browseBtn.addEventListener('click', () => fileInput.click());
-	fileInput.addEventListener('change', handleFileUpload);
-	dropZone.addEventListener('dragover', handleDragOver);
-	dropZone.addEventListener('drop', handleDrop);
-	processPasteBtn.addEventListener('click', processPastedContent);
-	clearResultsBtn.addEventListener('click', clearResults);
-	eventsViewBtn.addEventListener('click', () => switchView('events'));
-	messagesViewBtn.addEventListener('click', () => switchView('messages'));
-	statsToggleBtn.addEventListener('click', toggleStats);
-	groupFilesBtn.addEventListener('click', () => switchGroupMode('grouped'));
-	combineFilesBtn.addEventListener('click', () => switchGroupMode('combined'));
-	downloadEditedBtn.addEventListener('click', handleDownload);
-	saveChangesBtn.addEventListener('click', saveChanges);
-	discardChangesBtn.addEventListener('click', discardChanges);
-	
-	// Function to handle drag over event
-	function handleDragOver(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		dropZone.style.backgroundColor = 'rgba(52, 152, 219, 0.3)';
-	}
-	
-	// Function to handle drop event
-	function handleDrop(e) {
-		e.preventDefault();
-		e.stopPropagation();
-		dropZone.style.backgroundColor = '';
-		const files = e.dataTransfer.files;
-		if (files.length > 0) {
-			processFiles(files);
-		}
-	}
-	
-	// Function to handle file upload via input
-	function handleFileUpload(e) {
-		const files = e.target.files;
-		if (files.length > 0) {
-			processFiles(files);
-		}
-	}
+    // Function to handle drag over event
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.style.backgroundColor = 'rgba(52, 152, 219, 0.3)';
+    }
+    
+    // Function to handle drop event
+    function handleDrop(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.style.backgroundColor = '';
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            processFiles(files);
+        }
+    }
+    
+    // Function to handle file upload via input
+    function handleFileUpload(e) {
+        const files = e.target.files;
+        if (files.length > 0) {
+            processFiles(files);
+        }
+    }
 	
 	// Function to process pasted content
-	function processPastedContent() {
-		const content = pasteArea.value.trim();
-		if (content) {
-			const pseudoFile = {
-				name: "Pasted Content",
-				content: content
-			};
-			processPseudoFiles([pseudoFile]);
-			} else {
-			alert(i18n.t('events_manager.paste_alert'));
-		}
-	}
-	
-	// Function to process uploaded files
-	function processFiles(files) {
-		const newFilesData = [];
-		for (let i = 0; i < files.length; i++) {
-			const file = files[i];
-			if (file.name.endsWith('.cfg')) {
-				const reader = new FileReader();
-				reader.onload = function(e) {
-					const content = e.target.result;
-					originalFiles[file.name] = content;
-					const events = extractEvents(content);
-					const messages = extractMessages(content, events);
-					newFilesData.push({
-						fileName: file.name,
-						events: events,
-						messages: messages
-					});
-					if (newFilesData.length > 0) {
-						allFilesData = allFilesData.concat(newFilesData);
-						updateUI();
-					}
-				};
-				reader.readAsText(file);
-			}
-		}
-	}
+    function processPastedContent() {
+        const content = pasteArea.value.trim();
+        if (content) {
+            const pseudoFile = {
+                name: "Pasted Content",
+                content: content
+            };
+            processPseudoFiles([pseudoFile]);
+            } else {
+            alert(i18n.t('events_manager.paste_alert'));
+        }
+    }
+    
+    // Function to process uploaded files
+    function processFiles(files) {
+        const newFilesData = [];
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            if (file.name.endsWith('.cfg')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const content = e.target.result;
+                    originalFiles[file.name] = content;
+                    const events = extractEvents(content);
+                    const messages = extractMessages(content, events);
+                    newFilesData.push({
+                        fileName: file.name,
+                        events: events,
+                        messages: messages
+                    });
+                    if (newFilesData.length > 0) {
+                        allFilesData = allFilesData.concat(newFilesData);
+                        updateUI();
+                    }
+                };
+                reader.readAsText(file);
+            }
+        }
+    }
 	
 	// Function to process pseudo files (for pasted content)
-	function processPseudoFiles(files) {
-		files.forEach(file => {
-			originalFiles[file.name] = file.content;
-			const events = extractEvents(file.content);
-			const messages = extractMessages(file.content, events);
-			allFilesData.push({
-				fileName: file.name,
-				events: events,
-				messages: messages
-			});
-		});
-		if (allFilesData.length > 0) {
-			updateUI();
-		}
-	}
-	
-	// Update UI after processing files
-	function updateUI() {
-		updateFileInfo();
-		updateStats();
-		renderContent();
-		resultsSection.style.display = 'block';
-		emptyState.style.display = 'none';
-	}
+    function processPseudoFiles(files) {
+        files.forEach(file => {
+            originalFiles[file.name] = file.content;
+            const events = extractEvents(file.content);
+            const messages = extractMessages(file.content, events);
+            allFilesData.push({
+                fileName: file.name,
+                events: events,
+                messages: messages
+            });
+        });
+        if (allFilesData.length > 0) {
+            updateUI();
+        }
+    }
+    
+    // Update UI after processing files
+    function updateUI() {
+        updateFileInfo();
+        updateStats();
+        renderContent();
+        resultsSection.style.display = 'block';
+        emptyState.style.display = 'none';
+    }
 	
 	// Function to extract events from content
-	function extractEvents(content) {
-		const events = [];
-		const eventRegex = /\[event\b[^\]]*\]([\s\S]*?)\[\/event\]/gi;
-		let match;
-		let eventIndex = 0;
-		
-		while ((match = eventRegex.exec(content)) !== null) {
-			const eventBlock = match[0];
-			const start = match.index;
-			const end = start + eventBlock.length;
-			
-			// Extract event name
-			const nameMatch = eventBlock.match(
-				/name\s*=\s*"((?:\\"|[^"])*)"|name\s*=\s*'((?:\\'|[^'])*)'|name\s*=\s*([^\s#\[]+)/i
-			);
-			let eventName = "unnamed";
-			if (nameMatch) {
-				eventName = (nameMatch[1] || nameMatch[2] || nameMatch[3] || "").trim();
-			}
-			
-			// Handle multi-line names
-			if (eventName.includes('\n')) {
-				eventName = eventName.split('\n')[0].trim();
-			}
-			
-			// Extract filter content
-			let filterContent = "";
-			const filterMatch = eventBlock.match(/\[filter\]([\s\S]*?)\[\/filter\]/i);
-			if (filterMatch && filterMatch[1]) {
-				filterContent = filterMatch[1].replace(/\s+/g, " ").trim();
-			}
-			
-			events.push({
-				id: `event-${eventIndex++}`,
-				name: eventName,
-				filter: filterContent,
-				block: eventBlock,
-				start: start,
-				end: end
-			});
-		}
-		return events;
-	}
+    function extractEvents(content) {
+        const events = [];
+        const eventRegex = /\[event\b[^\]]*\]([\s\S]*?)\[\/event\]/gi;
+        let match;
+        let eventIndex = 0;
+        
+        while ((match = eventRegex.exec(content)) !== null) {
+            const eventBlock = match[0];
+            const start = match.index;
+            const end = start + eventBlock.length;
+            
+            // FIXED: Extract event name with improved regex to capture multi-word names
+            const nameMatch = eventBlock.match(
+                /name\s*=\s*"((?:\\"|[^"])*)"|name\s*=\s*'((?:\\'|[^'])*)'|name\s*=\s*([^#\r\n\[]*)/i
+            );
+            let eventName = "unnamed";
+            if (nameMatch) {
+                eventName = (nameMatch[1] || nameMatch[2] || nameMatch[3] || "").trim();
+            }
+            
+            // Extract filter content
+            let filterContent = "";
+            const filterMatch = eventBlock.match(/\[filter\]([\s\S]*?)\[\/filter\]/i);
+            if (filterMatch && filterMatch[1]) {
+                filterContent = filterMatch[1].replace(/\s+/g, " ").trim();
+            }
+            
+            events.push({
+                id: `event-${eventIndex++}`,
+                name: eventName,
+                filter: filterContent,
+                block: eventBlock,
+                start: start,
+                end: end
+            });
+        }
+        return events;
+    }
 	
 	// Function to extract messages from content
-	function extractMessages(content, events) {
-		const allMessages = [];
-		const messageRegex = /\[message\b[^\]]*\]([\s\S]*?)\[\/message\]/gi;
-		let match;
-		
-		while ((match = messageRegex.exec(content)) !== null) {
-			const messageBlock = match[0];
-			const messageStart = match.index;
-			const messageEnd = messageStart + messageBlock.length;
-			
-			// Extract speaker
-			const speakerMatch = messageBlock.match(/speaker\s*=\s*"([^"]*)"|speaker\s*=\s*'([^']*)'|speaker\s*=\s*(\S+)/i);
-			let speaker = "narrator";
-			if (speakerMatch) {
-				speaker = speakerMatch[1] || speakerMatch[2] || speakerMatch[3] || "narrator";
-			}
-			
-			// Extract message text
-			const messageMatch = messageBlock.match(/message\s*=\s*_?\s*"([^"]*)"|message\s*=\s*_?\s*'([^']*)'|message\s*=\s*_?\s*(\S+)/i);
-			let messageText = "";
-			if (messageMatch) {
-				messageText = messageMatch[1] || messageMatch[2] || messageMatch[3] || "";
-			}
-			
-			// Clean up message text
-			messageText = messageText.trim().replace(/^_ /, '');
-			
-			// Find event context and filter
-			let eventContext = "No event context";
-			let eventName = "unnamed";
-			let eventFilter = "";
-			
-			// Find the event that contains this message
-			for (const event of events) {
-				if (messageStart >= event.start && messageEnd <= event.end) {
-					eventContext = event.name;
-					eventName = event.name;
-					eventFilter = event.filter;
-					break;
-				}
-			}
-			
-			allMessages.push({
-				event: eventContext,
-				eventName: eventName,
-				eventFilter: eventFilter,
-				speaker,
-				message: messageText,
-				id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`
-			});
-		}
-		
-		return allMessages;
-	}
+    function extractMessages(content, events) {
+        const allMessages = [];
+        const messageRegex = /\[message\b[^\]]*\]([\s\S]*?)\[\/message\]/gi;
+        let match;
+        
+        while ((match = messageRegex.exec(content)) !== null) {
+            const messageBlock = match[0];
+            const messageStart = match.index;
+            const messageEnd = messageStart + messageBlock.length;
+            
+            // Extract speaker
+            const speakerMatch = messageBlock.match(/speaker\s*=\s*"([^"]*)"|speaker\s*=\s*'([^']*)'|speaker\s*=\s*(\S+)/i);
+            let speaker = "narrator";
+            if (speakerMatch) {
+                speaker = speakerMatch[1] || speakerMatch[2] || speakerMatch[3] || "narrator";
+            }
+            
+            // Extract message text
+            const messageMatch = messageBlock.match(/message\s*=\s*_?\s*"([^"]*)"|message\s*=\s*_?\s*'([^']*)'|message\s*=\s*_?\s*(\S+)/i);
+            let messageText = "";
+            if (messageMatch) {
+                messageText = messageMatch[1] || messageMatch[2] || messageMatch[3] || "";
+            }
+            
+            // Clean up message text
+            messageText = messageText.trim().replace(/^_ /, '');
+            
+            // Find event context and filter
+            let eventContext = "No event context";
+            let eventName = "unnamed";
+            let eventFilter = "";
+            
+            // Find the event that contains this message
+            for (const event of events) {
+                if (messageStart >= event.start && messageEnd <= event.end) {
+                    eventContext = event.name;
+                    eventName = event.name;
+                    eventFilter = event.filter;
+                    break;
+                }
+            }
+            
+            allMessages.push({
+                event: eventContext,
+                eventName: eventName,
+                eventFilter: eventFilter,
+                speaker,
+                message: messageText,
+                id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`
+            });
+        }
+        
+        return allMessages;
+    }
 	
 	// Function to render content based on current view and group mode
 	function renderContent() {
