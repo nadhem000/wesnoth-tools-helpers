@@ -90,12 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function parseScenario(content, fileName) {
-        // Helper function to extract values (from old version)
-        const extractValue = (regex, str) => {
+        // Helper function to extract values (fixed regex patterns)
+        const extractValue = (attrName, str) => {
+            // Robust regex to match: attr="value", attr='value', attr=value
+            const regex = new RegExp(
+                `${attrName}\\s*=\\s*` + 
+                `(?:"([^"]*)"|'([^']*)'|([^\\s\\[\\]]+))`
+            );
             const match = regex.exec(str);
             if (!match) return '';
-            const value = match[1] || match[2] || match[3] || '';
-            return value.split('#')[0].trim();
+            return (match[1] || match[2] || match[3] || '').trim();
         };
 
         const scenario = {
@@ -107,10 +111,10 @@ document.addEventListener('DOMContentLoaded', function() {
             events: []
         };
 
-        // Extract scenario metadata using robust patterns from old version
-        scenario.id = extractValue(/id\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n]+[^\s#]*))/, content);
-        scenario.name = extractValue(/name\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n]+[^\s#]*))/, content);
-        scenario.nextScenario = extractValue(/next_scenario\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n]+[^\s#]*))/, content);
+        // Extract scenario metadata using robust patterns
+        scenario.id = extractValue('id', content);
+        scenario.name = extractValue('name', content);
+        scenario.nextScenario = extractValue('next_scenario', content);
         
         // Extract story parts using utility function
         scenario.storyParts = extractStoryParts(content);
@@ -122,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
         events.forEach(event => {
             const eventContent = event.block;
             
-            // Extract filters using robust method from old version
+            // Extract filters using robust method
             const allFilters = [];
             for (const filterType of filterTypes) {
                 const filterRegex = new RegExp(`\\[${filterType}\\]([\\s\\S]*?)\\[\\/${filterType}\\]`, 'gi');
@@ -147,6 +151,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Skip events without messages
             if (!/\[message\]/.test(eventContent)) return;
             
+            // FIX: Use event.name directly
             scenario.events.push({
                 name: event.name,
                 filters: filterSummary,

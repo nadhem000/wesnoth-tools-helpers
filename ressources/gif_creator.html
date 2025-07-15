@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title data-i18n="manager_gif.title">GIF Creator</title>
+		<link rel="stylesheet" href="../styles/gif_creator.css">
+		<link rel="stylesheet" href="../styles/main.css">
+		<script src="../scripts/i18n.js"></script>
+	</head>
+	<body class="wts-index-body">
+		<header class="wts-index-header">
+			<nav class="wts-index-nav">
+				<div>
+					<button id="wts-index-dashboard" class="wts-index-tooltip" data-i18n="nav.dashboard">Dashboard</button>
+					<!-- Updated Tools Dropdown -->
+					<div class="wts-index-dropdown">
+						<button id="wts-index-tools" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.tools">Tools</button>
+						<div class="wts-index-dropdown-content">
+							<a href="ressources/events_manager.html" data-i18n="card.events_manager">Events Manager</a>
+							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
+							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
+							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
+							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
+							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
+							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
+						</div>
+					</div>
+					<button id="wts-index-community" class="wts-index-tooltip" data-i18n="nav.community">Community</button>
+					<button id="wts-index-documentation" class="wts-index-tooltip" data-i18n="nav.documentation">Documentation</button>
+					<button id="wts-index-about" class="wts-index-tooltip" data-i18n="nav.about">About</button>
+				</div>
+				<div class="wts-index-nav-right">
+					<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme">
+						<svg viewBox="0 0 24 24" width="24" height="24">
+							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/>
+						</svg>
+					</button>
+					<div class="wts-index-dropdown">
+						<button id="wts-index-languages" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.languages">Languages</button>
+						<div class="wts-index-dropdown-content">
+							<a href="#" data-lang="en" data-i18n="lang.en">English</a>
+							<a href="#" data-lang="fr" data-i18n="lang.fr">Français</a>
+							<a href="#" data-lang="de" data-i18n="lang.de">Deutsch</a>
+							<a href="#" data-lang="es" data-i18n="lang.es">Español</a>
+							<a href="#" data-lang="it" data-i18n="lang.it">Italiano</a>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</header>
+		
+		<div class="manager-gif-container">
+			<div class="manager-gif-header">
+				<h1 class="manager-gif-title" data-i18n="manager_gif.title">GIF Creator</h1>
+				<p class="manager-gif-subtitle" data-i18n="manager_gif.subtitle">Convert your images to animated GIFs entirely in your browser - no server processing, no external libraries, no internet required!</p>
+			</div>
+			
+			<div class="manager-gif-panel">
+				<h2 class="manager-gif-panel-title" data-i18n="manager_gif.upload_title"><i>📸</i> Upload Images</h2>
+				<div class="manager-gif-controls">
+					<div class="manager-gif-control-group">
+						<label class="manager-gif-label" for="manager-gif-imageUpload" data-i18n="manager_gif.select_images">Select Images</label>
+						<input type="file" id="manager-gif-imageUpload" accept="image/*" multiple class="manager-gif-input">
+					</div>
+					<div class="manager-gif-control-group">
+						<label class="manager-gif-label" for="manager-gif-frameDelay" data-i18n="manager_gif.frame_delay">Frame Delay (ms)</label>
+						<input type="number" id="manager-gif-frameDelay" min="20" max="1000" value="200" class="manager-gif-input">
+					</div>
+				</div>
+				
+				<div id="manager-gif-imagePreviews" class="manager-gif-image-previews"></div>
+				
+				<button id="manager-gif-createGifBtn" class="manager-gif-btn" disabled>
+					<i>⚙️</i> <span data-i18n="manager_gif.create_button">Create GIF</span>
+				</button>
+				
+				<div id="manager-gif-processingStatus" class="manager-gif-status" data-i18n="manager_gif.processing">Processing... Please wait</div>
+			</div>
+			
+			<div class="manager-gif-panel manager-gif-result-container">
+				<h2 class="manager-gif-panel-title manager-gif-result-title" data-i18n="manager_gif.result_title"><i>🎉</i> Your GIF Result</h2>
+				<div id="manager-gif-resultGif"></div>
+				<div id="manager-gif-resultStatus" class="manager-gif-status" data-i18n="manager_gif.result_placeholder">Your GIF will appear here</div>
+			</div>
+			
+			<div class="manager-gif-instructions">
+				<h3 class="manager-gif-instructions-title" data-i18n="manager_gif.how_to_use_title">How to Use This GIF Creator</h3>
+				<ol>
+					<li data-i18n="manager_gif.step1"><strong>Select images</strong> using the file picker (JPG, PNG, etc.)</li>
+					<li data-i18n="manager_gif.step2"><strong>Adjust frame delay</strong> to control animation speed (default 200ms)</li>
+					<li data-i18n="manager_gif.step3"><strong>Click "Create GIF"</strong> to generate your animation</li>
+					<li data-i18n="manager_gif.step4"><strong>Preview your GIF</strong> - it will appear in the result section</li>
+					<li data-i18n="manager_gif.step5"><strong>Right-click</strong> on the GIF and choose "Save image as..." to download</li>
+				</ol>
+				<p data-i18n="manager_gif.note"><strong>Note:</strong> All processing happens in your browser - no images are uploaded to any server!</p>
+			</div>
+		</div>
+		
+		<div class="wts-content-container">
+			<footer class="wts-index-footer">
+				<div class="wts-index-footer-links">
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
+					<a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
+				</div>
+				<span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025</span>
+			</footer>
+		</div>
+		
+		<script src="../scripts/main.js"></script>
+		<script src="../scripts/gif_creator.js"></script>
+	</body>
+</html>	

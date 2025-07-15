@@ -37,6 +37,7 @@
             --water: #3498db;
     --special-card-1: #3470db;
     --special-card-2: #27ae85;
+  --special-card-3: #db3434;
 }
 
 [data-theme="dark"] {
@@ -142,6 +143,9 @@
 }
 .wts-index-card[data-card="sound"] .wts-index-card-header {
     background: var(--special-card-2);
+}
+.wts-index-card[data-card="gif"] .wts-index-card-header {
+  background: var(--special-card-3);
 }
 
 .wts-index-card-icon {

@@ -6,47 +6,51 @@
 
 // handle navigation
 function setupNavigation() {
-  const isInRessources = window.location.pathname.includes('ressources');
-  const basePath = window.location.protocol === 'file:' ? '' : '/';
-  
-  // Dashboard button
-  document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
-    window.location.href = isInRessources ? `${basePath}../index.html` : `${basePath}index.html`;
-  });
-  
-  // Tools dropdown items
-document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const href = link.getAttribute('href');
-    
-    // Handle paths correctly for all locations
-    if (isInRessources) {
-      window.location.href = href.startsWith('ressources/') 
-        ? `${basePath}${href.replace('ressources/', '')}`
-        : `${basePath}${href}`;
-    } else {
-      window.location.href = `${basePath}${href}`;
-    }
-  });
-});
-
-  // Documentation button
-  document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
-    window.location.href = isInRessources 
-      ? `${basePath}documentation.html`
-      : `${basePath}ressources/documentation.html`;
-  });
-  
-  // About button
-  document.getElementById('wts-index-about')?.addEventListener('click', () => {
-    window.location.href = isInRessources 
-      ? `${basePath}about.html`
-      : `${basePath}ressources/about.html`;
-  });
+	try {
+		const isInRessources = window.location.pathname.includes('ressources');
+		const basePath = window.location.protocol === 'file:' ? '' : '/';
+		
+		// Dashboard button
+		document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
+			window.location.href = isInRessources ? `${basePath}../index.html` : `${basePath}index.html`;
+		});
+		
+		// Tools dropdown items
+		document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
+			link.addEventListener('click', (e) => {
+				e.preventDefault();
+				const href = link.getAttribute('href');
+				
+				// Handle paths correctly for all locations
+				if (isInRessources) {
+					window.location.href = href.startsWith('ressources/') 
+					? `${basePath}${href.replace('ressources/', '')}`
+					: `${basePath}${href}`;
+					} else {
+					window.location.href = `${basePath}${href}`;
+				}
+			});
+		});
+		
+		// Documentation button
+		document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
+			window.location.href = isInRessources 
+			? `${basePath}documentation.html`
+			: `${basePath}ressources/documentation.html`;
+		});
+		
+		// About button
+		document.getElementById('wts-index-about')?.addEventListener('click', () => {
+			window.location.href = isInRessources 
+			? `${basePath}about.html`
+			: `${basePath}ressources/about.html`;
+		});
+		} catch (e) {
+		console.warn('Navigation setup partial failure', e);
+	}
 }
 // DOM Ready Handler 
-document.addEventListener('DOMContentLoaded', () => { 
+document.addEventListener('DOMContentLoaded', () => {
 	/* i18n.init(); */
     // Tooltip initialization 
     document.querySelectorAll('.wts-index-tooltip').forEach(el => {
@@ -140,6 +144,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			i18n.setLanguage(lang);
 		});
 	});
+const navRight = document.querySelector('.wts-index-nav-right');
+if (navRight) {
+  navRight.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const lang = link.getAttribute('data-lang');
+      i18n.setLanguage(lang);
+    });
+  });
+}
 });
 
 // Service Worker Registration
@@ -153,4 +167,4 @@ if ('serviceWorker' in navigator) {
 		.then(reg => console.log('SW registered: ', reg))
 		.catch(err => console.log('SW registration failed: ', err));
 	});
-}
+}	

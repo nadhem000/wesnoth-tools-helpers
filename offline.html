@@ -7,20 +7,26 @@
 		<link rel="stylesheet" href="styles/main.css">
 		<link rel="manifest" href="manifest.json">
 		<script src="scripts/i18n.js"></script>
+		<script>
+			i18n.init();
+		</script>
 	</head>
 	<body class="wts-index-body">
 		<header class="wts-index-header">
 			<nav class="wts-index-nav">
 				<div>
 					<button id="wts-index-dashboard" class="wts-index-tooltip" data-i18n="nav.dashboard">Dashboard</button>
+					<!-- Updated Tools Dropdown -->
 					<div class="wts-index-dropdown">
 						<button id="wts-index-tools" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.tools">Tools</button>
 						<div class="wts-index-dropdown-content">
 							<a href="ressources/events_manager.html" data-i18n="card.events_manager">Events Manager</a>
+							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
+							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
+							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
 							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
 							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
 							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
-							<a href="ressources/sample.html" data-i18n="card.story_manager">Story Manager</a>
 						</div>
 					</div>
 					<button id="wts-index-community" class="wts-index-tooltip" data-i18n="nav.community">Community</button>
@@ -49,39 +55,184 @@
 		
 		<main class="wts-index-main">
 			<section class="wts-index-cards">
+				<!-- Events Manager Card -->
 				<a href="ressources/events_manager.html" class="wts-index-card-link">
-					<div class="wts-index-card">
+					<div class="wts-index-card" data-card="events">
 						<div class="wts-index-card-header">
 							<div class="wts-index-card-icon">
-								<svg viewBox="0 0 512 512">
-									<path d="M160 0c-17.7 0-32 14.3-32 32s14.3 32 32 32h64v64H32c-17.7 0-32 14.3-32 32s14.3 32 32 32h192v64H160c-17.7 0-32 14.3-32 32s14.3 32 32 32h192c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V192h192c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V64h64c17.7 0 32-14.3 32-32s-14.3-32-32-32H160z"/>
+								<svg viewBox="0 0 640 512">
+									<path d="M496 224h-48v-48c0-8.8-7.2-16-16-16h-48V96c0-8.8-7.2-16-16-16H112c-8.8 0-16 7.2-16 16v48H48c-8.8 0-16 7.2-16 16v48H16c-8.8 0-16 7.2-16 16v128c0 8.8 7.2 16 16 16h80V320h32v128h64V320h32v128h64V320h32v128h80c8.8 0 16-7.2 16-16V256c0-8.8-7.2-16-16-16zm-48 176h-32V320h32v80zm-96 0h-32V320h32v80zm-96 0h-32V320h32v80zm-96 0H80V320h32v80zm272-224h32v32h-32v-32zm-96 0h32v32h-32v-32zm-96 0h32v32h-32v-32zm-96 0h32v32H80v-32zm352-64v32h-32v-32h32zm-96 0v32h-32v-32h32zm-96 0v32h-32v-32h32zm-96 0v32H80v-32h32z"/>
 								</svg>
 							</div>
 							<h3 class="wts-index-tooltip" data-i18n="card.events_manager">Events Manager</h3>
 						</div>
 						<div class="wts-index-card-content">
-							<p class="wts-index-card-description" data-i18n="card.events_manager_description">Manage and edit events and messages in Wesnoth scenario files</p>
+							<p class="wts-index-card-description" data-i18n="card.events_manager_description">
+								Extract and manage events and messages from Wesnoth scenario files
+							</p>
 							<ul class="wts-index-card-features">
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.events_manager_feature1">Extract events and messages from scenario files</span>
+									<span data-i18n="card.events_manager_feature1">
+										Extract events and messages
+									</span>
 								</li>
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.events_manager_feature2">Edit events and messages in a user-friendly interface</span>
+									<span data-i18n="card.events_manager_feature2">
+										Edit event WML code directly
+									</span>
 								</li>
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.events_manager_feature3">Export edited files with changes applied</span>
+									<span data-i18n="card.events_manager_feature3">
+										Modify message text in context
+									</span>
 								</li>
 							</ul>
-							<button class="wts-index-card-button" data-i18n="card.open_tool">Open Tool</button>
+							<button class="wts-index-card-button outline" data-i18n="card.use_tool">Use Tool</button>
+						</div>
+					</div>
+				</a>
+				
+				<!-- Story Manager Card -->
+				<a href="ressources/story_mode.html" class="wts-index-card-link">
+					<div class="wts-index-card" data-card="story">
+						<div class="wts-index-card-header">
+							<div class="wts-index-card-icon">
+								<svg viewBox="0 0 576 512">
+									<path d="M448 160H320V128H448v32zm48-32h32v32H496V128zM272 128v32H128V128H272zm176 96H128v32H448V224zM496 224h32v32H496V224zM128 288h32v32H128V288zm80 0H448v32H208V288zm288 0h32v32H496V288zM128 352H448v32H128V352zM496 352h32v32H496V352z"/>
+								</svg>
+							</div>
+							<h3 class="wts-index-tooltip" data-i18n="card.story_mode">Story Mode</h3>
+						</div>
+						<div class="wts-index-card-content">
+							<p class="wts-index-card-description" data-i18n="card.story_mode_description">
+								Extract and manage story content from Wesnoth scenario files
+							</p>
+							<ul class="wts-index-card-features">
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.story_mode_feature1">
+										Extract story parts and dialogues
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.story_mode_feature2">
+										View scenario metadata and events
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.story_mode_feature3">
+										Export to WML story format
+									</span>
+								</li>
+							</ul>
+							<button class="wts-index-card-button outline" data-i18n="card.use_tool">Use Tool</button>
+						</div>
+					</div>
+				</a>
+				<!-- Sound Manager Card -->
+				<a href="ressources/sounds_manager.html" class="wts-index-card-link">
+					<div class="wts-index-card" data-card="sound">
+						<div class="wts-index-card-header">
+							<div class="wts-index-card-icon">
+								<svg viewBox="0 0 640 512">
+									<path d="M215.03 71.05L126.06 160H24c-13.26 0-24 10.74-24 24v144c0 13.25 10.74 24 24 24h102.06l88.97 88.95c15.03 15.03 40.97 4.47 40.97-16.97V88.02c0-21.46-25.96-31.98-40.97-16.97zm233.32-51.08c-11.17-7.33-26.18-4.24-33.51 6.95-7.34 11.17-4.22 26.18 6.95 33.51 66.27 43.49 105.82 116.6 105.82 195.58 0 78.98-39.55 152.09-105.82 195.58-11.17 7.32-14.29 22.34-6.95 33.5 7.04 10.71 21.93 14.56 33.51 6.95C528.27 439.58 576 351.33 576 256S528.27 72.43 448.35 19.97zM480 256c0-63.53-32.06-121.94-85.77-156.24-11.19-7.14-26.03-3.82-33.12 7.46s-3.78 26.21 7.41 33.36C408.27 165.97 432 209.11 432 256s-23.73 90.03-63.48 115.42c-11.19 7.14-14.5 22.07-7.41 33.36 6.51 10.36 21.12 15.14 33.12 7.46C447.94 377.94 480 319.53 480 256zm-141.77-76.87c-11.58-6.33-26.19-2.16-32.61 9.45-6.39 11.61-2.16 26.2 9.45 32.61C327.98 228.28 336 241.63 336 256c0 14.38-8.02 27.72-20.92 34.81-11.61 6.41-15.84 21-9.45 32.61 6.43 11.66 21.05 15.8 32.61 9.45 28.23-15.55 45.77-45 45.77-76.88s-17.54-61.32-45.78-76.86z"/>
+								</svg>
+							</div>
+							<h3 class="wts-index-tooltip" data-i18n="card.sound_manager">Sound Manager</h3>
+						</div>
+						<div class="wts-index-card-content">
+							<p class="wts-index-card-description" data-i18n="card.sound_manager_description">
+								Manage and organize game audio assets with advanced editing
+							</p>
+							<ul class="wts-index-card-features">
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.sound_manager_feature1">
+										Load and preview sound files
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.sound_manager_feature2">
+										Edit sound properties and metadata
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.sound_manager_feature3">
+										Apply audio effects and filters
+									</span>
+								</li>
+							</ul>
+							<button class="wts-index-card-button outline" data-i18n="card.use_tool">Use Tool</button>
+						</div>
+					</div>
+				</a>
+				<!-- GIF Creator -->
+				<a href="ressources/gif_creator.html" class="wts-index-card-link">
+					<div class="wts-index-card" data-card="gif">
+						<div class="wts-index-card-header">
+							<div class="wts-index-card-icon">
+								<svg viewBox="0 0 640 512">
+									<path d="M256 336h-.02c0-16.18 1.34-8.73-85.05-181.51-17.65-35.29-68.19-35.36-85.87 0C-2.06 328.75.02 320.33.02 336H0c0 44.18 57.31 80 128 80s128-35.82 128-80zm-128-160l72 144H56l72-144zm511.98 160c0-16.18 1.34-8.73-85.05-181.51-17.65-35.29-68.19-35.36-85.87 0-87.12 174.26-85.04 165.84-85.04 181.51H384c0 44.18 57.31 80 128 80s128-35.82 128-80h-.02zM440 320l72-144 72 144H440zm88 128c-13.25 0-24-10.75-24-24 0-13.26 10.75-24 24-24s24 10.74 24 24c0 13.25-10.75 24-24 24z"/>
+								</svg>
+							</div>
+							<h3 class="wts-index-tooltip" data-i18n="card.gif_creator">GIF Creator</h3>
+						</div>
+						<div class="wts-index-card-content">
+							<p class="wts-index-card-description" data-i18n="card.gif_creator_description">
+								Create animated GIFs from image sequences directly in your browser
+							</p>
+							<ul class="wts-index-card-features">
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.gif_creator_feature1">
+										No server processing required
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.gif_creator_feature2">
+										Adjustable frame delay for speed control
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.gif_creator_feature3">
+										Download your GIF with one click
+									</span>
+								</li>
+							</ul>
+							<button class="wts-index-card-button outline" data-i18n="card.use_tool">Use Tool</button>
 						</div>
 					</div>
 				</a>
@@ -96,25 +247,33 @@
 							<h3 class="wts-index-tooltip" data-i18n="card.unit_editor">Unit Editor</h3>
 						</div>
 						<div class="wts-index-card-content">
-							<p class="wts-index-card-description" data-i18n="card.unit_editor_description"></p>
+							<p class="wts-index-card-description" data-i18n="card.unit_editor_description">
+								Create and customize units with detailed statistics and abilities
+							</p>
 							<ul class="wts-index-card-features">
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.unit_editor_feature1"></span>
+									<span data-i18n="card.unit_editor_feature1">
+										Customize attack types and damage
+									</span>
 								</li>
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.unit_editor_feature2"></span>
+									<span data-i18n="card.unit_editor_feature2">
+										Define movement costs and resistances
+									</span>
 								</li>
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.unit_editor_feature3"></span>
+									<span data-i18n="card.unit_editor_feature3">
+										Add special abilities and traits
+									</span>
 								</li>
 							</ul>
 							<button class="wts-index-card-button outline" data-i18n="card.coming_soon">Coming Soon</button>
@@ -133,25 +292,33 @@
 							<h3 class="wts-index-tooltip" data-i18n="card.scenario_builder">Scenario Builder</h3>
 						</div>
 						<div class="wts-index-card-content">
-							<p class="wts-index-card-description" data-i18n="card.scenario_builder_description"></p>
+							<p class="wts-index-card-description" data-i18n="card.scenario_builder_description">
+								Design and build engaging scenarios with terrain, units, and events
+							</p>
 							<ul class="wts-index-card-features">
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.scenario_builder_feature1"></span>
+									<span data-i18n="card.scenario_builder_feature1">
+										Drag-and-drop map editor
+									</span>
 								</li>
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.scenario_builder_feature2"></span>
+									<span data-i18n="card.scenario_builder_feature2">
+										Terrain palette with preview
+									</span>
 								</li>
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.scenario_builder_feature3"></span>
+									<span data-i18n="card.scenario_builder_feature3">
+										Starting position management
+									</span>
 								</li>
 							</ul>
 							<button class="wts-index-card-button outline" data-i18n="card.coming_soon">Coming Soon</button>
@@ -170,63 +337,33 @@
 							<h3 class="wts-index-tooltip" data-i18n="card.wml_validator">WML Validator</h3>
 						</div>
 						<div class="wts-index-card-content">
-							<p class="wts-index-card-description" data-i18n="card.wml_validator_description"></p>
+							<p class="wts-index-card-description" data-i18n="card.wml_validator_description">
+								Validate WML code for errors and optimize performance
+							</p>
 							<ul class="wts-index-card-features">
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.wml_validator_feature1"></span>
+									<span data-i18n="card.wml_validator_feature1">
+										Syntax error detection
+									</span>
 								</li>
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.wml_validator_feature2"></span>
+									<span data-i18n="card.wml_validator_feature2">
+										Performance optimization
+									</span>
 								</li>
 								<li>
 									<svg viewBox="0 0 512 512">
 										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
 									</svg>
-									<span data-i18n="card.wml_validator_feature3"></span>
-								</li>
-							</ul>
-							<button class="wts-index-card-button outline" data-i18n="card.coming_soon">Coming Soon</button>
-						</div>
-					</div>
-				</a>
-				
-				<!-- Story Manager Card -->
-				<a href="ressources/sample.html" class="wts-index-card-link">
-					<div class="wts-index-card">
-						<div class="wts-index-card-header">
-							<div class="wts-index-card-icon">
-								<svg viewBox="0 0 576 512">
-									<path d="M448 160H320V128H448v32zm48-32h32v32H496V128zM272 128v32H128V128H272zm176 96H128v32H448V224zM496 224h32v32H496V224zM128 288h32v32H128V288zm80 0H448v32H208V288zm288 0h32v32H496V288zM128 352H448v32H128V352zM496 352h32v32H496V352z"/>
-								</svg>
-							</div>
-							<h3 class="wts-index-tooltip" data-i18n="card.story_manager">Story Manager</h3>
-						</div>
-						<div class="wts-index-card-content">
-							<p class="wts-index-card-description" data-i18n="card.story_manager_description">Create and manage narrative sequences and dialogues</p>
-							<ul class="wts-index-card-features">
-								<li>
-									<svg viewBox="0 0 512 512">
-										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
-									</svg>
-									<span data-i18n="card.story_manager_feature1">Create branching dialogue trees</span>
-								</li>
-								<li>
-									<svg viewBox="0 0 512 512">
-										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
-									</svg>
-									<span data-i18n="card.story_manager_feature2">Manage character dialogues</span>
-								</li>
-								<li>
-									<svg viewBox="0 0 512 512">
-										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
-									</svg>
-									<span data-i18n="card.story_manager_feature3">Export to WML story format</span>
+									<span data-i18n="card.wml_validator_feature3">
+										Compatibility checks
+									</span>
 								</li>
 							</ul>
 							<button class="wts-index-card-button outline" data-i18n="card.coming_soon">Coming Soon</button>

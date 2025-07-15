@@ -68,7 +68,14 @@ const i18n = {
                 sound_manager_description: "Manage and organize game audio assets with advanced editing",
                 sound_manager_feature1: "Load and preview sound files",
                 sound_manager_feature2: "Edit sound properties and metadata",
-                sound_manager_feature3: "Apply audio effects and filters"
+                sound_manager_feature3: "Apply audio effects and filters",
+                
+                // GIF Creator
+				gif_creator: "GIF Creator",
+				gif_creator_description: "Create animated GIFs from image sequences directly in your browser",
+				gif_creator_feature1: "No server processing required",
+				gif_creator_feature2: "Adjustable frame delay for speed control",
+				gif_creator_feature3: "Download your GIF with one click"
 			},
             footer: {
                 github: "GitHub",
@@ -91,6 +98,7 @@ const i18n = {
 				best_practices: "Best Practices",
 				api_reference: "API Reference",
 				faq: "FAQ",
+                gif_creator: "GIF Creator",
 				intro_p1: "Welcome to the Wesnoth Campaign Tools Suite documentation...",
 				intro_p2: "The suite includes three main tools...",
 				key_features: "Key Features",
@@ -183,7 +191,19 @@ const i18n = {
                 sound_feature1: "Load and preview sound files",
                 sound_feature2: "Edit sound properties and metadata",
                 sound_feature3: "Apply audio effects and filters",
-                sound_feature4: "Download processed sounds"
+                sound_feature4: "Download processed sounds",
+                gif_creator_desc: "The GIF Creator tool allows you to create animated GIFs from image sequences entirely in your browser.",
+                using_gif_creator: "Using the GIF Creator",
+                gif_step1: "Select images using the file picker (JPG, PNG, etc.)",
+                gif_step2: "Adjust frame delay to control animation speed (default 200ms)",
+                gif_step3: "Click \"Create GIF\" to generate your animation",
+                gif_step4: "Preview your GIF - it will appear in the result section",
+                gif_step5: "Right-click on the GIF and choose \"Save image as...\" to download",
+                gif_feature1: "Client-side processing - no images uploaded to servers",
+                gif_feature2: "Adjustable frame delay for animation speed control",
+                gif_feature3: "Image previews before GIF creation",
+                gif_feature4: "Real-time processing status indicators",
+                gif_note: "All processing happens locally in your browser - no images are uploaded to any server!"
 			},
             about: {
                 title: "About Wesnoth Tools Suite",
@@ -276,7 +296,7 @@ const i18n = {
                 normalize: "Normalize Volume",
                 reverse: "Reverse Sound",
                 save_changes: "Save Changes"
-            },
+			},
             // Story Mode texts
             story_mode: {
                 title: "Wesnoth Story Mode",
@@ -313,7 +333,25 @@ const i18n = {
                 no_dialogue: "No dialogue found in this scenario",
                 no_filter: "No filters applied",
                 filters: "Filters"
-            }
+			},
+			manager_gif: {
+				title: "GIF Creator",
+				subtitle: "Convert your images to animated GIFs entirely in your browser - no server processing, no external libraries, no internet required!",
+				upload_title: "Upload Images",
+				select_images: "Select Images",
+				frame_delay: "Frame Delay (ms)",
+				create_button: "Create GIF",
+				processing: "Processing... Please wait",
+				result_title: "Your GIF Result",
+				result_placeholder: "Your GIF will appear here",
+				how_to_use_title: "How to Use This GIF Creator",
+				step1: "Select images using the file picker (JPG, PNG, etc.)",
+				step2: "Adjust frame delay to control animation speed (default 200ms)",
+				step3: "Click \"Create GIF\" to generate your animation",
+				step4: "Preview your GIF - it will appear in the result section",
+				step5: "Right-click on the GIF and choose \"Save image as...\" to download",
+				note: "Note: All processing happens in your browser - no images are uploaded to any server!"
+			}
 		},
         fr: {
             title: "Suite d'Outils Wesnoth",
@@ -368,7 +406,12 @@ const i18n = {
                 sound_manager_description: "Gérer et organiser les ressources audio du jeu avec édition avancée",
                 sound_manager_feature1: "Charger et prévisualiser les fichiers audio",
                 sound_manager_feature2: "Modifier les propriétés et métadonnées des sons",
-                sound_manager_feature3: "Appliquer des effets et filtres audio"
+                sound_manager_feature3: "Appliquer des effets et filtres audio",
+				gif_creator: "Créateur de GIF",
+				gif_creator_description: "Créez des GIF animés à partir de séquences d'images directement dans votre navigateur",
+				gif_creator_feature1: "Aucun traitement serveur requis",
+				gif_creator_feature2: "Délai entre les images réglable pour contrôler la vitesse",
+				gif_creator_feature3: "Téléchargez votre GIF en un clic"
 			},
             footer: {
                 github: "GitHub",
@@ -391,6 +434,7 @@ const i18n = {
                 best_practices: "Bonnes pratiques",
                 api_reference: "Référence API",
                 faq: "FAQ",
+                gif_creator: "Créateur de GIF",
                 intro_p1: "Bienvenue dans la documentation de la suite d'outils Wesnoth...",
                 intro_p2: "La suite comprend trois outils principaux...",
                 key_features: "Fonctionnalités clés",
@@ -483,7 +527,19 @@ const i18n = {
                 sound_feature1: "Charger et prévisualiser les fichiers audio",
                 sound_feature2: "Modifier les propriétés et métadonnées des sons",
                 sound_feature3: "Appliquer des effets et filtres audio",
-                sound_feature4: "Télécharger les sons traités"
+                sound_feature4: "Télécharger les sons traités",
+                gif_creator_desc: "L'outil Créateur de GIF vous permet de créer des GIF animés à partir de séquences d'images entièrement dans votre navigateur.",
+                using_gif_creator: "Utilisation du Créateur de GIF",
+                gif_step1: "Sélectionnez des images avec le sélecteur de fichiers (JPG, PNG, etc.)",
+                gif_step2: "Ajustez le délai entre les images pour contrôler la vitesse de l'animation (200 ms par défaut)",
+                gif_step3: "Cliquez sur \"Créer un GIF\" pour générer votre animation",
+                gif_step4: "Prévisualisez votre GIF - il apparaîtra dans la section des résultats",
+                gif_step5: "Faites un clic droit sur le GIF et choisissez \"Enregistrer l'image sous...\" pour le télécharger",
+                gif_feature1: "Traitement côté client - aucune image n'est envoyée vers les serveurs",
+                gif_feature2: "Délai entre les images réglable pour contrôler la vitesse de l'animation",
+                gif_feature3: "Prévisualisation des images avant la création du GIF",
+                gif_feature4: "Indicateurs d'état de traitement en temps réel",
+                gif_note: "Tout le traitement s'effectue localement dans votre navigateur - aucune image n'est envoyée à un serveur !"
 			},
             about: {
                 title: "À propos de la suite d'outils Wesnoth",
@@ -576,7 +632,7 @@ const i18n = {
                 normalize: "Normaliser le volume",
                 reverse: "Inverser le son",
                 save_changes: "Enregistrer les modifications"
-            },
+			},
             // Story Mode texts (French)
             story_mode: {
                 title: "Mode Histoire Wesnoth",
@@ -613,7 +669,25 @@ const i18n = {
                 no_dialogue: "Aucun dialogue trouvé dans ce scénario",
                 no_filter: "Aucun filtre appliqué",
                 filters: "Filtres"
-            }
+			},
+			manager_gif: {
+				title: "Créateur de GIF",
+				subtitle: "Convertissez vos images en GIF animés entièrement dans votre navigateur - pas de traitement serveur, pas de bibliothèques externes, pas besoin d'internet !",
+				upload_title: "Importer des images",
+				select_images: "Sélectionner des images",
+				frame_delay: "Délai entre les images (ms)",
+				create_button: "Créer le GIF",
+				processing: "Traitement en cours... Veuillez patienter",
+				result_title: "Résultat de votre GIF",
+				result_placeholder: "Votre GIF apparaîtra ici",
+				how_to_use_title: "Comment utiliser ce créateur de GIF",
+				step1: "Sélectionnez des images avec le sélecteur de fichiers (JPG, PNG, etc.)",
+				step2: "Ajustez le délai entre les images pour contrôler la vitesse de l'animation (par défaut 200ms)",
+				step3: "Cliquez sur \"Créer le GIF\" pour générer votre animation",
+				step4: "Prévisualisez votre GIF - il apparaîtra dans la section résultat",
+				step5: "Faites un clic droit sur le GIF et choisissez \"Enregistrer l'image sous...\" pour le télécharger",
+				note: "Remarque : Tout le traitement se passe dans votre navigateur - aucune image n'est envoyée à un serveur !"
+			}
 		}
 	},
 	

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" data-i18n="story_mode">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="title">Story Mode - Wesnoth Tools</title>
-    <link rel="stylesheet" href="../styles/main.css">
-    <link rel="stylesheet" href="../styles/story_mode.css">
-    <script src="../scripts/i18n.js"></script>
-    <script src="../scripts/wesnoth-wml-utils.js"></script>
-</head>
-<body class="wts-index-body">
-    <header class="wts-index-header">
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title data-i18n="title">Story Mode - Wesnoth Tools</title>
+		<link rel="stylesheet" href="../styles/main.css">
+		<link rel="stylesheet" href="../styles/story_mode.css">
+		<script src="../scripts/i18n.js"></script>
+		<script src="../scripts/wesnoth-wml-utils.js"></script>
+	</head>
+	<body class="wts-index-body">
+		<header class="wts-index-header">
 			<nav class="wts-index-nav">
 				<div>
 					<button id="wts-index-dashboard" class="wts-index-tooltip" data-i18n="nav.dashboard">Dashboard</button>
@@ -21,6 +21,7 @@
 							<a href="ressources/events_manager.html" data-i18n="card.events_manager">Events Manager</a>
 							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
 							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
+							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
 							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
 							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
 							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
@@ -50,88 +51,88 @@
 			</nav>
 		</header>
 		
-    <div class="mode-story-container">
-        <header class="mode-story-header">
-            <h1 data-i18n="story_mode.title">Wesnoth Story Mode</h1>
-            <p class="mode-story-subtitle" data-i18n="story_mode.subtitle">
-                Extract and organize story content from Wesnoth campaigns
-            </p>
-        </header>
-        
-        <div class="mode-story-how-to-use">
-            <h3 data-i18n="story_mode.how_to_use">How to Use This Tool</h3>
-            <ul>
-                <li><strong data-i18n="story_mode.upload_files">Upload Files</strong>: 
-                    <span data-i18n="story_mode.upload_desc">Select .cfg scenario files from your computer</span></li>
-                <li><strong data-i18n="story_mode.paste_content">Paste Content</strong>: 
-                    <span data-i18n="story_mode.paste_desc">Copy and paste scenario file contents directly</span></li>
-                <li data-i18n="story_mode.extract_instructions">Click "Extract Story Content" to process files</li>
-            </ul>
-            <p data-i18n="story_mode.note">Note: Extracts story parts and dialogues from scenario files.</p>
-        </div>
-        
-        <section class="mode-story-input-section">
-            <div class="mode-story-input-options">
-                <div class="mode-story-input-option active" data-target="upload">
-                    <h3 data-i18n="story_mode.upload_files">Upload Files</h3>
-                    <p data-i18n="story_mode.upload_desc">Select .cfg scenario files from your computer</p>
-                </div>
-                <div class="mode-story-input-option" data-target="paste">
-                    <h3 data-i18n="story_mode.paste_content">Paste Content</h3>
-                    <p data-i18n="story_mode.paste_desc">Copy and paste scenario file contents directly</p>
-                </div>
-            </div>
-            
-            <!-- Upload Content -->
-            <div class="mode-story-input-content active" id="mode-story-upload-content">
-                <div class="mode-story-file-upload">
-                    <h3 data-i18n="story_mode.select_files">Select Scenario Files</h3>
-                    <p data-i18n="story_mode.select_desc">Choose .cfg files to extract story content</p>
-                    <input type="file" id="mode-story-file-input" accept=".cfg" multiple>
-                </div>
-                <div class="mode-story-controls">
-                    <button class="mode-story-btn" id="mode-story-process-btn" 
-                            data-i18n="story_mode.extract_button">Extract Story Content</button>
-                    <button class="mode-story-btn mode-story-btn-secondary" id="mode-story-reset-btn" 
-                            data-i18n="story_mode.reset_button">Reset</button>
-                </div>
-            </div>
-            
-            <!-- Paste Content -->
-            <div class="mode-story-input-content" id="mode-story-paste-content">
-                <textarea id="mode-story-paste-input" 
-                          placeholder="Paste scenario content here..." 
-                          data-i18n="story_mode.paste_placeholder"></textarea>
-                <div class="mode-story-controls">
-                    <button class="mode-story-btn" id="mode-story-paste-process-btn" 
-                            data-i18n="story_mode.extract_button">Extract Story Content</button>
-                    <button class="mode-story-btn mode-story-btn-secondary" id="mode-story-paste-reset-btn" 
-                            data-i18n="story_mode.clear_button">Clear</button>
-                </div>
-            </div>
-        </section>
-        
-        <section class="mode-story-output-section" id="mode-story-output-section">
-            <div id="mode-story-output-content"></div>
-            <div class="mode-story-controls">
-                <button class="mode-story-btn mode-story-btn-secondary" id="mode-story-back-btn" 
-                        data-i18n="story_mode.back_button">Back to Input</button>
-            </div>
-        </section>
-    </div>
-
-    <div class="wts-content-container">
-         <footer class="wts-index-footer">
-            <div class="wts-index-footer-links">
-                <a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
-                <a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
-                <a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
-            </div>
-            <span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025</span>
-        </footer>
-    </div>
-
-    <script src="../scripts/story_mode.js"></script>
-<script src="../scripts/main.js"></script>
-</body>
+		<div class="mode-story-container">
+			<header class="mode-story-header">
+				<h1 data-i18n="story_mode.title">Wesnoth Story Mode</h1>
+				<p class="mode-story-subtitle" data-i18n="story_mode.subtitle">
+					Extract and organize story content from Wesnoth campaigns
+				</p>
+			</header>
+			
+			<div class="mode-story-how-to-use">
+				<h3 data-i18n="story_mode.how_to_use">How to Use This Tool</h3>
+				<ul>
+					<li><strong data-i18n="story_mode.upload_files">Upload Files</strong>: 
+					<span data-i18n="story_mode.upload_desc">Select .cfg scenario files from your computer</span></li>
+					<li><strong data-i18n="story_mode.paste_content">Paste Content</strong>: 
+					<span data-i18n="story_mode.paste_desc">Copy and paste scenario file contents directly</span></li>
+					<li data-i18n="story_mode.extract_instructions">Click "Extract Story Content" to process files</li>
+				</ul>
+				<p data-i18n="story_mode.note">Note: Extracts story parts and dialogues from scenario files.</p>
+			</div>
+			
+			<section class="mode-story-input-section">
+				<div class="mode-story-input-options">
+					<div class="mode-story-input-option active" data-target="upload">
+						<h3 data-i18n="story_mode.upload_files">Upload Files</h3>
+						<p data-i18n="story_mode.upload_desc">Select .cfg scenario files from your computer</p>
+					</div>
+					<div class="mode-story-input-option" data-target="paste">
+						<h3 data-i18n="story_mode.paste_content">Paste Content</h3>
+						<p data-i18n="story_mode.paste_desc">Copy and paste scenario file contents directly</p>
+					</div>
+				</div>
+				
+				<!-- Upload Content -->
+				<div class="mode-story-input-content active" id="mode-story-upload-content">
+					<div class="mode-story-file-upload">
+						<h3 data-i18n="story_mode.select_files">Select Scenario Files</h3>
+						<p data-i18n="story_mode.select_desc">Choose .cfg files to extract story content</p>
+						<input type="file" id="mode-story-file-input" accept=".cfg" multiple>
+					</div>
+					<div class="mode-story-controls">
+						<button class="mode-story-btn" id="mode-story-process-btn" 
+						data-i18n="story_mode.extract_button">Extract Story Content</button>
+						<button class="mode-story-btn mode-story-btn-secondary" id="mode-story-reset-btn" 
+						data-i18n="story_mode.reset_button">Reset</button>
+					</div>
+				</div>
+				
+				<!-- Paste Content -->
+				<div class="mode-story-input-content" id="mode-story-paste-content">
+					<textarea id="mode-story-paste-input" 
+					placeholder="Paste scenario content here..." 
+					data-i18n="story_mode.paste_placeholder"></textarea>
+					<div class="mode-story-controls">
+						<button class="mode-story-btn" id="mode-story-paste-process-btn" 
+						data-i18n="story_mode.extract_button">Extract Story Content</button>
+						<button class="mode-story-btn mode-story-btn-secondary" id="mode-story-paste-reset-btn" 
+						data-i18n="story_mode.clear_button">Clear</button>
+					</div>
+				</div>
+			</section>
+			
+			<section class="mode-story-output-section" id="mode-story-output-section">
+				<div id="mode-story-output-content"></div>
+				<div class="mode-story-controls">
+					<button class="mode-story-btn mode-story-btn-secondary" id="mode-story-back-btn" 
+					data-i18n="story_mode.back_button">Back to Input</button>
+				</div>
+			</section>
+		</div>
+		
+		<div class="wts-content-container">
+			<footer class="wts-index-footer">
+				<div class="wts-index-footer-links">
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
+					<a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
+				</div>
+				<span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025</span>
+			</footer>
+		</div>
+		
+		<script src="../scripts/story_mode.js"></script>
+		<script src="../scripts/main.js"></script>
+	</body>
 </html>

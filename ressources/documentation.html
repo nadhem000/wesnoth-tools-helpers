@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-i18n="documentation">
+<html lang="en">
 	<head>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,6 +20,7 @@
 							<a href="ressources/events_manager.html" data-i18n="card.events_manager">Events Manager</a>
 							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
 							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
+							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
 							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
 							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
 							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
@@ -59,6 +60,8 @@
 					<li><a href="#wml-validator" data-i18n="doc.wml_validator">WML Validator</a></li>
 					<li><a href="#events-manager" data-i18n="doc.events_manager">Events Manager</a></li>
 					<li><a href="#story-mode" data-i18n="doc.story_mode">Story Mode</a></li>
+					<!-- Add GIF Creator to TOC -->
+					<li><a href="#gif-creator" data-i18n="doc.gif_creator">GIF Creator</a></li>
 					<li><a href="#best-practices" data-i18n="doc.best_practices">Best Practices</a></li>
 					<li><a href="#api-reference" data-i18n="doc.api_reference">API Reference</a></li>
 					<li><a href="#faq" data-i18n="doc.faq">FAQ</a></li>
@@ -226,6 +229,39 @@
 						</span>
 					</div>
 				</section>		
+				
+				<!-- New GIF Creator Section -->
+				<section id="gif-creator">
+					<h2 data-i18n="doc.gif_creator">GIF Creator</h2>
+					<p data-i18n="doc.gif_creator_desc">
+						The GIF Creator tool allows you to create animated GIFs from image sequences entirely in your browser.
+					</p>
+					
+					<h3 data-i18n="doc.using_gif_creator">Using the GIF Creator</h3>
+					<ol>
+						<li data-i18n="doc.gif_step1"><strong>Select images</strong> using the file picker (JPG, PNG, etc.)</li>
+						<li data-i18n="doc.gif_step2"><strong>Adjust frame delay</strong> to control animation speed (default 200ms)</li>
+						<li data-i18n="doc.gif_step3"><strong>Click "Create GIF"</strong> to generate your animation</li>
+						<li data-i18n="doc.gif_step4"><strong>Preview your GIF</strong> - it will appear in the result section</li>
+						<li data-i18n="doc.gif_step5"><strong>Right-click</strong> on the GIF and choose "Save image as..." to download</li>
+					</ol>
+					
+					<h3 data-i18n="doc.key_features">Key Features</h3>
+					<ul>
+						<li data-i18n="doc.gif_feature1">Client-side processing - no images uploaded to servers</li>
+						<li data-i18n="doc.gif_feature2">Adjustable frame delay for animation speed control</li>
+						<li data-i18n="doc.gif_feature3">Image previews before GIF creation</li>
+						<li data-i18n="doc.gif_feature4">Real-time processing status indicators</li>
+					</ul>
+					
+					<div class="wts-doc-note">
+						<strong data-i18n="doc.note">Note:</strong>
+						<span data-i18n="doc.gif_note">
+							All processing happens locally in your browser - no images are uploaded to any server!
+						</span>
+					</div>
+				</section>
+				
 				<section id="best-practices">
 					<h2 data-i18n="doc.best_practices">Best Practices</h2>
 					<ul>
@@ -284,4 +320,4 @@
 		<script src="../scripts/documentation.js"></script>
 		<script src="../scripts/main.js"></script>
 	</body>
-</html>		
+</html>

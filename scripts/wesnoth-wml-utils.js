@@ -35,9 +35,9 @@ function extractEvents(content) {
         const start = match.index;
         const end = start + eventBlock.length;
 
-        // Extract event name
+        // Extract event name - FIXED REGEX
         const nameMatch = eventBlock.match(
-            /name\s*=\s*"((?:\\"|[^"])*)"|name\s*=\s*'((?:\\'|[^'])*)'|name\s*=\s*([^\s#\[]+)/i
+            /name\s*=\s*"((?:\\"|[^"])*)"|name\s*=\s*'((?:\\'|[^'])*)'|name\s*=\s*([^#\r\n\[]*)/i
         );
         let eventName = "unnamed";
         if (nameMatch) {
@@ -205,10 +205,10 @@ if (typeof module !== 'undefined' && module.exports) {
 
 
 
-/* // In your HTML file
+/* // In  HTML file
 <script src="wesnoth-utils.js"></script>
 
-// In your tool JavaScript files
+// In  tool JavaScript files
 // Example usage for the event/message manager:
 const events = extractEvents(fileContent);
 const messages = parseEventContent(eventBlock);

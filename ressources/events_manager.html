@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" data-i18n="events_manager">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wesnoth Events Manager</title>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Wesnoth Events Manager</title>
 		<link rel="stylesheet" href="../styles/main.css">
 		<link rel="stylesheet" href="../styles/events_manager.css">
-    <script src="../scripts/wesnoth-wml-utils.js"></script>
-    <script src="../scripts/i18n.js"></script>
-</head>
-<body class="wts-index-body">
-    <header class="wts-index-header">
+		<script src="../scripts/wesnoth-wml-utils.js"></script>
+		<script src="../scripts/i18n.js"></script>
+	</head>
+	<body class="wts-index-body">
+		<header class="wts-index-header">
 			<nav class="wts-index-nav">
 				<div>
 					<button id="wts-index-dashboard" class="wts-index-tooltip" data-i18n="nav.dashboard">Dashboard</button>
@@ -21,6 +21,7 @@
 							<a href="ressources/events_manager.html" data-i18n="card.events_manager">Events Manager</a>
 							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
 							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
+							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
 							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
 							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
 							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
@@ -50,293 +51,293 @@
 			</nav>
 		</header>
 		
-    <div class="manager-event-container">
-        <header class="manager-event-header">
-            <h1>
-                <svg class="svg-icon" viewBox="0 0 640 512">
-                    <path d="M496 224h-48v-48c0-8.8-7.2-16-16-16h-48V96c0-8.8-7.2-16-16-16H112c-8.8 0-16 7.2-16 16v48H48c-8.8 0-16 7.2-16 16v48H16c-8.8 0-16 7.2-16 16v128c0 8.8 7.2 16 16 16h80V320h32v128h64V320h32v128h64V320h32v128h80c8.8 0 16-7.2 16-16V256c0-8.8-7.2-16-16-16zm-48 176h-32V320h32v80zm-96 0h-32V320h32v80zm-96 0h-32V320h32v80zm-96 0H80V320h32v80zm272-224h32v32h-32v-32zm-96 0h32v32h-32v-32zm-96 0h32v32h-32v-32zm-96 0h32v32H80v-32zm352-64v32h-32v-32h32zm-96 0v32h-32v-32h32zm-96 0v32h-32v-32h32zm-96 0v32H80v-32h32z"/>
-                </svg>
-                <span data-i18n="events_manager.title">Wesnoth Events Manager</span>
-            </h1>
-            <p data-i18n="events_manager.subtitle">Extract, edit, and manage events and messages from Wesnoth scenario files</p>
-        </header>
-        
-        <!-- Usage Instructions Section -->
-        <section class="manager-event-usage-section">
-            <h2 class="manager-event-section-title">
-                <svg class="svg-icon" viewBox="0 0 512 512">
-                    <path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm0-338c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
-                </svg>
-                <span data-i18n="events_manager.usage_title">How to Use</span>
-            </h2>
-            <div class="manager-event-instructions">
-                <h3 data-i18n="events_manager.usage_subtitle">How to use this tool:</h3>
-                <ol>
-                    <li><strong data-i18n="events_manager.step1">Upload your scenario files</strong> <span data-i18n="events_manager.or">or</span> <strong data-i18n="events_manager.step1b">paste .cfg content</strong> <span data-i18n="events_manager.step1c">in the input area below</span></li>
-                    <li><span data-i18n="events_manager.step2a">Click</span> <strong data-i18n="events_manager.step2b">"Process Files/Content"</strong> <span data-i18n="events_manager.step2c">to extract all events and messages</span></li>
-                    <li><strong data-i18n="events_manager.step3a">Review the extracted content</strong>:
-                        <ul>
-                            <li><span data-i18n="events_manager.step3b">Switch between</span> <strong data-i18n="events_manager.step3c">Events View</strong> <span data-i18n="events_manager.and">and</span> <strong data-i18n="events_manager.step3d">Messages View</strong></li>
-                            <li><span data-i18n="events_manager.step3e">Choose to</span> <strong data-i18n="events_manager.step3f">group by file</strong> <span data-i18n="events_manager.or">or</span> <strong data-i18n="events_manager.step3g">combine all files</strong></li>
-                            <li><span data-i18n="events_manager.step3h">Edit content directly in the extraction panels</span></li>
-                        </ul>
-                    </li>
-                    <li><strong data-i18n="events_manager.step4a">Edit the extracted content</strong>:
-                        <ul>
-                            <li><span data-i18n="events_manager.step4b">Edit event WML code directly in the Events View</span></li>
-                            <li><span data-i18n="events_manager.step4c">Modify message text in the Messages View</span></li>
-                            <li><span data-i18n="events_manager.step4d">Use</span> <strong data-i18n="events_manager.step4e">"Download Edited Files"</strong> <span data-i18n="events_manager.step4f">to get your modified scenarios</span></li>
-                        </ul>
-                    </li>
-                    <li><strong data-i18n="events_manager.step5a">Export your results</strong>:
-                        <ul>
-                            <li><strong data-i18n="events_manager.step5b">"Download Edited Files"</strong> - <span data-i18n="events_manager.step5c">Download all modified scenario files as a ZIP</span></li>
-                            <li><strong data-i18n="events_manager.step5d">"Show Statistics"</strong> - <span data-i18n="events_manager.step5e">View extraction metrics and file statistics</span></li>
-                            <li><strong data-i18n="events_manager.step5f">"Clear Results"</strong> - <span data-i18n="events_manager.step5g">Reset the tool to process new files</span></li>
-                        </ul>
-                    </li>
-                </ol>
-                <p><strong data-i18n="events_manager.features_title">Special features:</strong></p>
-                <div class="manager-event-feature-list">
-                    <div class="manager-event-feature-card">
-                        <svg class="svg-icon" viewBox="0 0 512 512">
-                            <path d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-5.4 24-12 24H12c-6.6 0-12-10.7-12-24V376c0-13.3 5.4-24 12-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c6.6 0 12 10.7 12 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/>
-                        </svg>
-                        <h4 data-i18n="events_manager.feature1_title">Multi-File Processing</h4>
-                        <p data-i18n="events_manager.feature1_desc">Upload multiple .cfg files at once for batch processing</p>
-                    </div>
-                    <div class="manager-event-feature-card">
-                        <svg class="svg-icon" viewBox="0 0 640 512">
-                            <path d="M278.9 511.5l-61-17.7c-6.4-1.8-10-8.5-8.2-14.9L346.2 8.7c1.8-6.4 8.5-10 14.9-8.2l61 17.7c6.4 1.8 10 8.5 8.2 14.9L293.8 503.3c-1.9 6.4-8.5 10.1-14.9 8.2zm-114-112.2l43.5-46.4c4.6-4.9 4.3-12.7-.8-17.2L117 256l90.6-79.7c5.1-4.5 5.5-12.3.8-17.2l-43.5-46.4c-4.5-4.8-12.1-5.1-17-.5L3.8 247.2c-5.1 4.7-5.1 12.8 0 17.5l144.1 135.1c4.9 4.6 12.5 4.4 17-.5zm327.2.6l144.1-135.1c5.1-4.7 5.1-12.8 0-17.5L492.1 112.1c-4.8-4.5-12.4-4.3-17 .5L431.6 159c-4.6 4.9-4.3 12.7.8 17.2L523 256l-90.6 79.7c-5.1 4.5-5.5 12.3-.8 17.2l43.5 46.4c4.5 4.9 12.1 5.1 17 .6z"/>
-                        </svg>
-                        <h4 data-i18n="events_manager.feature2_title">WML Syntax Preservation</h4>
-                        <p data-i18n="events_manager.feature2_desc">Maintains original WML structure during extraction</p>
-                    </div>
-                    <div class="manager-event-feature-card">
-                        <svg class="svg-icon" viewBox="0 0 512 512">
-                            <path d="M290.74 93.24l128.02 128.02-128.02 128.02-128.02-128.02L290.74 93.24zM127.98 0C92.28 0 64 28.28 64 63.98v384.04C64 483.72 92.28 512 127.98 512h384.04C547.72 512 576 483.72 576 448.02V63.98C576 28.28 547.72 0 512.02 0H127.98zM464 48c8.84 0 16 7.16 16 16s-7.16 16-16 16-16-7.16-16-16 7.16-16 16-16zm-96 0c8.84 0 16 7.16 16 16s-7.16 16-16 16-16-7.16-16-16 7.16-16 16-16zm-96 0c8.84 0 16 7.16 16 16s-7.16 16-16 16-16-7.16-16-16 7.16-16 16-16z"/>
-                        </svg>
-                        <h4 data-i18n="events_manager.feature3_title">Direct Editing</h4>
-                        <p data-i18n="events_manager.feature3_desc">Edit events and messages directly in the interface</p>
-                    </div>
-                    <div class="manager-event-feature-card">
-                        <svg class="svg-icon" viewBox="0 0 512 512">
-                            <path d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"/>
-                        </svg>
-                        <h4 data-i18n="events_manager.feature4_title">Extraction Statistics</h4>
-                        <p data-i18n="events_manager.feature4_desc">Detailed metrics on events and messages extracted</p>
-                    </div>
-                </div>
-                <p><strong data-i18n="events_manager.note_title">Note:</strong> <span data-i18n="events_manager.note_text">Complex edits (adding/removing tags) might break WML syntax. Always verify your changes in the Wesnoth game editor after modification.</span></p>
-            </div>
-        </section>
-        
-        <!-- Input Section -->
-        <section class="manager-event-upload-section">
-            <h2 class="manager-event-section-title">
-                <svg class="svg-icon" viewBox="0 0 640 512">
-                    <path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"/>
-                </svg>
-                <span data-i18n="events_manager.input_title">Input Source</span>
-            </h2>
-            <div class="manager-event-input-options">
-                <div class="manager-event-input-card">
-                    <h3>
-                        <svg class="svg-icon" viewBox="0 0 512 512">
-                            <path d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-5.4 24-12 24H12c-6.6 0-12-10.7-12-24V376c0-13.3 5.4-24 12-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c6.6 0 12 10.7 12 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/>
-                        </svg>
-                        <span data-i18n="events_manager.upload_title">Upload Files</span>
-                    </h3>
-                    <div id="manager-event-dropZone" class="manager-event-drop-zone">
-                        <svg class="svg-icon" viewBox="0 0 512 512" style="width:48px;height:48px;">
-                            <path d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-5.4 24-12 24H12c-6.6 0-12-10.7-12-24V376c0-13.3 5.4-24 12-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c6.6 0 12 10.7 12 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/>
-                        </svg>
-                        <h3 data-i18n="events_manager.upload_drop">Drag & Drop scenario files here</h3>
-                        <p data-i18n="events_manager.or">or</p>
-                        <button id="manager-event-browseBtn" class="manager-event-btn">
-                            <svg class="svg-icon" viewBox="0 0 576 512">
-                                <path d="M572.6 270.3l-96 192C471.2 473.2 460.1 480 447.1 480H64c-35.35 0-64-28.65-64-64V96c0-35.35 28.65-64 64-64h117.5c16.97 0 33.25 6.742 45.26 18.75L275.9 96H416c35.35 0 64 28.65 64 64v32h-48V160c0-8.824-7.178-16-16-16H256L192.8 84.69C189.8 81.66 185.8 80 181.5 80H64C55.18 80 48 87.18 48 96v288l71.16-142.3C124.6 230.8 134.5 224 145.1 224h399.8C555.1 224 565.8 238.3 572.6 270.3z"/>
-                            </svg>
-                            <span data-i18n="events_manager.browse_files">Browse Files</span>
-                        </button>
-                        <input type="file" id="manager-event-fileInput" accept=".cfg" multiple hidden>
-                    </div>
-                    <p class="manager-event-note" data-i18n="events_manager.upload_note">Upload one or multiple .cfg scenario files</p>
-                </div>
-                <div class="manager-event-input-card">
-                    <h3>
-                        <svg class="svg-icon" viewBox="0 0 512 512">
-                            <path d="M502.6 278.6l-128 128c-12.51 12.51-32.76 12.49-45.25 0c-12.5-12.5-12.5-32.75 0-45.25L402.8 288H192C174.3 288 160 273.7 160 256s14.31-32 32-32h210.8l-73.38-73.38c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l128 128C515.1 245.9 515.1 266.1 502.6 278.6zM192 448c-17.67 0-32-14.33-32-32c0-17.67 14.33-32 32-32h192v-64H192c-35.35 0-64 28.65-64 64v96c0 35.35 28.65 64 64 64h192V448H192zM160 192h192V128H160V192zM128 64h288V32c0-17.67-14.33-32-32-32H160C142.3 0 128 14.33 128 32V64zM96 96V64H32C14.33 64 0 78.33 0 96v64c0 17.67 14.33 32 32 32h64v128c0 17.67 14.33 32 32 32h64v-32H128V160h64v128h64V128H192v32H128V96H96z"/>
-                        </svg>
-                        <span data-i18n="events_manager.paste_title">Paste Content</span>
-                    </h3>
-                    <textarea class="manager-event-paste-area" id="manager-event-pasteArea" placeholder="Paste the content of a .cfg file here..." data-i18n-placeholder="events_manager.paste_placeholder"></textarea>
-                    <button id="manager-event-processPasteBtn" class="manager-event-btn manager-event-btn-success">
-                        <svg class="svg-icon" viewBox="0 0 640 512">
-                            <path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"/>
-                        </svg>
-                        <span data-i18n="events_manager.process_button">Process Files/Content</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Results Section -->
-        <section id="manager-event-resultsSection" class="manager-event-results-section manager-event-hidden">
-            <h2 class="manager-event-section-title">
-                <svg class="svg-icon" viewBox="0 0 384 512">
-                    <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128z"/>
-                </svg>
-                <span data-i18n="events_manager.results_title">Extracted Content</span>
-            </h2>
-            
-            <div class="manager-event-file-info" id="manager-event-fileInfo">
-                <div>
-                    <h3 id="manager-event-fileName">
-                        <span data-i18n="events_manager.files_processed">Files Processed:</span> 
-                        <span id="manager-event-fileCount">0</span>
-                    </h3>
-                    <p id="manager-event-eventCount">
-                        <span data-i18n="events_manager.extracted">Extracted</span> 
-                        <span id="manager-event-totalEvents">0</span> 
-                        <span data-i18n="events_manager.events">events</span> 
-                        <span data-i18n="events_manager.and">and</span> 
-                        <span id="manager-event-totalMessages">0</span> 
-                        <span data-i18n="events_manager.messages">messages</span>
-                    </p>
-                </div>
-                <div>
-                    <button id="manager-event-statsToggleBtn" class="manager-event-btn">
-                        <svg class="svg-icon" viewBox="0 0 512 512">
-                            <path d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"/>
-                        </svg>
-                        <span data-i18n="events_manager.show_stats">Show Statistics</span>
-                    </button>
-                    <button id="manager-event-downloadEditedBtn" class="manager-event-btn manager-event-btn-success">
-                        <svg class="svg-icon" viewBox="0 0 512 512">
-                            <path d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/>
-                        </svg>
-                        <span data-i18n="events_manager.download_files">Download Edited Files</span>
-                    </button>
-                    <button id="manager-event-clearResultsBtn" class="manager-event-btn manager-event-btn-warning">
-                        <svg class="svg-icon" viewBox="0 0 448 512">
-                            <path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/>
-                        </svg>
-                        <span data-i18n="events_manager.clear_results">Clear Results</span>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Statistics Panel -->
-            <div class="manager-event-stats-panel" id="manager-event-statsPanel">
-                <h3>
-                    <svg class="svg-icon" viewBox="0 0 512 512">
-                        <path d="M227.9 307.2c-1.8-1.4-3.9-2.4-6.3-2.4-5.1 0-9.2 4.1-9.2 9.2 0 2.4.9 4.6 2.4 6.3l84 76.4c1.7 1.6 4 2.5 6.4 2.5 5.1 0 9.2-4.1 9.2-9.2 0-2.4-.9-4.6-2.5-6.4l-84-76.4zm-84-76.4c-1.6-1.7-2.5-4-2.5-6.4 0-5.1 4.1-9.2 9.2-9.2 2.4 0 4.7.9 6.4 2.5l76.4 84c1.4 1.8 2.4 3.9 2.4 6.3 0 5.1-4.1 9.2-9.2 9.2-2.4 0-4.6-.9-6.3-2.4l-76.4-84zm228.1 84c-1.8-1.4-3.9-2.4-6.3-2.4-5.1 0-9.2 4.1-9.2 9.2 0 2.4.9 4.6 2.4 6.3l76.4 84c1.6 1.7 4 2.5 6.4 2.5 5.1 0 9.2-4.1 9.2-9.2 0-2.4-.9-4.6-2.5-6.4l-76.4-84zm76.4-84c-1.6-1.7-2.5-4-2.5-6.4 0-5.1 4.1-9.2 9.2-9.2 2.4 0 4.7.9 6.4 2.5l84 76.4c1.4 1.8 2.4 3.9 2.4 6.3 0 5.1-4.1 9.2-9.2 9.2-2.4 0-4.6-.9-6.3-2.4l-84-76.4zM256 32C132.3 32 32 132.3 32 256s100.3 224 224 224 224-100.3 224-224S379.7 32 256 32zm0 416c-106 0-192-86-192-192S150 64 256 64s192 86 192 192-86 192-192 192z"/>
-                    </svg>
-                    <span data-i18n="events_manager.statistics_title">Extraction Statistics</span>
-                </h3>
-                <div class="manager-event-stat-grid">
-                    <div class="manager-event-stat-card">
-                        <div class="manager-event-stat-value" id="manager-event-statFiles">0</div>
-                        <div class="manager-event-stat-label" data-i18n="events_manager.files_processed">Files Processed</div>
-                    </div>
-                    <div class="manager-event-stat-card">
-                        <div class="manager-event-stat-value" id="manager-event-statEvents">0</div>
-                        <div class="manager-event-stat-label" data-i18n="events_manager.total_events">Total Events</div>
-                    </div>
-                    <div class="manager-event-stat-card">
-                        <div class="manager-event-stat-value" id="manager-event-statMessages">0</div>
-                        <div class="manager-event-stat-label" data-i18n="events_manager.total_messages">Total Messages</div>
-                    </div>
-                    <div class="manager-event-stat-card">
-                        <div class="manager-event-stat-value" id="manager-event-statAvgEvents">0</div>
-                        <div class="manager-event-stat-label" data-i18n="events_manager.avg_events">Avg Events/File</div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- View Toggle -->
-            <div class="manager-event-view-toggle">
-                <button id="manager-event-eventsViewBtn" class="manager-event-btn manager-event-active">
-                    <svg class="svg-icon" viewBox="0 0 512 512">
-                        <path d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"/>
-                    </svg>
-                    <span data-i18n="events_manager.events_view">Events View</span>
-                </button>
-                <button id="manager-event-messagesViewBtn" class="manager-event-btn">
-                    <svg class="svg-icon" viewBox="0 0 512 512">
-                        <path d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32z"/>
-                    </svg>
-                    <span data-i18n="events_manager.messages_view">Messages View</span>
-                </button>
-                <button id="manager-event-groupFilesBtn" class="manager-event-btn manager-event-active">
-                    <svg class="svg-icon" viewBox="0 0 512 512">
-                        <path d="M488.6 250.2L392 214V105.5c0-15-9.3-28.4-23.4-33.7l-100-37.5c-8.1-3.1-17.1-3.1-25.3 0l-100 37.5c-14.1 5.3-23.4 18.7-23.4 33.7V214l-96.6 36.2C9.3 255.5 0 268.9 0 283.9V394c0 13.6 7.7 26.1 19.9 32.2l100 50c10.1 5.1 22.1 5.1 32.2 0l103.9-52 103.9 52c10.1 5.1 22.1 5.1 32.2 0l100-50c12.2-6.1 19.9-18.6 19.9-32.2V283.9c0-15-9.3-28.4-23.4-33.7zM358 214.8l-85 31.9v-68.2l85-37v73.3zM154 104.1l102-38.2 102 38.2v.9l-102 41.4-102-41.4v-.9zm84 291.1l-85 42.5v-79.1l85-38.8v75.4zm0-112l-102 41.4-102-41.4v-.9l102-38.2 102 38.2v.9zm240 112l-85 42.5v-79.1l85-38.8v75.4zm0-112l-102 41.4-102-41.4v-.9l102-38.2 102 38.2v.9z"/>
-                    </svg>
-                    <span data-i18n="events_manager.group_by_file">Group by File</span>
-                </button>
-                <button id="manager-event-combineFilesBtn" class="manager-event-btn">
-                    <svg class="svg-icon" viewBox="0 0 512 512">
-                        <path d="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-16 160H64v-84c0-6.6 5.4-12 12-12h360c6.6 0 12 5.4 12 12v84z"/>
-                    </svg>
-                    <span data-i18n="events_manager.combine_all">Combine All Files</span>
-                </button>
-            </div>
-            
-            <!-- Events Container -->
-            <div id="manager-event-eventsContainer" class="manager-event-results-view active">
-                <!-- Events will be populated here -->
-            </div>
-            
-            <!-- Messages Container -->
-            <div id="manager-event-messagesContainer" class="manager-event-results-view">
-                <!-- Messages will be populated here -->
-            </div>
-            
-            <!-- Save Section -->
-            <div class="manager-event-save-section" id="manager-event-saveSection">
-                <div>
-                    <span data-i18n="events_manager.unsaved_changes">You have unsaved changes. Would you like to save them before downloading?</span>
-                </div>
-                <div>
-                    <button id="manager-event-saveChangesBtn" class="manager-event-btn manager-event-btn-success">
-                        <svg class="svg-icon" viewBox="0 0 448 512">
-                            <path d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM224 416c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64s64 28.654 64 64c0 35.346-28.654 64-64 64zm96-304c0 19.882-16.118 36-36 36H140c-19.882 0-36-16.118-36-36V100c0-19.882 16.118-36 36-36h144c19.882 0 36 16.118 36 36v12z"/>
-                        </svg>
-                        <span data-i18n="events_manager.save_changes">Save Changes</span>
-                    </button>
-                    <button id="manager-event-discardChangesBtn" class="manager-event-btn manager-event-btn-warning">
-                        <svg class="svg-icon" viewBox="0 0 352 512">
-                            <path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/>
-                        </svg>
-                        <span data-i18n="events_manager.discard_changes">Discard</span>
-                    </button>
-                </div>
-            </div>
-        </section>
-        
-        <!-- Empty State -->
-        <div id="manager-event-emptyState" class="manager-event-empty-state">
-            <svg class="svg-icon" viewBox="0 0 384 512" style="width:48px;height:48px;">
-                <path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128z"/>
-            </svg>
-            <h3 data-i18n="events_manager.empty_title">No Files Processed</h3>
-            <p data-i18n="events_manager.empty_text">Upload scenario files (.cfg) or paste WML content to get started</p>
-        </div>
-    </div>
-    
-    <div class="wts-content-container">
-        <footer class="wts-index-footer">
-            <div class="wts-index-footer-links">
-                <a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
-                <a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
-                <a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
-            </div>
-            <span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025</span>
-        </footer>
-    </div>
-    
-	<script src="../scripts/events_manager.js"></script>
-	<script src="../scripts/main.js"></script>
-</body>
+		<div class="manager-event-container">
+			<header class="manager-event-header">
+				<h1>
+					<svg class="svg-icon" viewBox="0 0 640 512">
+						<path d="M496 224h-48v-48c0-8.8-7.2-16-16-16h-48V96c0-8.8-7.2-16-16-16H112c-8.8 0-16 7.2-16 16v48H48c-8.8 0-16 7.2-16 16v48H16c-8.8 0-16 7.2-16 16v128c0 8.8 7.2 16 16 16h80V320h32v128h64V320h32v128h64V320h32v128h80c8.8 0 16-7.2 16-16V256c0-8.8-7.2-16-16-16zm-48 176h-32V320h32v80zm-96 0h-32V320h32v80zm-96 0h-32V320h32v80zm-96 0H80V320h32v80zm272-224h32v32h-32v-32zm-96 0h32v32h-32v-32zm-96 0h32v32h-32v-32zm-96 0h32v32H80v-32zm352-64v32h-32v-32h32zm-96 0v32h-32v-32h32zm-96 0v32h-32v-32h32zm-96 0v32H80v-32h32z"/>
+					</svg>
+					<span data-i18n="events_manager.title">Wesnoth Events Manager</span>
+				</h1>
+				<p data-i18n="events_manager.subtitle">Extract, edit, and manage events and messages from Wesnoth scenario files</p>
+			</header>
+			
+			<!-- Usage Instructions Section -->
+			<section class="manager-event-usage-section">
+				<h2 class="manager-event-section-title">
+					<svg class="svg-icon" viewBox="0 0 512 512">
+						<path d="M256 8C119.043 8 8 119.083 8 256c0 136.997 111.043 248 248 248s248-111.003 248-248C504 119.083 392.957 8 256 8zm0 448c-110.532 0-200-89.431-200-200 0-110.495 89.472-200 200-200 110.491 0 200 89.471 200 200 0 110.53-89.431 200-200 200zm0-338c23.196 0 42 18.804 42 42s-18.804 42-42 42-42-18.804-42-42 18.804-42 42-42zm56 254c0 6.627-5.373 12-12 12h-88c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h12v-64h-12c-6.627 0-12-5.373-12-12v-24c0-6.627 5.373-12 12-12h64c6.627 0 12 5.373 12 12v100h12c6.627 0 12 5.373 12 12v24z"/>
+					</svg>
+					<span data-i18n="events_manager.usage_title">How to Use</span>
+				</h2>
+				<div class="manager-event-instructions">
+					<h3 data-i18n="events_manager.usage_subtitle">How to use this tool:</h3>
+					<ol>
+						<li><strong data-i18n="events_manager.step1">Upload your scenario files</strong> <span data-i18n="events_manager.or">or</span> <strong data-i18n="events_manager.step1b">paste .cfg content</strong> <span data-i18n="events_manager.step1c">in the input area below</span></li>
+						<li><span data-i18n="events_manager.step2a">Click</span> <strong data-i18n="events_manager.step2b">"Process Files/Content"</strong> <span data-i18n="events_manager.step2c">to extract all events and messages</span></li>
+						<li><strong data-i18n="events_manager.step3a">Review the extracted content</strong>:
+							<ul>
+								<li><span data-i18n="events_manager.step3b">Switch between</span> <strong data-i18n="events_manager.step3c">Events View</strong> <span data-i18n="events_manager.and">and</span> <strong data-i18n="events_manager.step3d">Messages View</strong></li>
+								<li><span data-i18n="events_manager.step3e">Choose to</span> <strong data-i18n="events_manager.step3f">group by file</strong> <span data-i18n="events_manager.or">or</span> <strong data-i18n="events_manager.step3g">combine all files</strong></li>
+								<li><span data-i18n="events_manager.step3h">Edit content directly in the extraction panels</span></li>
+							</ul>
+						</li>
+						<li><strong data-i18n="events_manager.step4a">Edit the extracted content</strong>:
+							<ul>
+								<li><span data-i18n="events_manager.step4b">Edit event WML code directly in the Events View</span></li>
+								<li><span data-i18n="events_manager.step4c">Modify message text in the Messages View</span></li>
+								<li><span data-i18n="events_manager.step4d">Use</span> <strong data-i18n="events_manager.step4e">"Download Edited Files"</strong> <span data-i18n="events_manager.step4f">to get your modified scenarios</span></li>
+							</ul>
+						</li>
+						<li><strong data-i18n="events_manager.step5a">Export your results</strong>:
+							<ul>
+								<li><strong data-i18n="events_manager.step5b">"Download Edited Files"</strong> - <span data-i18n="events_manager.step5c">Download all modified scenario files as a ZIP</span></li>
+								<li><strong data-i18n="events_manager.step5d">"Show Statistics"</strong> - <span data-i18n="events_manager.step5e">View extraction metrics and file statistics</span></li>
+								<li><strong data-i18n="events_manager.step5f">"Clear Results"</strong> - <span data-i18n="events_manager.step5g">Reset the tool to process new files</span></li>
+							</ul>
+						</li>
+					</ol>
+					<p><strong data-i18n="events_manager.features_title">Special features:</strong></p>
+					<div class="manager-event-feature-list">
+						<div class="manager-event-feature-card">
+							<svg class="svg-icon" viewBox="0 0 512 512">
+								<path d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-5.4 24-12 24H12c-6.6 0-12-10.7-12-24V376c0-13.3 5.4-24 12-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c6.6 0 12 10.7 12 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/>
+							</svg>
+							<h4 data-i18n="events_manager.feature1_title">Multi-File Processing</h4>
+							<p data-i18n="events_manager.feature1_desc">Upload multiple .cfg files at once for batch processing</p>
+						</div>
+						<div class="manager-event-feature-card">
+							<svg class="svg-icon" viewBox="0 0 640 512">
+								<path d="M278.9 511.5l-61-17.7c-6.4-1.8-10-8.5-8.2-14.9L346.2 8.7c1.8-6.4 8.5-10 14.9-8.2l61 17.7c6.4 1.8 10 8.5 8.2 14.9L293.8 503.3c-1.9 6.4-8.5 10.1-14.9 8.2zm-114-112.2l43.5-46.4c4.6-4.9 4.3-12.7-.8-17.2L117 256l90.6-79.7c5.1-4.5 5.5-12.3.8-17.2l-43.5-46.4c-4.5-4.8-12.1-5.1-17-.5L3.8 247.2c-5.1 4.7-5.1 12.8 0 17.5l144.1 135.1c4.9 4.6 12.5 4.4 17-.5zm327.2.6l144.1-135.1c5.1-4.7 5.1-12.8 0-17.5L492.1 112.1c-4.8-4.5-12.4-4.3-17 .5L431.6 159c-4.6 4.9-4.3 12.7.8 17.2L523 256l-90.6 79.7c-5.1 4.5-5.5 12.3-.8 17.2l43.5 46.4c4.5 4.9 12.1 5.1 17 .6z"/>
+							</svg>
+							<h4 data-i18n="events_manager.feature2_title">WML Syntax Preservation</h4>
+							<p data-i18n="events_manager.feature2_desc">Maintains original WML structure during extraction</p>
+						</div>
+						<div class="manager-event-feature-card">
+							<svg class="svg-icon" viewBox="0 0 512 512">
+								<path d="M290.74 93.24l128.02 128.02-128.02 128.02-128.02-128.02L290.74 93.24zM127.98 0C92.28 0 64 28.28 64 63.98v384.04C64 483.72 92.28 512 127.98 512h384.04C547.72 512 576 483.72 576 448.02V63.98C576 28.28 547.72 0 512.02 0H127.98zM464 48c8.84 0 16 7.16 16 16s-7.16 16-16 16-16-7.16-16-16 7.16-16 16-16zm-96 0c8.84 0 16 7.16 16 16s-7.16 16-16 16-16-7.16-16-16 7.16-16 16-16zm-96 0c8.84 0 16 7.16 16 16s-7.16 16-16 16-16-7.16-16-16 7.16-16 16-16z"/>
+							</svg>
+							<h4 data-i18n="events_manager.feature3_title">Direct Editing</h4>
+							<p data-i18n="events_manager.feature3_desc">Edit events and messages directly in the interface</p>
+						</div>
+						<div class="manager-event-feature-card">
+							<svg class="svg-icon" viewBox="0 0 512 512">
+								<path d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"/>
+							</svg>
+							<h4 data-i18n="events_manager.feature4_title">Extraction Statistics</h4>
+							<p data-i18n="events_manager.feature4_desc">Detailed metrics on events and messages extracted</p>
+						</div>
+					</div>
+					<p><strong data-i18n="events_manager.note_title">Note:</strong> <span data-i18n="events_manager.note_text">Complex edits (adding/removing tags) might break WML syntax. Always verify your changes in the Wesnoth game editor after modification.</span></p>
+				</div>
+			</section>
+			
+			<!-- Input Section -->
+			<section class="manager-event-upload-section">
+				<h2 class="manager-event-section-title">
+					<svg class="svg-icon" viewBox="0 0 640 512">
+						<path d="M144 480C64.5 480 0 415.5 0 336c0-62.8 40.2-116.2 96.2-135.9c-.1-2.7-.2-5.4-.2-8.1c0-88.4 71.6-160 160-160c59.3 0 111 32.2 138.7 80.2C409.9 102 428.3 96 448 96c53 0 96 43 96 96c0 12.2-2.3 23.8-6.4 34.6C596 238.4 640 290.1 640 352c0 70.7-57.3 128-128 128H144zm79-217c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l39-39V392c0 13.3 10.7 24 24 24s24-10.7 24-24V257.9l39 39c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9l-80-80c-9.4-9.4-24.6-9.4-33.9 0l-80 80z"/>
+					</svg>
+					<span data-i18n="events_manager.input_title">Input Source</span>
+				</h2>
+				<div class="manager-event-input-options">
+					<div class="manager-event-input-card">
+						<h3>
+							<svg class="svg-icon" viewBox="0 0 512 512">
+								<path d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-5.4 24-12 24H12c-6.6 0-12-10.7-12-24V376c0-13.3 5.4-24 12-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c6.6 0 12 10.7 12 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/>
+							</svg>
+							<span data-i18n="events_manager.upload_title">Upload Files</span>
+						</h3>
+						<div id="manager-event-dropZone" class="manager-event-drop-zone">
+							<svg class="svg-icon" viewBox="0 0 512 512" style="width:48px;height:48px;">
+								<path d="M296 384h-80c-13.3 0-24-10.7-24-24V192h-87.7c-17.8 0-26.7-21.5-14.1-34.1L242.3 5.7c7.5-7.5 19.8-7.5 27.3 0l152.2 152.2c12.6 12.6 3.7 34.1-14.1 34.1H320v168c0 13.3-10.7 24-24 24zm216-8v112c0 13.3-5.4 24-12 24H12c-6.6 0-12-10.7-12-24V376c0-13.3 5.4-24 12-24h136v8c0 30.9 25.1 56 56 56h80c30.9 0 56-25.1 56-56v-8h136c6.6 0 12 10.7 12 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/>
+							</svg>
+							<h3 data-i18n="events_manager.upload_drop">Drag & Drop scenario files here</h3>
+							<p data-i18n="events_manager.or">or</p>
+							<button id="manager-event-browseBtn" class="manager-event-btn">
+								<svg class="svg-icon" viewBox="0 0 576 512">
+									<path d="M572.6 270.3l-96 192C471.2 473.2 460.1 480 447.1 480H64c-35.35 0-64-28.65-64-64V96c0-35.35 28.65-64 64-64h117.5c16.97 0 33.25 6.742 45.26 18.75L275.9 96H416c35.35 0 64 28.65 64 64v32h-48V160c0-8.824-7.178-16-16-16H256L192.8 84.69C189.8 81.66 185.8 80 181.5 80H64C55.18 80 48 87.18 48 96v288l71.16-142.3C124.6 230.8 134.5 224 145.1 224h399.8C555.1 224 565.8 238.3 572.6 270.3z"/>
+								</svg>
+								<span data-i18n="events_manager.browse_files">Browse Files</span>
+							</button>
+							<input type="file" id="manager-event-fileInput" accept=".cfg" multiple hidden>
+						</div>
+						<p class="manager-event-note" data-i18n="events_manager.upload_note">Upload one or multiple .cfg scenario files</p>
+					</div>
+					<div class="manager-event-input-card">
+						<h3>
+							<svg class="svg-icon" viewBox="0 0 512 512">
+								<path d="M502.6 278.6l-128 128c-12.51 12.51-32.76 12.49-45.25 0c-12.5-12.5-12.5-32.75 0-45.25L402.8 288H192C174.3 288 160 273.7 160 256s14.31-32 32-32h210.8l-73.38-73.38c-12.5-12.5-12.5-32.75 0-45.25s32.75-12.5 45.25 0l128 128C515.1 245.9 515.1 266.1 502.6 278.6zM192 448c-17.67 0-32-14.33-32-32c0-17.67 14.33-32 32-32h192v-64H192c-35.35 0-64 28.65-64 64v96c0 35.35 28.65 64 64 64h192V448H192zM160 192h192V128H160V192zM128 64h288V32c0-17.67-14.33-32-32-32H160C142.3 0 128 14.33 128 32V64zM96 96V64H32C14.33 64 0 78.33 0 96v64c0 17.67 14.33 32 32 32h64v128c0 17.67 14.33 32 32 32h64v-32H128V160h64v128h64V128H192v32H128V96H96z"/>
+							</svg>
+							<span data-i18n="events_manager.paste_title">Paste Content</span>
+						</h3>
+						<textarea class="manager-event-paste-area" id="manager-event-pasteArea" placeholder="Paste the content of a .cfg file here..." data-i18n-placeholder="events_manager.paste_placeholder"></textarea>
+						<button id="manager-event-processPasteBtn" class="manager-event-btn manager-event-btn-success">
+							<svg class="svg-icon" viewBox="0 0 640 512">
+								<path d="M392.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm80.6 120.1c-12.5 12.5-12.5 32.8 0 45.3L562.7 256l-89.4 89.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l112-112c12.5-12.5 12.5-32.8 0-45.3l-112-112c-12.5-12.5-32.8-12.5-45.3 0zm-306.7 0c-12.5-12.5-32.8-12.5-45.3 0l-112 112c-12.5 12.5-12.5 32.8 0 45.3l112 112c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256l89.4-89.4c12.5-12.5 12.5-32.8 0-45.3z"/>
+							</svg>
+							<span data-i18n="events_manager.process_button">Process Files/Content</span>
+						</button>
+					</div>
+				</div>
+			</section>
+			
+			<!-- Results Section -->
+			<section id="manager-event-resultsSection" class="manager-event-results-section manager-event-hidden">
+				<h2 class="manager-event-section-title">
+					<svg class="svg-icon" viewBox="0 0 384 512">
+						<path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128z"/>
+					</svg>
+					<span data-i18n="events_manager.results_title">Extracted Content</span>
+				</h2>
+				
+				<div class="manager-event-file-info" id="manager-event-fileInfo">
+					<div>
+						<h3 id="manager-event-fileName">
+							<span data-i18n="events_manager.files_processed">Files Processed:</span> 
+							<span id="manager-event-fileCount">0</span>
+						</h3>
+						<p id="manager-event-eventCount">
+							<span data-i18n="events_manager.extracted">Extracted</span> 
+							<span id="manager-event-totalEvents">0</span> 
+							<span data-i18n="events_manager.events">events</span> 
+							<span data-i18n="events_manager.and">and</span> 
+							<span id="manager-event-totalMessages">0</span> 
+							<span data-i18n="events_manager.messages">messages</span>
+						</p>
+					</div>
+					<div>
+						<button id="manager-event-statsToggleBtn" class="manager-event-btn">
+							<svg class="svg-icon" viewBox="0 0 512 512">
+								<path d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"/>
+							</svg>
+							<span data-i18n="events_manager.show_stats">Show Statistics</span>
+						</button>
+						<button id="manager-event-downloadEditedBtn" class="manager-event-btn manager-event-btn-success">
+							<svg class="svg-icon" viewBox="0 0 512 512">
+								<path d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"/>
+							</svg>
+							<span data-i18n="events_manager.download_files">Download Edited Files</span>
+						</button>
+						<button id="manager-event-clearResultsBtn" class="manager-event-btn manager-event-btn-warning">
+							<svg class="svg-icon" viewBox="0 0 448 512">
+								<path d="M432 32H312l-9.4-18.7A24 24 0 0 0 281.1 0H166.8a23.72 23.72 0 0 0-21.4 13.3L136 32H16A16 16 0 0 0 0 48v32a16 16 0 0 0 16 16h416a16 16 0 0 0 16-16V48a16 16 0 0 0-16-16zM53.2 467a48 48 0 0 0 47.9 45h245.8a48 48 0 0 0 47.9-45L416 128H32z"/>
+							</svg>
+							<span data-i18n="events_manager.clear_results">Clear Results</span>
+						</button>
+					</div>
+				</div>
+				
+				<!-- Statistics Panel -->
+				<div class="manager-event-stats-panel" id="manager-event-statsPanel">
+					<h3>
+						<svg class="svg-icon" viewBox="0 0 512 512">
+							<path d="M227.9 307.2c-1.8-1.4-3.9-2.4-6.3-2.4-5.1 0-9.2 4.1-9.2 9.2 0 2.4.9 4.6 2.4 6.3l84 76.4c1.7 1.6 4 2.5 6.4 2.5 5.1 0 9.2-4.1 9.2-9.2 0-2.4-.9-4.6-2.5-6.4l-84-76.4zm-84-76.4c-1.6-1.7-2.5-4-2.5-6.4 0-5.1 4.1-9.2 9.2-9.2 2.4 0 4.7.9 6.4 2.5l76.4 84c1.4 1.8 2.4 3.9 2.4 6.3 0 5.1-4.1 9.2-9.2 9.2-2.4 0-4.6-.9-6.3-2.4l-76.4-84zm228.1 84c-1.8-1.4-3.9-2.4-6.3-2.4-5.1 0-9.2 4.1-9.2 9.2 0 2.4.9 4.6 2.4 6.3l76.4 84c1.6 1.7 4 2.5 6.4 2.5 5.1 0 9.2-4.1 9.2-9.2 0-2.4-.9-4.6-2.5-6.4l-76.4-84zm76.4-84c-1.6-1.7-2.5-4-2.5-6.4 0-5.1 4.1-9.2 9.2-9.2 2.4 0 4.7.9 6.4 2.5l84 76.4c1.4 1.8 2.4 3.9 2.4 6.3 0 5.1-4.1 9.2-9.2 9.2-2.4 0-4.6-.9-6.3-2.4l-84-76.4zM256 32C132.3 32 32 132.3 32 256s100.3 224 224 224 224-100.3 224-224S379.7 32 256 32zm0 416c-106 0-192-86-192-192S150 64 256 64s192 86 192 192-86 192-192 192z"/>
+						</svg>
+						<span data-i18n="events_manager.statistics_title">Extraction Statistics</span>
+					</h3>
+					<div class="manager-event-stat-grid">
+						<div class="manager-event-stat-card">
+							<div class="manager-event-stat-value" id="manager-event-statFiles">0</div>
+							<div class="manager-event-stat-label" data-i18n="events_manager.files_processed">Files Processed</div>
+						</div>
+						<div class="manager-event-stat-card">
+							<div class="manager-event-stat-value" id="manager-event-statEvents">0</div>
+							<div class="manager-event-stat-label" data-i18n="events_manager.total_events">Total Events</div>
+						</div>
+						<div class="manager-event-stat-card">
+							<div class="manager-event-stat-value" id="manager-event-statMessages">0</div>
+							<div class="manager-event-stat-label" data-i18n="events_manager.total_messages">Total Messages</div>
+						</div>
+						<div class="manager-event-stat-card">
+							<div class="manager-event-stat-value" id="manager-event-statAvgEvents">0</div>
+							<div class="manager-event-stat-label" data-i18n="events_manager.avg_events">Avg Events/File</div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- View Toggle -->
+				<div class="manager-event-view-toggle">
+					<button id="manager-event-eventsViewBtn" class="manager-event-btn manager-event-active">
+						<svg class="svg-icon" viewBox="0 0 512 512">
+							<path d="M496 384H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v336c0 17.67 14.33 32 32 32h464c8.84 0 16-7.16 16-16v-32c0-8.84-7.16-16-16-16zM464 96H345.94c-21.38 0-32.09 25.85-16.97 40.97l32.4 32.4L288 242.75l-73.37-73.37c-12.5-12.5-32.76-12.5-45.25 0l-68.69 68.69c-6.25 6.25-6.25 16.38 0 22.63l22.62 22.62c6.25 6.25 16.38 6.25 22.63 0L192 237.25l73.37 73.37c12.5 12.5 32.76 12.5 45.25 0l96-96 32.4 32.4c15.12 15.12 40.97 4.41 40.97-16.97V112c.01-8.84-7.15-16-15.99-16z"/>
+						</svg>
+						<span data-i18n="events_manager.events_view">Events View</span>
+					</button>
+					<button id="manager-event-messagesViewBtn" class="manager-event-btn">
+						<svg class="svg-icon" viewBox="0 0 512 512">
+							<path d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32z"/>
+						</svg>
+						<span data-i18n="events_manager.messages_view">Messages View</span>
+					</button>
+					<button id="manager-event-groupFilesBtn" class="manager-event-btn manager-event-active">
+						<svg class="svg-icon" viewBox="0 0 512 512">
+							<path d="M488.6 250.2L392 214V105.5c0-15-9.3-28.4-23.4-33.7l-100-37.5c-8.1-3.1-17.1-3.1-25.3 0l-100 37.5c-14.1 5.3-23.4 18.7-23.4 33.7V214l-96.6 36.2C9.3 255.5 0 268.9 0 283.9V394c0 13.6 7.7 26.1 19.9 32.2l100 50c10.1 5.1 22.1 5.1 32.2 0l103.9-52 103.9 52c10.1 5.1 22.1 5.1 32.2 0l100-50c12.2-6.1 19.9-18.6 19.9-32.2V283.9c0-15-9.3-28.4-23.4-33.7zM358 214.8l-85 31.9v-68.2l85-37v73.3zM154 104.1l102-38.2 102 38.2v.9l-102 41.4-102-41.4v-.9zm84 291.1l-85 42.5v-79.1l85-38.8v75.4zm0-112l-102 41.4-102-41.4v-.9l102-38.2 102 38.2v.9zm240 112l-85 42.5v-79.1l85-38.8v75.4zm0-112l-102 41.4-102-41.4v-.9l102-38.2 102 38.2v.9z"/>
+						</svg>
+						<span data-i18n="events_manager.group_by_file">Group by File</span>
+					</button>
+					<button id="manager-event-combineFilesBtn" class="manager-event-btn">
+						<svg class="svg-icon" viewBox="0 0 512 512">
+							<path d="M464 32H48C21.5 32 0 53.5 0 80v352c0 26.5 21.5 48 48 48h416c26.5 0 48-21.5 48-48V80c0-26.5-21.5-48-48-48zm-16 160H64v-84c0-6.6 5.4-12 12-12h360c6.6 0 12 5.4 12 12v84z"/>
+						</svg>
+						<span data-i18n="events_manager.combine_all">Combine All Files</span>
+					</button>
+				</div>
+				
+				<!-- Events Container -->
+				<div id="manager-event-eventsContainer" class="manager-event-results-view active">
+					<!-- Events will be populated here -->
+				</div>
+				
+				<!-- Messages Container -->
+				<div id="manager-event-messagesContainer" class="manager-event-results-view">
+					<!-- Messages will be populated here -->
+				</div>
+				
+				<!-- Save Section -->
+				<div class="manager-event-save-section" id="manager-event-saveSection">
+					<div>
+						<span data-i18n="events_manager.unsaved_changes">You have unsaved changes. Would you like to save them before downloading?</span>
+					</div>
+					<div>
+						<button id="manager-event-saveChangesBtn" class="manager-event-btn manager-event-btn-success">
+							<svg class="svg-icon" viewBox="0 0 448 512">
+								<path d="M433.941 129.941l-83.882-83.882A48 48 0 0 0 316.118 32H48C21.49 32 0 53.49 0 80v352c0 26.51 21.49 48 48 48h352c26.51 0 48-21.49 48-48V163.882a48 48 0 0 0-14.059-33.941zM224 416c-35.346 0-64-28.654-64-64 0-35.346 28.654-64 64-64s64 28.654 64 64c0 35.346-28.654 64-64 64zm96-304c0 19.882-16.118 36-36 36H140c-19.882 0-36-16.118-36-36V100c0-19.882 16.118-36 36-36h144c19.882 0 36 16.118 36 36v12z"/>
+							</svg>
+							<span data-i18n="events_manager.save_changes">Save Changes</span>
+						</button>
+						<button id="manager-event-discardChangesBtn" class="manager-event-btn manager-event-btn-warning">
+							<svg class="svg-icon" viewBox="0 0 352 512">
+								<path d="M242.72 256l100.07-100.07c12.28-12.28 12.28-32.19 0-44.48l-22.24-22.24c-12.28-12.28-32.19-12.28-44.48 0L176 189.28 75.93 89.21c-12.28-12.28-32.19-12.28-44.48 0L9.21 111.45c-12.28 12.28-12.28 32.19 0 44.48L109.28 256 9.21 356.07c-12.28 12.28-12.28 32.19 0 44.48l22.24 22.24c12.28 12.28 32.2 12.28 44.48 0L176 322.72l100.07 100.07c12.28 12.28 32.2 12.28 44.48 0l22.24-22.24c12.28-12.28 12.28-32.19 0-44.48L242.72 256z"/>
+							</svg>
+							<span data-i18n="events_manager.discard_changes">Discard</span>
+						</button>
+					</div>
+				</div>
+			</section>
+			
+			<!-- Empty State -->
+			<div id="manager-event-emptyState" class="manager-event-empty-state">
+				<svg class="svg-icon" viewBox="0 0 384 512" style="width:48px;height:48px;">
+					<path d="M0 64C0 28.7 28.7 0 64 0H224V128c0 17.7 14.3 32 32 32H384V448c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V64zm384 64H256V0L384 128z"/>
+				</svg>
+				<h3 data-i18n="events_manager.empty_title">No Files Processed</h3>
+				<p data-i18n="events_manager.empty_text">Upload scenario files (.cfg) or paste WML content to get started</p>
+			</div>
+		</div>
+		
+		<div class="wts-content-container">
+			<footer class="wts-index-footer">
+				<div class="wts-index-footer-links">
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
+					<a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
+				</div>
+				<span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025</span>
+			</footer>
+		</div>
+		
+		<script src="../scripts/events_manager.js"></script>
+		<script src="../scripts/main.js"></script>
+	</body>
 </html>
