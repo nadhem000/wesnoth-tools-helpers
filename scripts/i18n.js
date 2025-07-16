@@ -75,7 +75,14 @@ const i18n = {
 				gif_creator_description: "Create animated GIFs from image sequences directly in your browser",
 				gif_creator_feature1: "No server processing required",
 				gif_creator_feature2: "Adjustable frame delay for speed control",
-				gif_creator_feature3: "Download your GIF with one click"
+				gif_creator_feature3: "Download your GIF with one click",
+                
+                // Big Map
+            big_map_tracker: "Big Map Coordinate Tracker",
+            big_map_tracker_description: "Track coordinates on images, place markers, and export data. All processing happens locally in your browser.",
+            big_map_tracker_feature1: "Upload and track coordinates like Paint",
+            big_map_tracker_feature2: "Place markers with different styles",
+            big_map_tracker_feature3: "Export image with markers or marker data"
 			},
             footer: {
                 github: "GitHub",
@@ -492,7 +499,12 @@ const i18n = {
 				gif_creator_description: "Créez des GIF animés à partir de séquences d'images directement dans votre navigateur",
 				gif_creator_feature1: "Aucun traitement serveur requis",
 				gif_creator_feature2: "Délai entre les images réglable pour contrôler la vitesse",
-				gif_creator_feature3: "Téléchargez votre GIF en un clic"
+				gif_creator_feature3: "Téléchargez votre GIF en un clic",
+            big_map_tracker: "Traceur de coordonnées des cartes avancé",
+            big_map_tracker_description: "Suivez les coordonnées sur les images, placez des marqueurs et exportez les données. Tout le traitement se fait localement dans votre navigateur.",
+            big_map_tracker_feature1: "Importer et suivre les coordonnées comme dans Paint",
+            big_map_tracker_feature2: "Placer des marqueurs avec différents styles",
+            big_map_tracker_feature3: "Exporter l'image avec marqueurs ou données de marqueurs"
 			},
             footer: {
                 github: "GitHub",
