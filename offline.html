@@ -24,6 +24,7 @@
 							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
 							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
 							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
+							<a href="ressources/big_map_tracker.html" data-i18n="card.big_map_tracker">Big Map Coordinate Tracker</a>
 							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
 							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
 							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
@@ -34,9 +35,12 @@
 					<button id="wts-index-about" class="wts-index-tooltip" data-i18n="nav.about">About</button>
 				</div>
 				<div class="wts-index-nav-right">
-					<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme">
+					<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme" aria-label="Toggle theme">
 						<svg viewBox="0 0 24 24" width="24" height="24">
-							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/>
+							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z" 
+							fill="none" 
+							stroke="currentColor" 
+							stroke-width="2"/>
 						</svg>
 					</button>
 					<div class="wts-index-dropdown">
@@ -229,6 +233,51 @@
 									</svg>
 									<span data-i18n="card.gif_creator_feature3">
 										Download your GIF with one click
+									</span>
+								</li>
+							</ul>
+							<button class="wts-index-card-button outline" data-i18n="card.use_tool">Use Tool</button>
+						</div>
+					</div>
+				</a>
+				<!-- Map Coordinate Tracker -->
+				<a href="ressources/big_map_tracker.html" class="wts-index-card-link">
+					<div class="wts-index-card" data-card="map_tracker">
+						<div class="wts-index-card-header">
+							<div class="wts-index-card-icon">
+								<svg viewBox="0 0 24 24">
+									<path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/>
+								</svg>
+							</div>
+							<h3 class="wts-index-tooltip" data-i18n="card.big_map_tracker">Advanced Map Coordinate Tracker</h3>
+						</div>
+						<div class="wts-index-card-content">
+							<p class="wts-index-card-description" data-i18n="card.big_map_tracker_description">
+								Track coordinates on images, place markers, and export data. All processing happens locally in your browser.
+							</p>
+							<ul class="wts-index-card-features">
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.big_map_tracker_feature1">
+										Upload and track coordinates like Paint
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.big_map_tracker_feature2">
+										Place markers with different styles
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.big_map_tracker_feature3">
+										Export image with markers or marker data
 									</span>
 								</li>
 							</ul>

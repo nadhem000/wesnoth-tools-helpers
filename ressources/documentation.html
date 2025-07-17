@@ -21,6 +21,7 @@
 							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
 							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
 							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
+							<a href="ressources/big_map_tracker.html" data-i18n="card.big_map_tracker">Big Map Coordinate Tracker</a>
 							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
 							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
 							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
@@ -31,9 +32,12 @@
 					<button id="wts-index-about" class="wts-index-tooltip" data-i18n="nav.about">About</button>
 				</div>
 				<div class="wts-index-nav-right">
-					<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme">
+					<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme" aria-label="Toggle theme">
 						<svg viewBox="0 0 24 24" width="24" height="24">
-							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/>
+							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z" 
+							fill="none" 
+							stroke="currentColor" 
+							stroke-width="2"/>
 						</svg>
 					</button>
 					<div class="wts-index-dropdown">
@@ -62,6 +66,7 @@
 					<li><a href="#story-mode" data-i18n="doc.story_mode">Story Mode</a></li>
 					<!-- Add GIF Creator to TOC -->
 					<li><a href="#gif-creator" data-i18n="doc.gif_creator">GIF Creator</a></li>
+					<li><a href="#big-map-tracker" data-i18n="doc.big_map_tracker">Big Map Tracker</a></li>
 					<li><a href="#best-practices" data-i18n="doc.best_practices">Best Practices</a></li>
 					<li><a href="#api-reference" data-i18n="doc.api_reference">API Reference</a></li>
 					<li><a href="#faq" data-i18n="doc.faq">FAQ</a></li>
@@ -262,6 +267,40 @@
 					</div>
 				</section>
 				
+				<!-- Big Map Tracker -->
+				<section id="big-map-tracker">
+					<h2 data-i18n="doc.big_map_tracker">Big Map Tracker</h2>
+					<p data-i18n="doc.big_map_tracker_desc">
+						The Big Map Coordinate Tracker tool allows you to track coordinates on your images, 
+						place markers, and export the data. All processing happens locally in your browser.
+					</p>
+					
+					<h3 data-i18n="doc.using_big_map_tracker">Using the Big Map Tracker</h3>
+					<ol>
+						<li data-i18n="doc.big_map_step1">Upload an image using the 'Upload Image' button</li>
+						<li data-i18n="doc.big_map_step2">Hover over the image to see coordinates</li>
+						<li data-i18n="doc.big_map_step3">Click to place markers of the selected type</li>
+						<li data-i18n="doc.big_map_step4">Use the command interface to run multiple placement commands</li>
+						<li data-i18n="doc.big_map_step5">Save your project or export the image with markers</li>
+					</ol>
+					
+					<h3 data-i18n="doc.key_features">Key Features</h3>
+					<ul>
+						<li data-i18n="doc.big_map_feature1">Local processing - no images uploaded to servers</li>
+						<li data-i18n="doc.big_map_feature2">Multiple marker types (dot, cross, circle, target, square)</li>
+						<li data-i18n="doc.big_map_feature3">Command interface for batch operations</li>
+						<li data-i18n="doc.big_map_feature4">Project saving/loading using browser storage</li>
+						<li data-i18n="doc.big_map_feature5">Export image with markers overlay</li>
+						<li data-i18n="doc.big_map_feature6">Full undo/redo history</li>
+					</ul>
+					
+					<div class="wts-doc-note">
+						<strong data-i18n="doc.note">Note:</strong>
+						<span data-i18n="doc.big_map_note">
+							All your data remains in your browser. You can download the project to save it permanently.
+						</span>
+					</div>
+				</section>
 				<section id="best-practices">
 					<h2 data-i18n="doc.best_practices">Best Practices</h2>
 					<ul>
@@ -277,17 +316,184 @@
 					<h2 data-i18n="doc.api_reference">API Reference</h2>
 					<p data-i18n="doc.api_desc">Advanced users can extend functionality using our JavaScript API:</p>
 					
-					<h3 data-i18n="doc.core_methods">Core Methods</h3>
-					<dl>
-						<dt><code>WTS.Unit.create(config)</code></dt>
-						<dd data-i18n="doc.method1">Creates a new unit programmatically</dd>
-						
-						<dt><code>WTS.Scenario.validate()</code></dt>
-						<dd data-i18n="doc.method2">Validates current scenario</dd>
-						
-						<dt><code>WTS.exportWML(options)</code></dt>
-						<dd data-i18n="doc.method3">Exports current project to WML</dd>
-					</dl>
+					<h3 data-i18n="doc.api_buttons">Buttons</h3>
+					<p data-i18n="doc.api_buttons_desc">Interactive UI controls available across the application:</p>
+					
+					<h4 data-i18n="doc.dashboard_buttons">Dashboard</h4>
+					<table class="wts-doc-table">
+						<thead>
+							<tr>
+								<th data-i18n="doc.button_id">Button ID</th>
+								<th data-i18n="doc.button_role">Role</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>wts-index-dashboard</td>
+								<td data-i18n="doc.btn_dashboard">Navigates to Dashboard</td>
+							</tr>
+							<tr>
+								<td>wts-index-tools</td>
+								<td data-i18n="doc.btn_tools">Opens Tools dropdown menu</td>
+							</tr>
+							<tr>
+								<td>wts-theme-toggle</td>
+								<td data-i18n="doc.btn_theme">Toggles light/dark theme</td>
+							</tr>
+							<tr>
+								<td>wts-index-languages</td>
+								<td data-i18n="doc.btn_lang">Opens language selection</td>
+							</tr>
+							<tr>
+								<td>wts-install-btn</td>
+								<td data-i18n="doc.btn_install">Installs PWA application</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<h4 data-i18n="doc.unit_editor_buttons">Unit Editor</h4>
+					<table class="wts-doc-table">
+						<thead>
+							<tr>
+								<th data-i18n="doc.button_id">Button ID</th>
+								<th data-i18n="doc.button_role">Role</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>unit-save-btn</td>
+								<td data-i18n="doc.btn_unit_save">Saves current unit</td>
+							</tr>
+							<tr>
+								<td>unit-export-btn</td>
+								<td data-i18n="doc.btn_unit_export">Exports unit to WML</td>
+							</tr>
+							<tr>
+								<td>unit-preview-btn</td>
+								<td data-i18n="doc.btn_unit_preview">Shows unit preview</td>
+							</tr>
+							<tr>
+								<td>unit-reset-btn</td>
+								<td data-i18n="doc.btn_unit_reset">Resets form fields</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<h3 data-i18n="doc.api_functions">Functions</h3>
+					<p data-i18n="doc.api_functions_desc">Core JavaScript functions available for extension:</p>
+					
+					<h4 data-i18n="doc.core_functions">Core API</h4>
+					<table class="wts-doc-table">
+						<thead>
+							<tr>
+								<th data-i18n="doc.function_name">Function</th>
+								<th data-i18n="doc.version">Version</th>
+								<th data-i18n="doc.parameters">Parameters</th>
+								<th data-i18n="doc.returns">Returns</th>
+								<th data-i18n="doc.role">Role</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>WTS.initializeApp()</td>
+								<td>1.2+</td>
+								<td>config: object</td>
+								<td>void</td>
+								<td data-i18n="doc.fn_init">Initializes application</td>
+							</tr>
+							<tr>
+								<td>WTS.changeLanguage(lang)</td>
+								<td>1.0+</td>
+								<td>lang: string</td>
+								<td>void</td>
+								<td data-i18n="doc.fn_lang">Changes UI language</td>
+							</tr>
+							<tr>
+								<td>WTS.toggleTheme()</td>
+								<td>1.1+</td>
+								<td>None</td>
+								<td>void</td>
+								<td data-i18n="doc.fn_theme">Toggles color theme</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<h4 data-i18n="doc.unit_editor_functions">Unit Editor API</h4>
+					<table class="wts-doc-table">
+						<thead>
+							<tr>
+								<th data-i18n="doc.function_name">Function</th>
+								<th data-i18n="doc.version">Version</th>
+								<th data-i18n="doc.parameters">Parameters</th>
+								<th data-i18n="doc.returns">Returns</th>
+								<th data-i18n="doc.role">Role</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>WTS.Unit.create(config)</td>
+								<td>2.0+</td>
+								<td>config: UnitConfig</td>
+								<td>Unit object</td>
+								<td data-i18n="doc.fn_unit_create">Creates new unit</td>
+							</tr>
+							<tr>
+								<td>WTS.Unit.validate(unit)</td>
+								<td>1.5+</td>
+								<td>unit: Unit object</td>
+								<td>ValidationResult</td>
+								<td data-i18n="doc.fn_unit_validate">Validates unit stats</td>
+							</tr>
+							<tr>
+								<td>WTS.Unit.exportToWML(unit)</td>
+								<td>1.8+</td>
+								<td>unit: Unit object</td>
+								<td>string (WML)</td>
+								<td data-i18n="doc.fn_unit_export">Generates WML code</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<h4 data-i18n="doc.scenario_functions">Scenario Builder API</h4>
+					<table class="wts-doc-table">
+						<thead>
+							<tr>
+								<th data-i18n="doc.function_name">Function</th>
+								<th data-i18n="doc.version">Version</th>
+								<th data-i18n="doc.parameters">Parameters</th>
+								<th data-i18n="doc.returns">Returns</th>
+								<th data-i18n="doc.role">Role</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>WTS.Scenario.createMap(config)</td>
+								<td>1.3+</td>
+								<td>config: MapConfig</td>
+								<td>Map object</td>
+								<td data-i18n="doc.fn_scenario_map">Creates new map</td>
+							</tr>
+							<tr>
+								<td>WTS.Scenario.addEvent(scenario, event)</td>
+								<td>2.1+</td>
+								<td>scenario: Scenario, event: Event</td>
+								<td>Scenario</td>
+								<td data-i18n="doc.fn_scenario_event">Adds event to scenario</td>
+							</tr>
+							<tr>
+								<td>WTS.Scenario.validateWML(wml)</td>
+								<td>1.7+</td>
+								<td>wml: string</td>
+								<td>ValidationResult[]</td>
+								<td data-i18n="doc.fn_scenario_validate">Validates WML syntax</td>
+							</tr>
+						</tbody>
+					</table>
+					
+					<div class="wts-doc-note">
+						<strong data-i18n="doc.note">Note:</strong>
+						<span data-i18n="doc.api_note">All API functions require Wesnoth Tools Suite v1.0 or higher. Check console for version compatibility warnings.</span>
+					</div>
 				</section>
 				
 				<section id="faq">

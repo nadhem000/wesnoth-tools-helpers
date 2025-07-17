@@ -9,7 +9,6 @@
 		<script src="../scripts/i18n.js"></script>
 	</head>
 	<body class="wts-index-body">
-		<!-- HEADER MOVED OUTSIDE OF MAIN CONTAINER -->
 		<header class="wts-index-header">
 			<nav class="wts-index-nav">
 				<div>
@@ -22,6 +21,7 @@
 							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
 							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
 							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
+							<a href="ressources/big_map_tracker.html" data-i18n="card.big_map_tracker">Big Map Coordinate Tracker</a>
 							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
 							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
 							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
@@ -32,9 +32,12 @@
 					<button id="wts-index-about" class="wts-index-tooltip" data-i18n="nav.about">About</button>
 				</div>
 				<div class="wts-index-nav-right">
-					<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme">
+					<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme" aria-label="Toggle theme">
 						<svg viewBox="0 0 24 24" width="24" height="24">
-							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/>
+							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z" 
+							fill="none" 
+							stroke="currentColor" 
+							stroke-width="2"/>
 						</svg>
 					</button>
 					<div class="wts-index-dropdown">
@@ -109,8 +112,8 @@
 									<div class="big-map-track-marker-option active" data-type="dot">
 										<div class="big-map-track-dot"></div>
 									</div>
-									<div class="big-map-track-marker-option" data-type="cross">
-										<div class="big-map-track-cross"></div>
+									<div class="big-map-track-marker-option" data-type="square">
+										<div class="big-map-track-square"></div>
 									</div>
 									<div class="big-map-track-marker-option" data-type="circle">
 										<div class="big-map-track-circle"></div>
@@ -118,8 +121,11 @@
 									<div class="big-map-track-marker-option" data-type="target">
 										<div class="big-map-track-target"></div>
 									</div>
-<div class="big-map-track-marker-option" data-type="square">
-    <div class="big-map-track-square"></div>
+<div class="big-map-track-marker-option" data-type="white-dot">
+    <div class="big-map-track-white-dot"></div>
+</div>
+<div class="big-map-track-marker-option" data-type="white-square">
+    <div class="big-map-track-white-square"></div>
 </div>
 								</div>
 							</div>
@@ -257,8 +263,8 @@
 						
 						<div class="big-map-track-command-interface">
 							<textarea id="big-map-track-command-input" class="big-map-track-command-input" 
-							placeholder="Enter commands to place markers (e.g. {new_journey 230 56})&#10;Multiple commands allowed, one per line&#10;&#10;Supported commands:&#10;  {new_journey x y} - Places a dot marker&#10;  {dot x y} - Places a dot marker&#10;  {cross x y} - Places a cross marker&#10;  {circle x y} - Places a circle marker&#10;  {target x y} - Places a target marker"
-							data-i18n-placeholder="big-map-track-command-placeholder"></textarea>
+    placeholder="Enter commands to place markers (e.g. {NEW_JOURNEY 230 56})&#10;Multiple commands allowed, one per line&#10;&#10;Supported commands:&#10;  {NEW_JOURNEY x y} - Red dot (new journey)&#10;  {OLD_JOURNEY x y} - White dot (old journey)&#10;  {NEW_REST x y} - Target (new rest)&#10;  {OLD_REST x y} - Circle (old rest)&#10;  {NEW_BATTLE x y} - Red square (new battle)&#10;  {OLD_BATTLE x y} - White square (old battle)"
+    data-i18n-placeholder="big-map-track-command-placeholder"></textarea>
 							
 							<div class="big-map-track-command-buttons">
 								<button class="big-map-track-btn" id="big-map-track-run-commands-btn">
@@ -281,51 +287,51 @@
 						</div>
 					</div>
 				</div>
-			
-			<!-- Image Container -->
-			<div class="big-map-track-section">
-				<h2 class="big-map-track-section-title">
-					<svg width="30" height="30" viewBox="0 0 24 24" fill="none">
-						<path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z" fill="#4cc9f0"/>
-					</svg>
-					<span data-i18n="big-map-track-image-preview">Image Preview</span>
-				</h2>
 				
-				<div class="big-map-track-image-container" id="big-map-track-image-container">
-					<div class="big-map-track-image-placeholder big-map-track-bounce">
-						<svg width="80" height="80" viewBox="0 0 24 24" fill="none">
-							<path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z" fill="#4361ee"/>
+				<!-- Image Container -->
+				<div class="big-map-track-section">
+					<h2 class="big-map-track-section-title">
+						<svg width="30" height="30" viewBox="0 0 24 24" fill="none">
+							<path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z" fill="#4cc9f0"/>
 						</svg>
-						<h3 data-i18n="big-map-track-upload-prompt">Upload an Image to Get Started</h3>
-						<p data-i18n="big-map-track-upload-instructions">Use the upload button above to select an image</p>
+						<span data-i18n="big-map-track-image-preview">Image Preview</span>
+					</h2>
+					
+					<div class="big-map-track-image-container" id="big-map-track-image-container">
+						<div class="big-map-track-image-placeholder big-map-track-bounce">
+							<svg width="80" height="80" viewBox="0 0 24 24" fill="none">
+								<path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z" fill="#4361ee"/>
+							</svg>
+							<h3 data-i18n="big-map-track-upload-prompt">Upload an Image to Get Started</h3>
+							<p data-i18n="big-map-track-upload-instructions">Use the upload button above to select an image</p>
+						</div>
+					</div>
+				</div>
+				
+				<!-- Coordinate Display -->
+				<div class="big-map-track-coords-display">
+					<div class="big-map-track-coord">
+						<div class="big-map-track-coord-label" data-i18n="big-map-track-x-coord-label">X Coordinate</div>
+						<div id="big-map-track-x-coord" class="big-map-track-coord-value">0</div>
+					</div>
+					<div class="big-map-track-coord">
+						<div class="big-map-track-coord-label" data-i18n="big-map-track-y-coord-label">Y Coordinate</div>
+						<div id="big-map-track-y-coord" class="big-map-track-coord-value">0</div>
 					</div>
 				</div>
 			</div>
 			
-			<!-- Coordinate Display -->
-			<div class="big-map-track-coords-display">
-				<div class="big-map-track-coord">
-					<div class="big-map-track-coord-label" data-i18n="big-map-track-x-coord-label">X Coordinate</div>
-					<div id="big-map-track-x-coord" class="big-map-track-coord-value">0</div>
-				</div>
-				<div class="big-map-track-coord">
-					<div class="big-map-track-coord-label" data-i18n="big-map-track-y-coord-label">Y Coordinate</div>
-					<div id="big-map-track-y-coord" class="big-map-track-coord-value">0</div>
-				</div>
+			<div class="wts-content-container">
+				<footer class="wts-index-footer">
+					<div class="wts-index-footer-links">
+						<a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
+						<a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
+						<a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
+					</div>
+					<span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025</span>
+				</footer>
 			</div>
-		</div>
-		
-		<div class="wts-content-container">
-			<footer class="wts-index-footer">
-				<div class="wts-index-footer-links">
-					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
-					<a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
-					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
-				</div>
-				<span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025</span>
-			</footer>
-		</div>
-		<script src="../scripts/big_map_tracker.js"></script>
-		<script src="../scripts/main.js"></script>
-	</body>
-</html>
+			<script src="../scripts/big_map_tracker.js"></script>
+			<script src="../scripts/main.js"></script>
+		</body>
+	</html>	

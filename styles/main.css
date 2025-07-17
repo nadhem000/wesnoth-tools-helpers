@@ -38,6 +38,7 @@
     --special-card-1: #3470db;
     --special-card-2: #27ae85;
   --special-card-3: #db3434;
+    --special-card-4: #7b2cbf;
 }
 
 [data-theme="dark"] {
@@ -63,6 +64,7 @@
     --text-tertiary: #e0e0e0;
     --special-card-1: #4da8da;
     --special-card-2: #2ecc76;
+    --special-card-4: #9d4edd;
 }
 /* INDEX PAGE STYLES */
 .wts-index-body {
@@ -146,6 +148,9 @@
 }
 .wts-index-card[data-card="gif"] .wts-index-card-header {
   background: var(--special-card-3);
+}
+.wts-index-card[data-card="map_tracker"] .wts-index-card-header {
+    background: var(--special-card-4);
 }
 
 .wts-index-card-icon {
@@ -320,25 +325,29 @@
 
 /* Theme toggle button */
 #wts-theme-toggle {
-    background: none;
-    border: none;
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.25);
     cursor: pointer;
     padding: 8px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
 }
 
 #wts-theme-toggle:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
 }
 
 #wts-theme-toggle svg {
-    fill: var(--header-text);
+    width: 24px;
+    height: 24px;
+    fill: white;
+    stroke: white;
+    stroke-width: 1;
 }
-/* Add this new rule */
 .wts-content-container {
   padding-bottom: 100px; /* Space for footer */
   min-height: 100vh; /* Ensure container fills viewport */
