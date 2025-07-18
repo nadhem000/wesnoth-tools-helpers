@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title data-i18n="comparator_unit.title">Wesnoth Unit Comparator</title>
+		<link rel="stylesheet" href="../styles/main.css">
+		<script src="../scripts/i18n.js"></script>
+		<style>
+			/* Prefixed styles for unit comparator */
+			.comparator-unit-container {
+				max-width: 1200px;
+				margin: 0 auto;
+				padding: 20px;
+			}
+			
+			.comparator-unit-header {
+				text-align: center;
+				padding: 20px 0;
+				margin-bottom: 20px;
+				position: relative;
+			}
+			
+			.comparator-unit-header-decoration {
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 5px;
+				background: linear-gradient(90deg, #ffd700, #ffa500, #ffd700);
+				border-radius: 3px;
+			}
+			
+			.comparator-unit-container h1 {
+				font-size: 2.5rem;
+				margin-bottom: 10px;
+				text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+				color: #ffd700;
+				position: relative;
+				display: inline-block;
+			}
+			
+			.comparator-unit-container h1::after {
+				content: "";
+				position: absolute;
+				bottom: -5px;
+				left: 25%;
+				width: 50%;
+				height: 3px;
+				background: linear-gradient(90deg, transparent, #ffa500, transparent);
+				border-radius: 2px;
+			}
+			
+			.comparator-unit-subtitle {
+				font-size: 1.1rem;
+				opacity: 0.9;
+				max-width: 700px;
+				margin: 15px auto 0;
+				line-height: 1.6;
+				color: #e6d7a8;
+			}
+			
+			.comparator-unit-panel {
+				background: rgba(40, 32, 16, 0.85);
+				border-radius: 12px;
+				padding: 25px;
+				box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+				backdrop-filter: blur(10px);
+				border: 1px solid rgba(255, 215, 0, 0.2);
+				position: relative;
+				overflow: hidden;
+				margin-bottom: 25px;
+			}
+			
+			.comparator-unit-panel::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				height: 4px;
+				background: linear-gradient(90deg, #ffd700, #ffa500, #ffd700);
+			}
+			
+			.comparator-unit-panel-title {
+				font-size: 1.7rem;
+				margin-bottom: 20px;
+				color: #ffd700;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				position: relative;
+				padding-bottom: 10px;
+			}
+			
+			.comparator-unit-panel-title::after {
+				content: "";
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				width: 60px;
+				height: 3px;
+				background: linear-gradient(90deg, #ffa500, transparent);
+				border-radius: 2px;
+			}
+			
+			.comparator-unit-svg-icon {
+				width: 24px;
+				height: 24px;
+				fill: #ffa500;
+			}
+			
+			.comparator-unit-file-upload-area {
+				border: 3px dashed #ffa500;
+				border-radius: 10px;
+				padding: 30px;
+				text-align: center;
+				margin-bottom: 25px;
+				transition: all 0.3s;
+				cursor: pointer;
+				background: rgba(60, 50, 25, 0.3);
+				position: relative;
+			}
+			
+			.comparator-unit-file-upload-area:hover {
+				background: rgba(255, 165, 0, 0.15);
+				border-color: #ffd700;
+			}
+			
+			.comparator-unit-file-upload-area.active {
+				background: rgba(255, 215, 0, 0.1);
+				border-color: #ffd700;
+			}
+			
+			.comparator-unit-upload-icon {
+				width: 60px;
+				height: 60px;
+				margin: 0 auto 15px;
+				fill: #ffa500;
+			}
+			
+			.comparator-unit-file-input {
+				display: none;
+			}
+			
+			.comparator-unit-btn {
+				background: linear-gradient(to right, #ffa500, #ff8c00);
+				color: #2a1f0c;
+				border: none;
+				padding: 12px 25px;
+				border-radius: 50px;
+				font-size: 1.1rem;
+				cursor: pointer;
+				transition: all 0.3s;
+				font-weight: 600;
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+				position: relative;
+				overflow: hidden;
+				z-index: 1;
+			}
+			
+			.comparator-unit-btn::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: linear-gradient(to right, #ffd700, #ffa500);
+				opacity: 0;
+				transition: opacity 0.3s;
+				z-index: -1;
+			}
+			
+			.comparator-unit-btn:hover {
+				transform: translateY(-3px);
+				box-shadow: 0 6px 12px rgba(0,0,0,0.4);
+			}
+			
+			.comparator-unit-btn:hover::before {
+				opacity: 1;
+			}
+			
+			.comparator-unit-btn:active {
+				transform: translateY(1px);
+			}
+			
+			.comparator-unit-btn-secondary {
+				background: linear-gradient(to right, #b8860b, #daa520);
+				color: #f8f4e6;
+			}
+			
+			.comparator-unit-btn-secondary::before {
+				background: linear-gradient(to right, #daa520, #b8860b);
+			}
+			
+			.comparator-unit-btn-warning {
+				background: linear-gradient(to right, #ff8c00, #ff7700);
+			}
+			
+			.comparator-unit-btn-warning::before {
+				background: linear-gradient(to right, #ffa500, #ff8c00);
+			}
+			
+			.comparator-unit-btn-danger {
+				background: linear-gradient(to right, #d9534f, #c9302c);
+			}
+			
+			.comparator-unit-btn-danger::before {
+				background: linear-gradient(to right, #f0ad4e, #d9534f);
+			}
+			
+			.comparator-unit-equation-options {
+				display: grid;
+				grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+				gap: 15px;
+				margin: 20px 0;
+			}
+			
+			.comparator-unit-option-card {
+				background: rgba(60, 50, 25, 0.6);
+				border-radius: 10px;
+				padding: 15px;
+				cursor: pointer;
+				transition: all 0.3s;
+				border: 2px solid transparent;
+				position: relative;
+				overflow: hidden;
+			}
+			
+			.comparator-unit-option-card:hover {
+				background: rgba(80, 65, 30, 0.8);
+				transform: translateY(-3px);
+				box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+			}
+			
+			.comparator-unit-option-card.selected {
+				border-color: #ffa500;
+				background: rgba(80, 65, 30, 0.9);
+				box-shadow: 0 0 15px rgba(255, 165, 0, 0.4);
+			}
+			
+			.comparator-unit-option-card.selected::before {
+				content: "";
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 5px;
+				height: 100%;
+				background: #ffd700;
+			}
+			
+			.comparator-unit-option-card h3 {
+				font-size: 1.2rem;
+				margin-bottom: 8px;
+				color: #ffd700;
+			}
+			
+			.comparator-unit-option-card p {
+				font-size: 0.9rem;
+				opacity: 0.9;
+				color: #e6d7a8;
+			}
+			
+			.comparator-unit-comparison-controls {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 15px;
+				margin: 25px 0;
+			}
+			
+			.comparator-unit-select {
+				background: rgba(50, 40, 20, 0.8);
+				color: #f8f4e6;
+				border: 1px solid #ffa500;
+				border-radius: 6px;
+				padding: 10px 15px;
+				font-size: 1rem;
+				flex: 1;
+				min-width: 200px;
+				box-shadow: inset 0 1px 3px rgba(0,0,0,0.3);
+			}
+			
+			.comparator-unit-select:focus {
+				outline: none;
+				border-color: #ffd700;
+				box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+			}
+			
+			.comparator-unit-console {
+				background: rgba(20, 15, 8, 0.9);
+				border-radius: 8px;
+				padding: 20px;
+				height: 200px;
+				overflow-y: auto;
+				font-family: monospace;
+				font-size: 0.95rem;
+				margin-top: 20px;
+				border: 1px solid #4d3b1a;
+				box-shadow: inset 0 1px 3px rgba(0,0,0,0.5);
+			}
+			
+			.comparator-unit-log-entry {
+				margin-bottom: 10px;
+				padding: 8px;
+				border-radius: 4px;
+				display: flex;
+				align-items: flex-start;
+				gap: 10px;
+			}
+			
+			.comparator-unit-log-entry-icon {
+				flex-shrink: 0;
+				width: 18px;
+				height: 18px;
+				margin-top: 3px;
+			}
+			
+			.comparator-unit-log-entry.info {
+				background: rgba(80, 65, 30, 0.3);
+				border-left: 3px solid #ffa500;
+			}
+			
+			.comparator-unit-log-entry.success {
+				background: rgba(40, 80, 30, 0.3);
+				border-left: 3px solid #66bb6a;
+			}
+			
+			.comparator-unit-log-entry.error {
+				background: rgba(120, 30, 30, 0.3);
+				border-left: 3px solid #f44336;
+			}
+			
+			.comparator-unit-log-entry.warning {
+				background: rgba(120, 80, 30, 0.3);
+				border-left: 3px solid #ff9800;
+			}
+			
+			.comparator-unit-comparison-table {
+				width: 100%;
+				border-collapse: separate;
+				border-spacing: 0;
+				margin-top: 20px;
+				border-radius: 8px;
+				overflow: hidden;
+				box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+			}
+			
+			.comparator-unit-comparison-table th {
+				background: rgba(80, 65, 30, 0.9);
+				padding: 15px;
+				text-align: left;
+				font-weight: 600;
+				color: #ffd700;
+				position: sticky;
+				top: 0;
+			}
+			
+			.comparator-unit-comparison-table td {
+				padding: 12px 15px;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			}
+			
+			.comparator-unit-comparison-table tr:nth-child(even) {
+				background: rgba(60, 50, 25, 0.4);
+			}
+			
+			.comparator-unit-comparison-table tr:hover {
+				background: rgba(100, 80, 40, 0.6);
+			}
+			
+			.comparator-unit-name {
+				font-weight: 600;
+				color: #ffd700;
+			}
+			
+			.comparator-unit-id {
+				font-size: 0.85rem;
+				opacity: 0.8;
+				color: #e6d7a8;
+			}
+			
+			.comparator-unit-stat-value {
+				font-weight: 600;
+				text-align: center;
+				color: #ffd700;
+			}
+			
+			.comparator-unit-image {
+				width: 50px;
+				height: 50px;
+				border-radius: 50%;
+				object-fit: cover;
+				background: #4d3b1a;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 1.5rem;
+				color: #ffa500;
+			}
+			
+			.comparator-unit-file-list {
+				margin-top: 20px;
+			}
+			
+			.comparator-unit-file-item {
+				display: flex;
+				justify-content: space-between;
+				padding: 12px 15px;
+				background: rgba(60, 50, 25, 0.5);
+				border-radius: 8px;
+				margin-bottom: 10px;
+				align-items: center;
+				transition: all 0.3s;
+				border-left: 3px solid transparent;
+			}
+			
+			.comparator-unit-file-item:hover {
+				background: rgba(80, 65, 30, 0.7);
+				transform: translateX(3px);
+			}
+			
+			.comparator-unit-file-name {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+			
+			.comparator-unit-file-actions {
+				display: flex;
+				gap: 8px;
+			}
+			
+			.comparator-unit-remove-btn {
+				background: #d9534f;
+				color: white;
+				border: none;
+				width: 30px;
+				height: 30px;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				cursor: pointer;
+				transition: all 0.2s;
+			}
+			
+			.comparator-unit-remove-btn:hover {
+				background: #c9302c;
+				transform: scale(1.1);
+			}
+			
+			.comparator-unit-comparison-header {
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+				margin-bottom: 20px;
+				padding-bottom: 15px;
+				border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+			}
+			
+			.comparator-unit-sort-indicator {
+				margin-left: 5px;
+				font-size: 0.8em;
+			}
+			
+			.comparator-unit-stat-bar {
+				height: 8px;
+				background: rgba(255, 255, 255, 0.1);
+				border-radius: 4px;
+				margin-top: 5px;
+				overflow: hidden;
+			}
+			
+			.comparator-unit-stat-bar-fill {
+				height: 100%;
+				background: linear-gradient(to right, #ffa500, #ff8c00);
+				border-radius: 4px;
+			}
+			
+			.comparator-unit-damage-cell {
+				display: flex;
+				flex-direction: column;
+			}
+			
+			.comparator-unit-damage-type {
+				font-size: 0.8rem;
+				opacity: 0.8;
+				color: #e6d7a8;
+			}
+			
+			.comparator-unit-empty-state {
+				text-align: center;
+				padding: 40px;
+				opacity: 0.7;
+			}
+			
+			.comparator-unit-empty-state-icon {
+				width: 80px;
+				height: 80px;
+				margin: 0 auto 20px;
+				fill: #ffa500;
+				opacity: 0.6;
+			}
+			
+			.comparator-unit-empty-state h2 {
+				margin-bottom: 15px;
+				color: #ffd700;
+			}
+			
+			/* How to Use Section */
+			.comparator-unit-how-to-use {
+				background: rgba(60, 50, 25, 0.6);
+				border-radius: 8px;
+				padding: 20px;
+				margin-bottom: 25px;
+				border: 1px solid rgba(255, 165, 0, 0.2);
+			}
+			
+			.comparator-unit-how-to-use h2 {
+				font-size: 1.6rem;
+				color: #ffd700;
+				margin-bottom: 15px;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+			}
+			
+			.comparator-unit-how-to-use ol {
+				padding-left: 20px;
+				margin-bottom: 15px;
+			}
+			
+			.comparator-unit-how-to-use li {
+				margin-bottom: 12px;
+				line-height: 1.5;
+				color: #f8f4e6;
+			}
+			
+			.comparator-unit-how-to-use strong {
+				color: #ffd700;
+			}
+			
+			.comparator-unit-how-to-use .note {
+				background: rgba(80, 65, 30, 0.6);
+				border-left: 3px solid #ffa500;
+				padding: 12px;
+				border-radius: 4px;
+				margin-top: 10px;
+				font-size: 0.95rem;
+				color: #e6d7a8;
+			}
+			
+			.comparator-unit-sample-buttons {
+				display: flex;
+				gap: 15px;
+				margin: 15px 0;
+				flex-wrap: wrap;
+			}
+			
+			.comparator-unit-sample-buttons .comparator-unit-btn {
+				flex: 1;
+				min-width: 200px;
+			}
+			
+			/* Collapsible sections */
+			.comparator-unit-collapsible {
+				cursor: pointer;
+				padding: 10px 0;
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			}
+			
+			.comparator-unit-collapsible:hover {
+				color: #ffd700;
+			}
+			
+			.comparator-unit-collapsible-content {
+				max-height: 0;
+				overflow: hidden;
+				transition: max-height 0.3s ease-out;
+			}
+			
+			.comparator-unit-collapsible-content.active {
+				max-height: 1000px;
+			}
+			
+			/* Status indicators */
+			.comparator-unit-status-indicator {
+				display: inline-block;
+				width: 10px;
+				height: 10px;
+				border-radius: 50%;
+				margin-right: 8px;
+			}
+			
+			.comparator-unit-status-good {
+				background-color: #66bb6a;
+			}
+			
+			.comparator-unit-status-warning {
+				background-color: #ff9800;
+			}
+			
+			.comparator-unit-status-error {
+				background-color: #f44336;
+			}
+			
+			.comparator-unit-file-status {
+				font-size: 0.85rem;
+				margin-top: 5px;
+				padding-left: 18px;
+				color: #ff9800;
+			}
+			
+			/* Scrollbar styling */
+			.comparator-unit-container ::-webkit-scrollbar {
+				width: 8px;
+			}
+			
+			.comparator-unit-container ::-webkit-scrollbar-track {
+				background: rgba(40, 32, 16, 0.5);
+				border-radius: 4px;
+			}
+			
+			.comparator-unit-container ::-webkit-scrollbar-thumb {
+				background: linear-gradient(#ffa500, #ff8c00);
+				border-radius: 4px;
+			}
+			
+			.comparator-unit-container ::-webkit-scrollbar-thumb:hover {
+				background: linear-gradient(#ffb732, #ff9a1e);
+			}
+			
+			/* Animation for file upload area */
+			@keyframes comparator-unit-pulse {
+				0% { box-shadow: 0 0 0 0 rgba(255, 165, 0, 0.4); }
+				70% { box-shadow: 0 0 0 10px rgba(255, 165, 0, 0); }
+				100% { box-shadow: 0 0 0 0 rgba(255, 165, 0, 0); }
+			}
+			
+			.comparator-unit-file-upload-area.pulse {
+				animation: comparator-unit-pulse 2s infinite;
+			}
+			
+			/* Footer */
+			.comparator-unit-footer {
+				text-align: center;
+				padding: 20px 0;
+				margin-top: 10px;
+				color: #e6d7a8;
+				font-size: 0.9rem;
+				border-top: 1px solid rgba(255, 215, 0, 0.2);
+			}
+			
+			/* Responsive adjustments */
+			@media (max-width: 768px) {
+				.comparator-unit-comparison-controls {
+					flex-direction: column;
+				}
+				
+				.comparator-unit-select, .comparator-unit-btn {
+					width: 100%;
+					min-width: unset;
+				}
+				
+				.comparator-unit-panel-title {
+					font-size: 1.5rem;
+				}
+				
+				.comparator-unit-container h1 {
+					font-size: 2rem;
+				}
+			}
+		</style>
+	</head>
+	<body class="wts-index-body">
+		<header class="wts-index-header">
+			<nav class="wts-index-nav">
+				<div>
+					<button id="wts-index-dashboard" class="wts-index-tooltip" data-i18n="nav.dashboard">Dashboard</button>
+					<!-- Updated Tools Dropdown -->
+					<div class="wts-index-dropdown">
+						<button id="wts-index-tools" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.tools">Tools</button>
+						<div class="wts-index-dropdown-content">
+							<a href="ressources/events_manager.html" data-i18n="card.events_manager">Events Manager</a>
+							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
+							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
+							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
+							<a href="ressources/big_map_tracker.html" data-i18n="card.big_map_tracker">Big Map Coordinate Tracker</a>
+							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
+							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
+							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
+						</div>
+					</div>
+					<button id="wts-index-community" class="wts-index-tooltip" data-i18n="nav.community">Community</button>
+					<button id="wts-index-documentation" class="wts-index-tooltip" data-i18n="nav.documentation">Documentation</button>
+					<button id="wts-index-about" class="wts-index-tooltip" data-i18n="nav.about">About</button>
+				</div>
+				<div class="wts-index-nav-right">
+					<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme" aria-label="Toggle theme">
+						<svg viewBox="0 0 24 24" width="24" height="24">
+							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z" 
+							fill="none" 
+							stroke="currentColor" 
+							stroke-width="2"/>
+						</svg>
+					</button>
+					<div class="wts-index-dropdown">
+						<button id="wts-index-languages" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.languages">Languages</button>
+						<div class="wts-index-dropdown-content">
+							<a href="#" data-lang="en" data-i18n="lang.en">English</a>
+							<a href="#" data-lang="fr" data-i18n="lang.fr">Français</a>
+							<a href="#" data-lang="de" data-i18n="lang.de">Deutsch</a>
+							<a href="#" data-lang="es" data-i18n="lang.es">Español</a>
+							<a href="#" data-lang="it" data-i18n="lang.it">Italiano</a>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</header>
+		
+		<main class="wts-index-main">
+			<div class="comparator-unit-container">
+				<header class="comparator-unit-header">
+					<div class="comparator-unit-header-decoration"></div>
+					<h1 data-i18n="comparator_unit.title">Wesnoth Unit Comparator</h1>
+					<p class="comparator-unit-subtitle" data-i18n="comparator_unit.subtitle">
+						Upload multiple unit configuration files (.cfg) to analyze and compare stats, abilities, and combat effectiveness. 
+						The parser automatically handles missing attributes with default values.
+					</p>
+				</header>
+				
+				<div class="comparator-unit-panel">
+					<!-- How to Use Section -->
+					<div class="comparator-unit-how-to-use">
+						<h2 data-i18n="comparator_unit.how_to_use">How to Use</h2>
+						<ol>
+							<li><strong data-i18n="comparator_unit.step1">Upload unit files</strong>: <span data-i18n="comparator_unit.step1_desc">Drag & drop your .cfg files or click "Browse Files" to add units for comparison.</span></li>
+							<li><strong data-i18n="comparator_unit.step2">Load sample units</strong>: <span data-i18n="comparator_unit.step2_desc">Use the buttons below to load or remove sample units to see how the tool works.</span></li>
+							<li><strong data-i18n="comparator_unit.step3">Select a metric</strong>: <span data-i18n="comparator_unit.step3_desc">Choose the calculation method for unit effectiveness from the options.</span></li>
+							<li><strong data-i18n="comparator_unit.step4">Adjust settings</strong>: <span data-i18n="comparator_unit.step4_desc">Sort units by different attributes or filter by faction.</span></li>
+							<li><strong data-i18n="comparator_unit.step5">Compare units</strong>: <span data-i18n="comparator_unit.step5_desc">Click "Compare Units" to analyze and visualize unit performance.</span></li>
+							<li><strong data-i18n="comparator_unit.step6">Review results</strong>: <span data-i18n="comparator_unit.step6_desc">Examine the comparison table to see detailed stats and effectiveness metrics.</span></li>
+						</ol>
+						<div class="note">
+							<strong data-i18n="comparator_unit.tip">Tip</strong>: <span data-i18n="comparator_unit.tip_desc">The parser automatically handles missing attributes and provides default values for incomplete unit definitions.</span>
+						</div>
+					</div>
+					
+					<h2 class="comparator-unit-panel-title" data-i18n="comparator_unit.upload_title">Upload Units</h2>
+					
+					<div class="comparator-unit-file-upload-area" id="comparator-unit-drop-area">
+						<svg class="comparator-unit-upload-icon" viewBox="0 0 24 24">
+							<path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
+						</svg>
+						<h3 data-i18n="comparator_unit.upload_header">Upload Unit Configuration Files</h3>
+						<p data-i18n="comparator_unit.upload_desc1">Drag & drop your .cfg files here or click to browse</p>
+						<p data-i18n="comparator_unit.upload_desc2">(Multiple files supported)</p>
+						<input type="file" id="comparator-unit-file-input" class="comparator-unit-file-input" accept=".cfg" multiple>
+						<button class="comparator-unit-btn" id="comparator-unit-browse-btn" data-i18n="comparator_unit.browse_button">
+							Browse Files
+						</button>
+					</div>
+					
+					<div class="comparator-unit-sample-buttons">
+						<button class="comparator-unit-btn comparator-unit-btn-warning" id="comparator-unit-load-samples-btn" data-i18n="comparator_unit.load_samples">
+							Load Sample Units
+						</button>
+						<button class="comparator-unit-btn comparator-unit-btn-danger" id="comparator-unit-remove-samples-btn" data-i18n="comparator_unit.remove_all">
+							Remove All Units
+						</button>
+					</div>
+					
+					<div class="comparator-unit-file-list" id="comparator-unit-file-list">
+						<p data-i18n="comparator_unit.no_files">No files uploaded yet</p>
+					</div>
+					
+					<h2 class="comparator-unit-panel-title" data-i18n="comparator_unit.metrics_title">Comparison Metrics</h2>
+					
+					<div class="comparator-unit-equation-options">
+						<div class="comparator-unit-option-card selected" data-equation="damagePerCost">
+							<h3 data-i18n="comparator_unit.metric1_title">Damage per Cost</h3>
+							<p data-i18n="comparator_unit.metric1_formula">(Total Damage × Attacks) / Cost</p>
+						</div>
+						<div class="comparator-unit-option-card" data-equation="hpPerCost">
+							<h3 data-i18n="comparator_unit.metric2_title">HP per Cost</h3>
+							<p data-i18n="comparator_unit.metric2_formula">Hitpoints / Unit Cost</p>
+						</div>
+						<div class="comparator-unit-option-card" data-equation="totalDamage">
+							<h3 data-i18n="comparator_unit.metric3_title">Total Damage Output</h3>
+							<p data-i18n="comparator_unit.metric3_formula">Damage × Attacks (all weapons)</p>
+						</div>
+						<div class="comparator-unit-option-card" data-equation="efficiency">
+							<h3 data-i18n="comparator_unit.metric4_title">Combat Efficiency</h3>
+							<p data-i18n="comparator_unit.metric4_formula">(HP × Avg. Damage) / Cost</p>
+						</div>
+						<div class="comparator-unit-option-card" data-equation="meleeEffectiveness">
+							<h3 data-i18n="comparator_unit.metric5_title">Melee Effectiveness</h3>
+							<p data-i18n="comparator_unit.metric5_formula">(Melee Damage × Attacks) × Movement</p>
+						</div>
+						<div class="comparator-unit-option-card" data-equation="rangedEffectiveness">
+							<h3 data-i18n="comparator_unit.metric6_title">Ranged Effectiveness</h3>
+							<p data-i18n="comparator_unit.metric6_formula">(Ranged Damage × Attacks) × Movement</p>
+						</div>
+					</div>
+					
+					<div class="comparator-unit-comparison-controls">
+						<select id="comparator-unit-sort-by" class="comparator-unit-select">
+							<option value="name" data-i18n="comparator_unit.sort_name">Sort by: Name</option>
+							<option value="cost" data-i18n="comparator_unit.sort_cost">Sort by: Cost</option>
+							<option value="hp" data-i18n="comparator_unit.sort_hp">Sort by: Hitpoints</option>
+							<option value="movement" data-i18n="comparator_unit.sort_movement">Sort by: Movement</option>
+							<option value="damage" data-i18n="comparator_unit.sort_damage">Sort by: Damage</option>
+							<option value="level" data-i18n="comparator_unit.sort_level">Sort by: Level</option>
+							<option value="metric" data-i18n="comparator_unit.sort_metric">Sort by: Metric</option>
+						</select>
+						
+						<select id="comparator-unit-filter-faction" class="comparator-unit-select">
+							<option value="all" data-i18n="comparator_unit.filter_all">All Factions</option>
+							<option value="elf" data-i18n="comparator_unit.filter_elf">Elves</option>
+							<option value="dwarf" data-i18n="comparator_unit.filter_dwarf">Dwarves</option>
+							<option value="human" data-i18n="comparator_unit.filter_human">Humans</option>
+							<option value="orc" data-i18n="comparator_unit.filter_orc">Orcs</option>
+							<option value="unknown" data-i18n="comparator_unit.filter_unknown">Unknown Race</option>
+						</select>
+						
+						<button class="comparator-unit-btn comparator-unit-btn-secondary" id="comparator-unit-compare-btn" data-i18n="comparator_unit.compare_button">
+							Compare Units
+						</button>
+					</div>
+					
+					<h2 class="comparator-unit-panel-title" data-i18n="comparator_unit.log_title">Processing Log</h2>
+					<div class="comparator-unit-console" id="comparator-unit-console">
+						<div class="comparator-unit-log-entry info">
+							<svg class="comparator-unit-log-entry-icon" viewBox="0 0 24 24">
+								<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+							</svg>
+							<div data-i18n="comparator_unit.log_ready">Ready to process unit configuration files</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="comparator-unit-panel">
+					<div class="comparator-unit-comparison-header">
+						<h2 class="comparator-unit-panel-title" data-i18n="comparator_unit.results_title">Unit Comparison</h2>
+						<div id="comparator-unit-current-metric" data-i18n="comparator_unit.current_metric">Current Metric: Damage per Cost</div>
+					</div>
+					
+					<div id="comparator-unit-results-area">
+						<div class="comparator-unit-empty-state">
+							<svg class="comparator-unit-empty-state-icon" viewBox="0 0 24 24">
+								<path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+							</svg>
+							<h2 data-i18n="comparator_unit.empty_title">No Units Loaded</h2>
+							<p data-i18n="comparator_unit.empty_desc">Upload .cfg files to begin comparison</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
+		
+		<div class="wts-content-container">
+			<footer class="wts-index-footer">
+				<div class="wts-index-footer-links">
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
+					<a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
+				</div>
+				<span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025 | Created for Battle for Wesnoth developers</span>
+				<button id="wts-install-btn" class="wts-index-tooltip" data-i18n="install.button" style="display:none">Install App</button>
+			</footer>
+		</div>
+		
+		<script src="../scripts/main.js"></script>
+		<script>
+			// Sample data for demonstration
+			const sampleUnits = [
+				{
+					id: "Elvish_Archer",
+					name: "Elvish Archer",
+					race: "elf",
+					level: 1,
+					cost: 17,
+					hitpoints: 29,
+					movement: 6,
+					attacks: [
+						{ name: "sword", type: "blade", range: "melee", damage: 5, number: 2 },
+						{ name: "bow", type: "pierce", range: "ranged", damage: 5, number: 4 }
+					],
+					description: "As primarily foragers and hunters, most elves learn to become proficient archers from a young age...",
+					image: "archer.png",
+					status: "complete"
+				},
+				{
+					id: "Elvish_Avenger",
+					name: "Elvish Avenger",
+					race: "elf",
+					level: 3,
+					cost: 66,
+					hitpoints: 59,
+					movement: 6,
+					attacks: [
+						{ name: "sword", type: "blade", range: "melee", damage: 8, number: 4 },
+						{ name: "bow", type: "pierce", range: "ranged", damage: 11, number: 4 }
+					],
+					description: "The curious name of the Elvish 'Avengers' comes from a tactic often employed by these master rangers...",
+					image: "avenger.png",
+					status: "complete"
+				},
+				{
+					id: "Dwarvish_Lord",
+					name: "Dwarvish Lord",
+					race: "dwarf",
+					level: 3,
+					cost: 69,
+					hitpoints: 74,
+					movement: 4,
+					attacks: [
+						{ name: "battle axe", type: "blade", range: "melee", damage: 15, number: 3 },
+						{ name: "hammer", type: "impact", range: "melee", damage: 19, number: 2 },
+						{ name: "hatchet", type: "blade", range: "ranged", damage: 10, number: 1 }
+					],
+					description: "Clad in shining armor, these dwarves look like kings from under the mountains...",
+					image: "lord.png",
+					status: "complete"
+				},
+				{
+					id: "Elvish_Ranger",
+					name: "Elvish Ranger",
+					race: "elf",
+					level: 2,
+					cost: 31,
+					hitpoints: 42,
+					movement: 6,
+					attacks: [
+						{ name: "sword", type: "blade", range: "melee", damage: 7, number: 3 },
+						{ name: "bow", type: "pierce", range: "ranged", damage: 7, number: 4 }
+					],
+					description: "The silent watchers of the forests, Elvish rangers are masters of stealth and reconnaissance...",
+					image: "ranger.png",
+					status: "complete"
+				},
+				{
+					id: "Dwarvish_Steelclad",
+					name: "Dwarvish Steelclad",
+					race: "dwarf",
+					level: 2,
+					cost: 36,
+					hitpoints: 57,
+					movement: 4,
+					attacks: [
+						{ name: "battle axe", type: "blade", range: "melee", damage: 11, number: 3 },
+						{ name: "hammer", type: "impact", range: "melee", damage: 14, number: 2 }
+					],
+					description: "Outfitted in the strongest plate and mail of Knalgan forges, the Steelclads are the vanguard of dwarvish armies...",
+					image: "steelclad.png",
+					status: "complete"
+				},
+				{
+					id: "Incomplete_Warrior",
+					name: "Incomplete Warrior",
+					race: "unknown",
+					level: 1,
+					cost: 10,
+					hitpoints: 20,
+					movement: 5,
+					attacks: [
+						{ name: "fist", type: "impact", range: "melee", damage: 3, number: 1 }
+					],
+					description: "This unit has some missing attributes that were filled with default values",
+					status: "incomplete"
+				}
+			];
+
+			// Current state
+			let units = [];
+			let selectedEquation = "damagePerCost";
+			let sortBy = "name";
+			let filterFaction = "all";
+			
+			// DOM Elements
+			const fileInput = document.getElementById('comparator-unit-file-input');
+			const browseBtn = document.getElementById('comparator-unit-browse-btn');
+			const dropArea = document.getElementById('comparator-unit-drop-area');
+			const fileList = document.getElementById('comparator-unit-file-list');
+			const compareBtn = document.getElementById('comparator-unit-compare-btn');
+			const consoleElement = document.getElementById('comparator-unit-console');
+			const resultsArea = document.getElementById('comparator-unit-results-area');
+			const sortSelect = document.getElementById('comparator-unit-sort-by');
+			const factionSelect = document.getElementById('comparator-unit-filter-faction');
+			const equationOptions = document.querySelectorAll('.comparator-unit-option-card');
+			const currentMetric = document.getElementById('comparator-unit-current-metric');
+			const loadSamplesBtn = document.getElementById('comparator-unit-load-samples-btn');
+			const removeSamplesBtn = document.getElementById('comparator-unit-remove-samples-btn');
+			
+			// Initialize
+			function init() {
+				// Add event listeners
+				browseBtn.addEventListener('click', () => fileInput.click());
+				fileInput.addEventListener('change', handleFileSelect);
+				
+				dropArea.addEventListener('dragover', (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					dropArea.classList.add('active');
+					dropArea.classList.add('pulse');
+				});
+				
+				dropArea.addEventListener('dragleave', () => {
+					dropArea.classList.remove('active');
+					dropArea.classList.remove('pulse');
+				});
+				
+				dropArea.addEventListener('drop', (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					dropArea.classList.remove('active');
+					dropArea.classList.remove('pulse');
+					
+					const files = e.dataTransfer.files;
+					handleFiles(files);
+				});
+				
+				compareBtn.addEventListener('click', compareUnits);
+				sortSelect.addEventListener('change', () => {
+					sortBy = sortSelect.value;
+					renderComparisonTable();
+				});
+				factionSelect.addEventListener('change', () => {
+					filterFaction = factionSelect.value;
+					renderComparisonTable();
+				});
+				
+				equationOptions.forEach(option => {
+					option.addEventListener('click', () => {
+						equationOptions.forEach(opt => opt.classList.remove('selected'));
+						option.classList.add('selected');
+						selectedEquation = option.dataset.equation;
+						currentMetric.textContent = `${i18n.t('comparator_unit.current_metric')}: ${option.querySelector('h3').textContent}`;
+						renderComparisonTable();
+					});
+				});
+				
+				// Add event listeners for sample buttons
+				loadSamplesBtn.addEventListener('click', loadSampleUnits);
+				removeSamplesBtn.addEventListener('click', removeAllUnits);
+				
+				// Log initialization
+				logToConsole(i18n.t('comparator_unit.log_initialized'), "info");
+			}
+			
+			// Load sample units
+			function loadSampleUnits() {
+				if (units.length > 0) {
+					logToConsole(i18n.t('comparator_unit.log_samples_exists'), "error");
+					return;
+				}
+				
+				units = [...sampleUnits];
+				updateFileList();
+				renderComparisonTable();
+				logToConsole(i18n.t('comparator_unit.log_samples_loaded'), "success");
+				logToConsole(i18n.t('comparator_unit.log_incomplete_warning'), "warning");
+				logToConsole(i18n.t('comparator_unit.log_compare_hint'), "info");
+			}
+			
+			// Remove all units
+			function removeAllUnits() {
+				if (units.length === 0) {
+					logToConsole(i18n.t('comparator_unit.log_nothing_to_remove'), "info");
+					return;
+				}
+				
+				units = [];
+				updateFileList();
+				renderComparisonTable();
+				logToConsole(i18n.t('comparator_unit.log_all_removed'), "success");
+			}
+			
+			// Handle file selection
+			function handleFileSelect(e) {
+				const files = e.target.files;
+				handleFiles(files);
+			}
+			
+			// Process uploaded files
+			function handleFiles(files) {
+				if (!files.length) return;
+				
+				for (let i = 0; i < files.length; i++) {
+					const file = files[i];
+					if (file.name.endsWith('.cfg')) {
+						processFile(file);
+					} else {
+						logToConsole(`${i18n.t('comparator_unit.log_skipped_file')} ${file.name}: ${i18n.t('comparator_unit.log_invalid_format')}`, "error");
+					}
+				}
+			}
+			
+			// Robust WML parser with error handling
+			function parseUnitFromWML(content, filename) {
+				try {
+					const unit = {
+						id: "",
+						name: "",
+						race: "unknown",
+						level: 1,
+						cost: 0,
+						hitpoints: 1,
+						movement: 3,
+						attacks: [],
+						status: "complete",
+						warnings: []
+					};
+
+					// Extract ID
+					const idMatch = content.match(/id\s*=\s*"([^"]+)"/);
+					if (idMatch) {
+						unit.id = idMatch[1].replace(/\s+/g, '_');
+					} else {
+						// Generate ID from filename if missing
+						unit.id = filename.replace('.cfg', '').replace(/\s+/g, '_');
+						unit.warnings.push(i18n.t('comparator_unit.parse_id_warning'));
+					}
+					
+					// Extract name
+					const nameMatch = content.match(/name\s*=\s*_?\s*"([^"]+)"/);
+					if (nameMatch) {
+						unit.name = nameMatch[1];
+					} else {
+						unit.name = unit.id.replace(/_/g, ' ');
+						unit.warnings.push(i18n.t('comparator_unit.parse_name_warning'));
+					}
+
+					// Extract race
+					const raceMatch = content.match(/race\s*=\s*"([^"]+)"/);
+					if (raceMatch) {
+						unit.race = raceMatch[1];
+					} else {
+						unit.warnings.push(i18n.t('comparator_unit.parse_race_warning'));
+					}
+
+					// Extract numeric values with fallbacks
+					unit.level = extractNumber(content, "level", 1);
+					unit.cost = extractNumber(content, "cost", 0);
+					unit.hitpoints = extractNumber(content, "hitpoints", 1);
+					unit.movement = extractNumber(content, "movement", 3);
+
+					// Validate critical values
+					if (unit.hitpoints <= 0) {
+						unit.hitpoints = 1;
+						unit.warnings.push(i18n.t('comparator_unit.parse_hp_warning'));
+					}
+					if (unit.movement <= 0) {
+						unit.movement = 3;
+						unit.warnings.push(i18n.t('comparator_unit.parse_move_warning'));
+					}
+
+					// Extract attacks
+					const attackBlocks = content.match(/\[attack\][\s\S]*?\[\/attack\]/g) || [];
+					attackBlocks.forEach(block => {
+						try {
+							const attack = {
+								name: extractString(block, "name", "unknown"),
+								type: extractString(block, "type", "impact"),
+								range: extractString(block, "range", "melee"),
+								damage: extractNumber(block, "damage", 0),
+								number: extractNumber(block, "number", 0)
+							};
+							
+							// Validate attack
+							if (attack.damage <= 0) {
+								attack.damage = 1;
+								unit.warnings.push(`${i18n.t('comparator_unit.parse_attack_damage')} ${attack.name}`);
+							}
+							if (attack.number <= 0) {
+								attack.number = 1;
+								unit.warnings.push(`${i18n.t('comparator_unit.parse_attack_number')} ${attack.name}`);
+							}
+							
+							if (attack.damage > 0 && attack.number > 0) {
+								unit.attacks.push(attack);
+							}
+						} catch (e) {
+							unit.warnings.push(`${i18n.t('comparator_unit.parse_attack_error')}: ${e.message}`);
+						}
+					});
+
+					// Add default attack if none found
+					if (unit.attacks.length === 0) {
+						unit.attacks.push({
+							name: "fist",
+							type: "impact",
+							range: "melee",
+							damage: 1,
+							number: 1
+						});
+						unit.warnings.push(i18n.t('comparator_unit.parse_default_attack'));
+					}
+
+					// Mark as incomplete if any warnings
+					if (unit.warnings.length > 0) {
+						unit.status = "incomplete";
+					}
+
+					return unit;
+				} catch (e) {
+					logToConsole(`${i18n.t('comparator_unit.parse_error')} ${filename}: ${e.message}`, "error");
+					return null;
+				}
+			}
+
+			function extractNumber(text, key, defaultValue) {
+				const match = text.match(new RegExp(`${key}\\s*=\\s*(\\d+)`));
+				return match ? parseInt(match[1], 10) : defaultValue;
+			}
+
+			function extractString(text, key, defaultValue) {
+				const match = text.match(new RegExp(`${key}\\s*=\\s*"([^"]*)"`));
+				return match ? match[1] : defaultValue;
+			}
+
+			// Process a single file
+			function processFile(file) {
+				logToConsole(`${i18n.t('comparator_unit.processing_file')}: ${file.name}`, "info");
+				
+				const reader = new FileReader();
+				reader.onload = (e) => {
+					try {
+						const content = e.target.result;
+						const unit = parseUnitFromWML(content, file.name);
+						
+						if (unit) {
+							// Check if unit already exists
+							if (units.some(u => u.id === unit.id)) {
+								logToConsole(`${i18n.t('comparator_unit.unit_exists')} ${unit.name}`, "error");
+							} else {
+								units.push(unit);
+								logToConsole(`${i18n.t('comparator_unit.unit_added')}: ${unit.name} (${unit.id})`, "success");
+								
+								// Log any warnings from parsing
+								if (unit.warnings.length > 0) {
+									logToConsole(`${i18n.t('comparator_unit.unit_warnings')} ${unit.warnings.length}:`, "warning");
+									unit.warnings.forEach(warning => {
+										logToConsole(`- ${warning}`, "warning");
+									});
+								}
+							}
+						} else {
+							logToConsole(`${i18n.t('comparator_unit.parse_failed')}: ${file.name}`, "error");
+						}
+						
+						updateFileList();
+						renderComparisonTable();
+					} catch (error) {
+						logToConsole(`${i18n.t('comparator_unit.processing_error')} ${file.name}: ${error.message}`, "error");
+					}
+				};
+				reader.onerror = () => {
+					logToConsole(`${i18n.t('comparator_unit.read_error')}: ${file.name}`, "error");
+				};
+				reader.readAsText(file);
+			}
+
+			// Update file list display
+			function updateFileList() {
+				fileList.innerHTML = '';
+				
+				if (units.length === 0) {
+					fileList.innerHTML = `<p>${i18n.t('comparator_unit.no_files')}</p>`;
+					return;
+				}
+				
+				units.forEach(unit => {
+					const fileItem = document.createElement('div');
+					fileItem.className = 'comparator-unit-file-item';
+					
+					const statusClass = unit.status === "complete" ? "comparator-unit-status-good" : 
+									unit.status === "incomplete" ? "comparator-unit-status-warning" : "comparator-unit-status-error";
+					
+					fileItem.innerHTML = `
+						<div class="comparator-unit-file-name">
+							<span class="comparator-unit-status-indicator ${statusClass}"></span>
+							${unit.id}.cfg
+						</div>
+						<div class="comparator-unit-file-actions">
+							<div class="comparator-unit-remove-btn" data-id="${unit.id}">
+								<svg width="12" height="12" viewBox="0 0 24 24">
+									<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="white"/>
+								</svg>
+							</div>
+						</div>
+					`;
+					
+					if (unit.warnings.length > 0) {
+						const warningText = document.createElement('div');
+						warningText.className = 'comparator-unit-file-status';
+						warningText.innerHTML = `${unit.warnings.length} ${i18n.t('comparator_unit.unit_issues')}`;
+						fileItem.appendChild(warningText);
+					}
+					
+					fileList.appendChild(fileItem);
+				});
+				
+				// Add remove event listeners
+				document.querySelectorAll('.comparator-unit-remove-btn').forEach(btn => {
+					btn.addEventListener('click', (e) => {
+						const id = e.currentTarget.dataset.id;
+						removeUnit(id);
+					});
+				});
+			}
+			
+			// Remove a unit
+			function removeUnit(id) {
+				const unit = units.find(u => u.id === id);
+				units = units.filter(unit => unit.id !== id);
+				updateFileList();
+				renderComparisonTable();
+				logToConsole(`${i18n.t('comparator_unit.unit_removed')}: ${unit ? unit.name : id}`, "info");
+			}
+			
+			// Compare units based on selected equation
+			function compareUnits() {
+				if (units.length === 0) {
+					logToConsole(i18n.t('comparator_unit.error_no_units'), "error");
+					return;
+				}
+				
+				if (units.length === 1) {
+					logToConsole(i18n.t('comparator_unit.error_one_unit'), "error");
+					return;
+				}
+				
+				logToConsole(i18n.t('comparator_unit.comparing_units'), "info");
+				renderComparisonTable();
+			}
+			
+			// Calculate metric based on selected equation
+			function calculateMetric(unit) {
+				switch(selectedEquation) {
+					case "damagePerCost":
+						const totalDamage = unit.attacks.reduce((sum, attack) => sum + (attack.damage * attack.number), 0);
+						return unit.cost > 0 ? (totalDamage / unit.cost).toFixed(2) : 0;
+						
+					case "hpPerCost":
+						return unit.cost > 0 ? (unit.hitpoints / unit.cost).toFixed(2) : 0;
+						
+					case "totalDamage":
+						return unit.attacks.reduce((sum, attack) => sum + (attack.damage * attack.number), 0);
+						
+					case "efficiency":
+						const avgDamage = unit.attacks.reduce((sum, attack) => sum + attack.damage, 0) / unit.attacks.length;
+						return unit.cost > 0 ? ((unit.hitpoints * avgDamage) / unit.cost).toFixed(2) : 0;
+						
+					case "meleeEffectiveness":
+						const meleeAttacks = unit.attacks.filter(a => a.range === "melee");
+						const meleeDamage = meleeAttacks.reduce((sum, attack) => sum + (attack.damage * attack.number), 0);
+						return (meleeDamage * unit.movement).toFixed(1);
+						
+					case "rangedEffectiveness":
+						const rangedAttacks = unit.attacks.filter(a => a.range === "ranged");
+						const rangedDamage = rangedAttacks.reduce((sum, attack) => sum + (attack.damage * attack.number), 0);
+						return (rangedDamage * unit.movement).toFixed(1);
+						
+					default:
+						return 0;
+				}
+			}
+			
+			// Render comparison table
+			function renderComparisonTable() {
+				if (units.length === 0) {
+					resultsArea.innerHTML = `
+						<div class="comparator-unit-empty-state">
+							<svg class="comparator-unit-empty-state-icon" viewBox="0 0 24 24">
+								<path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+							</svg>
+							<h2>${i18n.t('comparator_unit.empty_title')}</h2>
+							<p>${i18n.t('comparator_unit.empty_desc')}</p>
+						</div>
+					`;
+					return;
+				}
+				
+				// Filter units by faction
+				let filteredUnits = [...units];
+				if (filterFaction !== "all") {
+					filteredUnits = filteredUnits.filter(unit => 
+						filterFaction === "unknown" ? unit.race === "unknown" : unit.race === filterFaction
+					);
+				}
+				
+				if (filteredUnits.length === 0) {
+					resultsArea.innerHTML = `
+						<div class="comparator-unit-empty-state">
+							<svg class="comparator-unit-empty-state-icon" viewBox="0 0 24 24">
+								<path d="M10 18h5V5h-5v13zm-6 0h5V5H4v13zM16 5v13h5V5h-5z"/>
+							</svg>
+							<h2>${i18n.t('comparator_unit.filter_empty_title')}</h2>
+							<p>${i18n.t('comparator_unit.filter_empty_desc')}</p>
+						</div>
+					`;
+					return;
+				}
+				
+				// Sort units
+				filteredUnits.sort((a, b) => {
+					switch(sortBy) {
+						case "name": return a.name.localeCompare(b.name);
+						case "cost": return a.cost - b.cost;
+						case "hp": return b.hitpoints - a.hitpoints;
+						case "movement": return b.movement - a.movement;
+						case "damage": 
+							const aDamage = a.attacks.reduce((sum, atk) => sum + (atk.damage * atk.number), 0);
+							const bDamage = b.attacks.reduce((sum, atk) => sum + (atk.damage * atk.number), 0);
+							return bDamage - aDamage;
+						case "level": return b.level - a.level;
+						case "metric": 
+							const aMetric = parseFloat(calculateMetric(a));
+							const bMetric = parseFloat(calculateMetric(b));
+							return bMetric - aMetric;
+						default: return 0;
+					}
+				});
+				
+				// Find max values for scaling
+				const maxCost = Math.max(...filteredUnits.map(u => u.cost), 1);
+				const maxHP = Math.max(...filteredUnits.map(u => u.hitpoints), 1);
+				const maxMovement = Math.max(...filteredUnits.map(u => u.movement), 1);
+				const maxDamage = Math.max(...filteredUnits.map(u => 
+					u.attacks.reduce((sum, atk) => sum + (atk.damage * atk.number), 0)
+				), 1);
+				
+				// Generate table HTML
+				let tableHTML = `
+					<table class="comparator-unit-comparison-table">
+						<thead>
+							<tr>
+								<th>${i18n.t('comparator_unit.table_unit')}</th>
+								<th>${i18n.t('comparator_unit.table_level')} ${sortBy === 'level' ? '▼' : ''}</th>
+								<th>${i18n.t('comparator_unit.table_cost')} ${sortBy === 'cost' ? '▼' : ''}</th>
+								<th>${i18n.t('comparator_unit.table_hp')} ${sortBy === 'hp' ? '▼' : ''}</th>
+								<th>${i18n.t('comparator_unit.table_move')} ${sortBy === 'movement' ? '▼' : ''}</th>
+								<th>${i18n.t('comparator_unit.table_attacks')}</th>
+								<th>${document.querySelector('.comparator-unit-option-card.selected h3').textContent}</th>
+							</tr>
+						</thead>
+						<tbody>
+				`;
+				
+				filteredUnits.forEach(unit => {
+					const totalDamage = unit.attacks.reduce((sum, atk) => sum + (atk.damage * atk.number), 0);
+					const metricValue = calculateMetric(unit);
+					const statusClass = unit.status === "complete" ? "" : "incomplete-unit";
+					
+					tableHTML += `
+						<tr class="${statusClass}">
+							<td>
+								<div class="comparator-unit-name">${unit.name}</div>
+								<div class="comparator-unit-id">${unit.id}</div>
+								${unit.status !== "complete" ? 
+									`<div class="comparator-unit-unit-status">⚠️ ${i18n.t('comparator_unit.table_incomplete')}</div>` : ''}
+							</td>
+							<td class="comparator-unit-stat-value">${unit.level}</td>
+							<td>
+								<div class="comparator-unit-stat-value">${unit.cost}</div>
+								<div class="comparator-unit-stat-bar">
+									<div class="comparator-unit-stat-bar-fill" style="width: ${(unit.cost / maxCost) * 100}%"></div>
+								</div>
+							</td>
+							<td>
+								<div class="comparator-unit-stat-value">${unit.hitpoints}</div>
+								<div class="comparator-unit-stat-bar">
+									<div class="comparator-unit-stat-bar-fill" style="width: ${(unit.hitpoints / maxHP) * 100}%"></div>
+								</div>
+							</td>
+							<td>
+								<div class="comparator-unit-stat-value">${unit.movement}</div>
+								<div class="comparator-unit-stat-bar">
+									<div class="comparator-unit-stat-bar-fill" style="width: ${(unit.movement / maxMovement) * 100}%"></div>
+								</div>
+							</td>
+							<td>
+								${unit.attacks.map(atk => `
+									<div class="comparator-unit-damage-cell">
+										<div>${atk.damage} × ${atk.number}</div>
+										<div class="comparator-unit-damage-type">${atk.name} (${atk.range})</div>
+									</div>
+								`).join('')}
+							</td>
+							<td class="comparator-unit-stat-value">${metricValue}</td>
+						</tr>
+					`;
+				});
+				
+				tableHTML += `
+						</tbody>
+					</table>
+				`;
+				
+				resultsArea.innerHTML = tableHTML;
+				
+				// Add status styling for incomplete units
+				const style = document.createElement('style');
+				style.innerHTML = `
+					.incomplete-unit {
+						position: relative;
+					}
+					.incomplete-unit::after {
+						content: "";
+						position: absolute;
+						top: 0;
+						left: 0;
+						right: 0;
+						bottom: 0;
+						background: repeating-linear-gradient(
+							45deg,
+							rgba(255, 152, 0, 0.05),
+							rgba(255, 152, 0, 0.05) 10px,
+							rgba(255, 152, 0, 0.1) 10px,
+							rgba(255, 152, 0, 0.1) 20px
+						);
+						pointer-events: none;
+						z-index: 1;
+					}
+					.comparator-unit-unit-status {
+						font-size: 0.8rem;
+						color: #ff9800;
+						margin-top: 5px;
+						display: flex;
+						align-items: center;
+						gap: 5px;
+					}
+				`;
+				resultsArea.appendChild(style);
+			}
+			
+			// Log messages to console
+			function logToConsole(message, type = "info") {
+				let iconPath = '';
+				
+				switch(type) {
+					case "error":
+						iconPath = '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/>';
+						break;
+					case "success":
+						iconPath = '<path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>';
+						break;
+					case "warning":
+						iconPath = '<path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"/>';
+						break;
+					default: // info
+						iconPath = '<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>';
+				}
+				
+				const entry = document.createElement('div');
+				entry.className = `comparator-unit-log-entry ${type}`;
+				entry.innerHTML = `
+					<svg class="comparator-unit-log-entry-icon" viewBox="0 0 24 24">
+						${iconPath}
+					</svg>
+					<div>${message}</div>
+				`;
+				
+				consoleElement.appendChild(entry);
+				consoleElement.scrollTop = consoleElement.scrollHeight;
+			}
+			
+			// Initialize the application
+			init();
+		</script>
+	</body>
+</html>
