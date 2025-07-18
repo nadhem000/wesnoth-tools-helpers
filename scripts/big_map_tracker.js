@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', () => {
 		if (historyStack.length === 0) {
 			const noHistory = document.createElement('div');
 			noHistory.className = 'big-map-track-history-item';
-			noHistory.textContent = document.querySelector('[data-i18n="big-map-track-no-history"]')?.dataset?.i18n || 'No history yet';
+			noHistory.textContent = document.querySelector('[data-i18n="big_map_tracker_no_history"]')?.dataset?.i18n || 'No history yet';
 			historyList.appendChild(noHistory);
 			return;
 		}
@@ -85,10 +85,10 @@ document.addEventListener('DOMContentLoaded', () => {
 			
 			const markerCount = state.length;
 			const lastAction = markerCount > 0 ? 
-			`${document.querySelector('[data-i18n="big-map-track-last-action"]')?.dataset?.i18n || 'Last'}: (${state[state.length-1].x}, ${state[state.length-1].y})` : 
-			document.querySelector('[data-i18n="big-map-track-no-markers"]')?.dataset?.i18n || 'No markers';
+			`${document.querySelector('[data-i18n="big_map_tracker_last_action"]')?.dataset?.i18n || 'Last'}: (${state[state.length-1].x}, ${state[state.length-1].y})` : 
+			document.querySelector('[data-i18n="big_map_tracker_no_markers"]')?.dataset?.i18n || 'No markers';
 			
-			item.textContent = `${document.querySelector('[data-i18n="big-map-track-state"]')?.dataset?.i18n || 'State'} ${index+1}: ${markerCount} ${document.querySelector('[data-i18n="big-map-track-markers"]')?.dataset?.i18n || 'markers'} - ${lastAction}`;
+			item.textContent = `${document.querySelector('[data-i18n="big_map_tracker_state"]')?.dataset?.i18n || 'State'} ${index+1}: ${markerCount} ${document.querySelector('[data-i18n="big_map_tracker_markers"]')?.dataset?.i18n || 'markers'} - ${lastAction}`;
 			
 			// Restore state on click
 			item.addEventListener('click', () => {
@@ -123,9 +123,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			markers = JSON.parse(JSON.stringify(historyStack[currentHistoryIndex]));
 			renderMarkers();
 			updateHistoryUI();
-			showOutput(document.querySelector('[data-i18n="big-map-track-undo-success"]')?.dataset?.i18n || 'Undo successful', 'success');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_undo_success"]')?.dataset?.i18n || 'Undo successful', 'success');
 			} else {
-			showOutput(document.querySelector('[data-i18n="big-map-track-nothing-undo"]')?.dataset?.i18n || 'Nothing to undo', 'info');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_nothing_undo"]')?.dataset?.i18n || 'Nothing to undo', 'info');
 		}
 	}
 	
@@ -140,16 +140,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			markers = undoStack.pop();
 			renderMarkers();
 			saveStateToHistory();
-			showOutput(document.querySelector('[data-i18n="big-map-track-redo-success"]')?.dataset?.i18n || 'Redo successful', 'success');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_redo_success"]')?.dataset?.i18n || 'Redo successful', 'success');
 			} else {
-			showOutput(document.querySelector('[data-i18n="big-map-track-nothing-redo"]')?.dataset?.i18n || 'Nothing to redo', 'info');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_nothing_redo"]')?.dataset?.i18n || 'Nothing to redo', 'info');
 		}
 	}
 	
 	// NEW: Save project to localStorage
 	function saveProject() {
 		if (!currentImage) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-upload-first"]')?.dataset?.i18n || 'Please upload an image first', 'error');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_upload_first"]')?.dataset?.i18n || 'Please upload an image first', 'error');
 			return;
 		}
 		
@@ -160,14 +160,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		};
 		
 		localStorage.setItem('mapTrackProject', JSON.stringify(project));
-		showOutput(document.querySelector('[data-i18n="big-map-track-project-saved"]')?.dataset?.i18n || 'Project saved successfully', 'success');
+		showOutput(document.querySelector('[data-i18n="big_map_tracker_project_saved"]')?.dataset?.i18n || 'Project saved successfully', 'success');
 	}
 	
 	// NEW: Load project from localStorage
 	function loadProject() {
 		const projectData = localStorage.getItem('mapTrackProject');
 		if (!projectData) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-no-project"]')?.dataset?.i18n || 'No saved project found', 'info');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_no_project"]')?.dataset?.i18n || 'No saved project found', 'info');
 			return;
 		}
 		
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				currentImage = img;
 				
 				// Set file name
-				fileName.textContent = project.fileName || document.querySelector('[data-i18n="big-map-track-saved-project"]')?.dataset?.i18n || 'Saved project';
+				fileName.textContent = project.fileName || document.querySelector('[data-i18n="big_map_tracker_saved_project"]')?.dataset?.i18n || 'Saved project';
 				
 				// Set up event listeners
 				setupImageListeners(img);
@@ -198,16 +198,16 @@ document.addEventListener('DOMContentLoaded', () => {
 				// Save to history
 				saveStateToHistory();
 				
-				showOutput(document.querySelector('[data-i18n="big-map-track-project-loaded"]')?.dataset?.i18n || 'Project loaded successfully', 'success');
+				showOutput(document.querySelector('[data-i18n="big_map_tracker_project_loaded"]')?.dataset?.i18n || 'Project loaded successfully', 'success');
 			};
 			img.src = project.imageData;
 			} catch (e) {
-			showOutput(`${document.querySelector('[data-i18n="big-map-track-load-error"]')?.dataset?.i18n || 'Error loading project'}: ${e.message}`, 'error');
+			showOutput(`${document.querySelector('[data-i18n="big_map_tracker_load_error"]')?.dataset?.i18n || 'Error loading project'}: ${e.message}`, 'error');
 		}
 	}
 	
 	function cancelProject() {
-		const cancelConfirm = document.querySelector('[data-i18n="big-map-track-cancel-confirm"]')?.dataset?.i18n || 'Are you sure you want to cancel? All unsaved changes will be lost.';
+		const cancelConfirm = document.querySelector('[data-i18n="big_map_tracker_cancel_confirm"]')?.dataset?.i18n || 'Are you sure you want to cancel? All unsaved changes will be lost.';
 		
 		if (confirm(cancelConfirm)) {
 			// Clear image and markers
@@ -216,28 +216,28 @@ document.addEventListener('DOMContentLoaded', () => {
 			<svg width="80" height="80" viewBox="0 0 24 24" fill="none">
 			<path d="M21 19V5C21 3.9 20.1 3 19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19ZM8.5 13.5L11 16.51L14.5 12L19 18H5L8.5 13.5Z" fill="#4361ee"/>
 			</svg>
-			<h3 data-i18n="big-map-track-upload-prompt">Upload an Image to Get Started</h3>
-			<p data-i18n="big-map-track-upload-instructions">Use the upload button above to select an image</p>
+			<h3 data-i18n="big_map_tracker_upload_prompt">Upload an Image to Get Started</h3>
+			<p data-i18n="big_map_tracker_upload_instructions">Use the upload button above to select an image</p>
 			</div>
 			`;
 			
 			// Reset variables
 			currentImage = null;
 			markers = [];
-			fileName.textContent = document.querySelector('[data-i18n="big-map-track-no-file"]')?.dataset?.i18n || 'No file selected';
+			fileName.textContent = document.querySelector('[data-i18n="big_map_tracker_no_file"]')?.dataset?.i18n || 'No file selected';
 			xCoord.textContent = '0';
 			yCoord.textContent = '0';
 			xInput.value = '0';
 			yInput.value = '0';
 			
 			// Clear command output
-			const clearedMsg = document.querySelector('[data-i18n="big-map-track-output-cleared"]')?.dataset?.i18n || 'Command output cleared';
+			const clearedMsg = document.querySelector('[data-i18n="big_map_tracker_output_cleared"]')?.dataset?.i18n || 'Command output cleared';
 			commandOutput.innerHTML = `<p>${clearedMsg}</p>`;
 			
 			// Clear history
 			initHistory();
 			
-			const cancelledMsg = document.querySelector('[data-i18n="big-map-track-project-cancelled"]')?.dataset?.i18n || 'Project cancelled';
+			const cancelledMsg = document.querySelector('[data-i18n="big_map_tracker_project_cancelled"]')?.dataset?.i18n || 'Project cancelled';
 			showOutput(cancelledMsg, 'info');
 		}
 	}
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// NEW: Download image with markers
 	function downloadImage() {
 		if (!currentImage) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-upload-first"]')?.dataset?.i18n || 'Please upload an image first', 'error');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_upload_first"]')?.dataset?.i18n || 'Please upload an image first', 'error');
 			return;
 		}
 		
@@ -331,16 +331,16 @@ document.addEventListener('DOMContentLoaded', () => {
 			link.href = canvas.toDataURL('image/png');
 			link.click();
 			
-			showOutput(document.querySelector('[data-i18n="big-map-track-image-downloaded"]')?.dataset?.i18n || 'Image downloaded successfully', 'success');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_image_downloaded"]')?.dataset?.i18n || 'Image downloaded successfully', 'success');
 			} catch (e) {
-			showOutput(`${document.querySelector('[data-i18n="big-map-track-image-error"]')?.dataset?.i18n || 'Error downloading image'}: ${e.message}`, 'error');
+			showOutput(`${document.querySelector('[data-i18n="big_map_tracker_image_error"]')?.dataset?.i18n || 'Error downloading image'}: ${e.message}`, 'error');
 		}
 	}
 	
 	// NEW: Download markers as JSON
 	function downloadMarkers() {
 		if (markers.length === 0) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-no-markers-download"]')?.dataset?.i18n || 'No markers to download', 'info');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_no_markers_download"]')?.dataset?.i18n || 'No markers to download', 'info');
 			return;
 		}
 		
@@ -353,9 +353,9 @@ document.addEventListener('DOMContentLoaded', () => {
 			link.setAttribute('download', 'markers.json');
 			link.click();
 			
-			showOutput(document.querySelector('[data-i18n="big-map-track-markers-downloaded"]')?.dataset?.i18n || 'Markers downloaded successfully', 'success');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_markers_downloaded"]')?.dataset?.i18n || 'Markers downloaded successfully', 'success');
 			} catch (e) {
-			showOutput(`${document.querySelector('[data-i18n="big-map-track-markers-error"]')?.dataset?.i18n || 'Error downloading markers'}: ${e.message}`, 'error');
+			showOutput(`${document.querySelector('[data-i18n="big_map_tracker_markers_error"]')?.dataset?.i18n || 'Error downloading markers'}: ${e.message}`, 'error');
 		}
 	}
 	
@@ -381,13 +381,13 @@ document.addEventListener('DOMContentLoaded', () => {
 		
 		// Validate file type
 		if (!file.type.match('image.*')) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-invalid-image"]')?.dataset?.i18n || 'Please select a valid image file (JPEG, PNG, etc.)', 'error');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_invalid_image"]')?.dataset?.i18n || 'Please select a valid image file (JPEG, PNG, etc.)', 'error');
 			return;
 		}
 		
 		// Validate file size (max 5MB)
 		if (file.size > 5 * 1024 * 1024) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-file-size"]')?.dataset?.i18n || 'File size exceeds 5MB limit', 'error');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_file_size"]')?.dataset?.i18n || 'File size exceeds 5MB limit', 'error');
 			return;
 		}
 		
@@ -420,11 +420,11 @@ document.addEventListener('DOMContentLoaded', () => {
 			// Update marker positions after image loads
 			updateMarkerPositions();
 			
-			showOutput(`${document.querySelector('[data-i18n="big-map-track-image-loaded"]')?.dataset?.i18n || 'Image loaded'}: ${file.name} (${Math.round(file.size/1024)}KB)`, 'success');
+			showOutput(`${document.querySelector('[data-i18n="big_map_tracker_image_loaded"]')?.dataset?.i18n || 'Image loaded'}: ${file.name} (${Math.round(file.size/1024)}KB)`, 'success');
 		};
 		
 		reader.onerror = () => {
-			showOutput(document.querySelector('[data-i18n="big-map-track-read-error"]')?.dataset?.i18n || 'Error reading file', 'error');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_read_error"]')?.dataset?.i18n || 'Error reading file', 'error');
 		};
 		
 		reader.readAsDataURL(file);
@@ -476,19 +476,19 @@ document.addEventListener('DOMContentLoaded', () => {
 		const y = parseInt(yInput.value);
 		
 		if (isNaN(x) || isNaN(y)) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-invalid-coords"]')?.dataset?.i18n || 'Please enter valid numbers for both coordinates', 'error');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_invalid_coords"]')?.dataset?.i18n || 'Please enter valid numbers for both coordinates', 'error');
 			return;
 		}
 		
 		// Check if an image is loaded
 		if (!currentImage) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-upload-first"]')?.dataset?.i18n || 'Please upload an image first', 'error');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_upload_first"]')?.dataset?.i18n || 'Please upload an image first', 'error');
 			return;
 		}
 		
 		// Check if coordinates are within the image
 		if (x < 0 || y < 0 || x > currentImage.width || y > currentImage.height) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-outside-boundaries"]')?.dataset?.i18n || 'Coordinates are outside the image boundaries', 'error');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_outside_boundaries"]')?.dataset?.i18n || 'Coordinates are outside the image boundaries', 'error');
 			return;
 		}
 		
@@ -516,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	function clearMarkers() {
 		markers.forEach(marker => marker.remove());
 		markers = [];
-		showOutput(document.querySelector('[data-i18n="big-map-track-markers-cleared"]')?.dataset?.i18n || 'All markers cleared', 'success');
+		showOutput(document.querySelector('[data-i18n="big_map_tracker_markers_cleared"]')?.dataset?.i18n || 'All markers cleared', 'success');
 		
 		// NEW: Save to history
 		saveStateToHistory();
@@ -524,14 +524,14 @@ document.addEventListener('DOMContentLoaded', () => {
 	
 	// Clear command output
 	clearOutputBtn.addEventListener('click', () => {
-		commandOutput.innerHTML = `<p>${document.querySelector('[data-i18n="big-map-track-output-cleared"]')?.dataset?.i18n || 'Command output cleared'}</p>`;
+		commandOutput.innerHTML = `<p>${document.querySelector('[data-i18n="big_map_tracker_output_cleared"]')?.dataset?.i18n || 'Command output cleared'}</p>`;
 	});
 	
 	// Generate command template
 	generateTemplateBtn.addEventListener('click', () => {
-		commandInput.value = `# ${document.querySelector('[data-i18n="big-map-track-command-template"]')?.dataset?.i18n || 'Command template'}
-# ${document.querySelector('[data-i18n="big-map-track-format"]')?.dataset?.i18n || 'Format'}: {command_name x y}
-# ${document.querySelector('[data-i18n="big-map-track-supported-commands"]')?.dataset?.i18n || 'Supported commands'}: NEW_JOURNEY, OLD_JOURNEY, NEW_REST, OLD_REST, NEW_BATTLE, OLD_BATTLE
+		commandInput.value = `# ${document.querySelector('[data-i18n="big_map_tracker_command_template"]')?.dataset?.i18n || 'Command template'}
+# ${document.querySelector('[data-i18n="big_map_tracker_format"]')?.dataset?.i18n || 'Format'}: {command_name x y}
+# ${document.querySelector('[data-i18n="big_map_tracker_supported_commands"]')?.dataset?.i18n || 'Supported commands'}: NEW_JOURNEY, OLD_JOURNEY, NEW_REST, OLD_REST, NEW_BATTLE, OLD_BATTLE
 
 {NEW_JOURNEY 100 200}
 {OLD_JOURNEY 250 350}
@@ -539,7 +539,7 @@ document.addEventListener('DOMContentLoaded', () => {
 {OLD_REST 550 300}
 {NEW_REST 700 250}
 {OLD_BATTLE 100 200}`;
-		showOutput(document.querySelector('[data-i18n="big-map-track-template-generated"]')?.dataset?.i18n || 'Command template generated', 'info');
+		showOutput(document.querySelector('[data-i18n="big_map_tracker_template_generated"]')?.dataset?.i18n || 'Command template generated', 'info');
 	});
 	
 	// Function to place a marker
@@ -595,7 +595,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	// Function to run commands
 	function runCommands() {
 		if (!currentImage) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-upload-first"]')?.dataset?.i18n || 'Please upload an image first', 'error');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_upload_first"]')?.dataset?.i18n || 'Please upload an image first', 'error');
 			return;
 		}
 		
@@ -621,7 +621,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				const y = parseInt(match[3]);
 				
 				if (isNaN(x) || isNaN(y)) {
-					showOutput(`${document.querySelector('[data-i18n="big-map-track-invalid-coords-line"]')?.dataset?.i18n || 'Error on line'} ${index+1}: ${document.querySelector('[data-i18n="big-map-track-invalid-coords"]')?.dataset?.i18n || 'Invalid coordinates'}`, 'error');
+					showOutput(`${document.querySelector('[data-i18n="big_map_tracker_invalid_coords_line"]')?.dataset?.i18n || 'Error on line'} ${index+1}: ${document.querySelector('[data-i18n="big_map_tracker_invalid_coords"]')?.dataset?.i18n || 'Invalid coordinates'}`, 'error');
 					return;
 				}
 				
@@ -647,22 +647,22 @@ switch(cmd) {
         markerType = 'white-square';
         break;
     default:
-        showOutput(`${document.querySelector('[data-i18n="big-map-track-unknown-command"]')?.dataset?.i18n || 'Error on line'} ${index+1}: ${document.querySelector('[data-i18n="big-map-track-unknown-command-msg"]')?.dataset?.i18n || 'Unknown command'} '${cmd}'`, 'error');
+        showOutput(`${document.querySelector('[data-i18n="big_map_tracker_unknown_command"]')?.dataset?.i18n || 'Error on line'} ${index+1}: ${document.querySelector('[data-i18n="big_map_tracker_unknown_command_msg"]')?.dataset?.i18n || 'Unknown command'} '${cmd}'`, 'error');
         return;
 				}
 				
 				// Check if coordinates are within the image
 				if (x < 0 || y < 0 || x > currentImage.width || y > currentImage.height) {
-					showOutput(`${document.querySelector('[data-i18n="big-map-track-outside-boundaries-line"]')?.dataset?.i18n || 'Error on line'} ${index+1}: ${document.querySelector('[data-i18n="big-map-track-outside-boundaries"]')?.dataset?.i18n || 'Coordinates outside image boundaries'}`, 'error');
+					showOutput(`${document.querySelector('[data-i18n="big_map_tracker_outside_boundaries_line"]')?.dataset?.i18n || 'Error on line'} ${index+1}: ${document.querySelector('[data-i18n="big_map_tracker_outside_boundaries"]')?.dataset?.i18n || 'Coordinates outside image boundaries'}`, 'error');
 					return;
 				}
 				
 				// Place the marker
 				placeMarker(x, y, markerType);
-				showOutput(`${document.querySelector('[data-i18n="big-map-track-executed"]')?.dataset?.i18n || 'Executed'}: {${cmd} ${x} ${y}}`, 'success');
+				showOutput(`${document.querySelector('[data-i18n="big_map_tracker_executed"]')?.dataset?.i18n || 'Executed'}: {${cmd} ${x} ${y}}`, 'success');
 				commandCount++;
 				} else {
-				showOutput(`${document.querySelector('[data-i18n="big-map-track-invalid-format-line"]')?.dataset?.i18n || 'Error on line'} ${index+1}: ${document.querySelector('[data-i18n="big-map-track-invalid-format"]')?.dataset?.i18n || 'Invalid command format'}`, 'error');
+				showOutput(`${document.querySelector('[data-i18n="big_map_tracker_invalid_format_line"]')?.dataset?.i18n || 'Error on line'} ${index+1}: ${document.querySelector('[data-i18n="big_map_tracker_invalid_format"]')?.dataset?.i18n || 'Invalid command format'}`, 'error');
 			}
 		});
 		
@@ -670,7 +670,7 @@ switch(cmd) {
 		saveStateToHistory();
 		
 		if (commandCount === 0) {
-			showOutput(document.querySelector('[data-i18n="big-map-track-no-commands"]')?.dataset?.i18n || 'No valid commands found', 'info');
+			showOutput(document.querySelector('[data-i18n="big_map_tracker_no_commands"]')?.dataset?.i18n || 'No valid commands found', 'info');
 		}
 	}
 	
@@ -688,7 +688,7 @@ function generateCommand(type, x, y) {
     }
     
     const commandLine = `{${cmd} ${x} ${y}}`;
-    showOutput(`${document.querySelector('[data-i18n="big-map-track-click-generated"]')?.dataset?.i18n || 'Click generated command'}: ${commandLine}`, 'info');
+    showOutput(`${document.querySelector('[data-i18n="big_map_tracker_click_generated"]')?.dataset?.i18n || 'Click generated command'}: ${commandLine}`, 'info');
 }
 	
 	// Function to show output

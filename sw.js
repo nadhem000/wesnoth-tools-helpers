@@ -56,46 +56,43 @@ const PRECACHE_URLS = [
 self.addEventListener('install', event => {
 	event.waitUntil(
 		caches.open(CACHE_NAME)
-		.then(cache => cache.addAll(PRECACHE_URLS))
+		.then(cache => {
+			// Normalize paths for deployment
+			const cacheUrls = PRECACHE_URLS.map(url => 
+				url.startsWith('/') ? url : '/' + url
+			);
+			return cache.addAll(cacheUrls);
+		})
 	);
 });
 
 // Fetch Event
+// Update the fetch handler
 self.addEventListener('fetch', event => {
-	if (event.request.method !== 'GET') return;
-	
-	const requestUrl = new URL(event.request.url);
-	
-	// Handle file:// protocol
-	if (requestUrl.protocol === 'file:') {
-		event.respondWith(
-			caches.match(event.request).then(response => {
-				return response || fetch(event.request);
-			})
-		);
-		return;
-	}
-	
-	// Existing HTTPS handling
-	event.respondWith(
-		caches.match(event.request).then(cachedResponse => {
-			if (cachedResponse) return cachedResponse;
-			
-			return fetch(event.request).then(response => {
-				if (response && response.status === 200) {
-					const responseToCache = response.clone();
-					caches.open(CACHE_NAME).then(cache => {
-						cache.put(event.request, responseToCache);
-					});
-				}
-				return response;
-				}).catch(() => {
-				if (event.request.mode === 'navigate') {
-					return caches.match(OFFLINE_URL);
-				}
-			});
-		})
-	);
+  if (event.request.method !== 'GET') return;
+  
+  const requestUrl = new URL(event.request.url);
+  
+  // Unified handling for both file:// and https://
+  event.respondWith(
+    caches.match(event.request).then(cachedResponse => {
+      if (cachedResponse) return cachedResponse;
+      
+      return fetch(event.request).then(response => {
+        if (response && response.status === 200) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return response;
+      }).catch(() => {
+        if (event.request.mode === 'navigate') {
+          return caches.match(OFFLINE_URL);
+        }
+      });
+    })
+  );
 });
 
 // Activate Event (Clean old caches)
