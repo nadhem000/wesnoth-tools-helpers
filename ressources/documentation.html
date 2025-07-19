@@ -64,9 +64,9 @@
 					<li><a href="#wml-validator" data-i18n="doc.wml_validator">WML Validator</a></li>
 					<li><a href="#events-manager" data-i18n="doc.events_manager">Events Manager</a></li>
 					<li><a href="#story-mode" data-i18n="doc.story_mode">Story Mode</a></li>
-					<!-- Add GIF Creator to TOC -->
 					<li><a href="#gif-creator" data-i18n="doc.gif_creator">GIF Creator</a></li>
 					<li><a href="#big-map-tracker" data-i18n="doc.big_map_tracker">Big Map Tracker</a></li>
+<li><a href="#unit-comparator" data-i18n="doc.unit_comparator">Unit Comparator</a></li>
 					<li><a href="#best-practices" data-i18n="doc.best_practices">Best Practices</a></li>
 					<li><a href="#api-reference" data-i18n="doc.api_reference">API Reference</a></li>
 					<li><a href="#faq" data-i18n="doc.faq">FAQ</a></li>
@@ -301,6 +301,44 @@
 						</span>
 					</div>
 				</section>
+
+<section id="unit-comparator">
+  <h2 data-i18n="doc.unit_comparator">Unit Comparator</h2>
+  <p data-i18n="doc.unit_comparator_desc">
+    The Unit Comparator tool allows you to upload multiple unit configuration files, 
+    compare their stats, and calculate various effectiveness metrics.
+  </p>
+  
+  <h3 data-i18n="doc.using_unit_comparator">Using the Unit Comparator</h3>
+  <ol>
+    <li data-i18n="doc.uc_step1">Upload unit configuration files (.cfg) using the drag-and-drop area or the browse button</li>
+    <li data-i18n="doc.uc_step2">Optionally, load sample units to see how the tool works</li>
+    <li data-i18n="doc.uc_step3">Select a comparison metric from the available options</li>
+    <li data-i18n="doc.uc_step4">Adjust sorting and filtering options as needed</li>
+    <li data-i18n="doc.uc_step5">Click 'Compare Units' to generate the comparison table</li>
+    <li data-i18n="doc.uc_step6">Click on any unit row to view detailed information</li>
+  </ol>
+  
+  <h3 data-i18n="doc.key_features">Key Features</h3>
+  <ul>
+    <li data-i18n="doc.uc_feature1">Compare multiple units side-by-side</li>
+    <li data-i18n="doc.uc_feature2">Multiple metrics for unit effectiveness</li>
+    <li data-i18n="doc.uc_feature3">Sort by any attribute or calculated metric</li>
+    <li data-i18n="doc.uc_feature4">Filter units by race/faction</li>
+    <li data-i18n="doc.uc_feature5">Robust parser with default values for missing attributes</li>
+    <li data-i18n="doc.uc_feature6">Sample units for demonstration</li>
+    <li data-i18n="doc.uc_feature7">Detailed log of processing and warnings</li>
+  </ul>
+  
+  <div class="wts-doc-note">
+    <strong data-i18n="doc.note">Note:</strong>
+    <span data-i18n="doc.uc_note">
+      The parser will automatically fill in missing attributes with default values 
+      and provide warnings about any issues found in the unit files.
+    </span>
+  </div>
+</section>
+				
 				<section id="best-practices">
 					<h2 data-i18n="doc.best_practices">Best Practices</h2>
 					<ul>

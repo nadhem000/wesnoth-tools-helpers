@@ -39,6 +39,7 @@
     --special-card-2: #27ae85;
   --special-card-3: #db3434;
     --special-card-4: #7b2cbf;
+    --special-card-5: #ffcc00;
 }
 
 [data-theme="dark"] {
@@ -65,6 +66,7 @@
     --special-card-1: #4da8da;
     --special-card-2: #2ecc76;
     --special-card-4: #9d4edd;
+    --special-card-5: #d4a017;
 }
 /* INDEX PAGE STYLES */
 .wts-index-body {
@@ -151,6 +153,9 @@
 }
 .wts-index-card[data-card="map_tracker"] .wts-index-card-header {
     background: var(--special-card-4);
+}
+.wts-index-card[data-card="unit_comparator"] .wts-index-card-header {
+    background: var(--special-card-5);
 }
 
 .wts-index-card-icon {
