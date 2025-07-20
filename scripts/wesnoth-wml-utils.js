@@ -1,28 +1,17 @@
 // wesnoth-wml-utils.js
 
 /**
- * Extracts a value from a string using a regex pattern that matches:
- *   key="value"
- *   key='value'
- *   key=value
- * 
- * @param {string} str - The string to search in
- * @param {RegExp} regex - The regex pattern (should have 3 capture groups for the three forms)
- * @returns {string} The extracted value
+ * Extracts a value from a string using a regex pattern
  */
 function extractValue(str, regex) {
     const match = regex.exec(str);
     if (!match) return '';
-    // The regex should have capture groups for double-quoted, single-quoted, and unquoted
     const value = match[1] || match[2] || match[3] || '';
     return value.split('#')[0].trim();
 }
 
 /**
- * Extracts events from scenario content.
- * 
- * @param {string} content - The scenario content
- * @returns {Array} Array of event objects
+ * Extracts events from scenario content
  */
 function extractEvents(content) {
     const events = [];
@@ -35,7 +24,6 @@ function extractEvents(content) {
         const start = match.index;
         const end = start + eventBlock.length;
 
-        // Extract event name - FIXED REGEX
         const nameMatch = eventBlock.match(
             /name\s*=\s*"((?:\\"|[^"])*)"|name\s*=\s*'((?:\\'|[^'])*)'|name\s*=\s*([^#\r\n\[]*)/i
         );
@@ -44,12 +32,10 @@ function extractEvents(content) {
             eventName = (nameMatch[1] || nameMatch[2] || nameMatch[3] || "").trim();
         }
 
-        // Handle multi-line names
         if (eventName.includes('\n')) {
             eventName = eventName.split('\n')[0].trim();
         }
 
-        // Extract filter content
         let filterContent = "";
         const filterMatch = eventBlock.match(/\[filter\]([\s\S]*?)\[\/filter\]/i);
         if (filterMatch && filterMatch[1]) {
@@ -69,10 +55,60 @@ function extractEvents(content) {
 }
 
 /**
- * Extracts story parts from scenario content.
- * 
- * @param {string} content - The scenario content
- * @returns {Array} Array of story part strings
+ * Extracts messages from content
+ */
+function extractMessages(content, events) {
+    const allMessages = [];
+    const messageRegex = /\[message\b[^\]]*\]([\s\S]*?)\[\/message\]/gi;
+    let match;
+    
+    while ((match = messageRegex.exec(content)) !== null) {
+        const messageBlock = match[0];
+        const messageStart = match.index;
+        const messageEnd = messageStart + messageBlock.length;
+        
+        const speakerMatch = messageBlock.match(/speaker\s*=\s*"([^"]*)"|speaker\s*=\s*'([^']*)'|speaker\s*=\s*(\S+)/i);
+        let speaker = "narrator";
+        if (speakerMatch) {
+            speaker = speakerMatch[1] || speakerMatch[2] || speakerMatch[3] || "narrator";
+        }
+        
+        const messageMatch = messageBlock.match(/message\s*=\s*_?\s*"([^"]*)"|message\s*=\s*_?\s*'([^']*)'|message\s*=\s*_?\s*(\S+)/i);
+        let messageText = "";
+        if (messageMatch) {
+            messageText = messageMatch[1] || messageMatch[2] || messageMatch[3] || "";
+        }
+        
+        messageText = messageText.trim().replace(/^_ /, '');
+        
+        let eventContext = "No event context";
+        let eventName = "unnamed";
+        let eventFilter = "";
+        
+        for (const event of events) {
+            if (messageStart >= event.start && messageEnd <= event.end) {
+                eventContext = event.name;
+                eventName = event.name;
+                eventFilter = event.filter;
+                break;
+            }
+        }
+        
+        allMessages.push({
+            event: eventContext,
+            eventName: eventName,
+            eventFilter: eventFilter,
+            speaker,
+            message: messageText,
+            id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`
+        });
+    }
+    
+    return allMessages;
+}
+
+/**
+ * Extracts story parts from scenario content
  */
 function extractStoryParts(content) {
     const storyParts = [];
@@ -90,13 +126,8 @@ function extractStoryParts(content) {
 }
 
 /**
- * Parses event content to extract messages and conditions.
- * 
- * @param {string} eventContent - The content of a single event
- * @returns {Array} Array of message objects and condition blocks
+ * Parses event content to extract messages and conditions
  */
-// wesnoth-wml-utils.js
-
 function parseEventContent(eventContent) {
     const result = [];
     let currentIndex = 0;
@@ -114,10 +145,8 @@ function parseEventContent(eventContent) {
             ? fullTag.substring(2, fullTag.length - 1).toLowerCase()
             : fullTag.substring(1, fullTag.length - 1).split(' ')[0].toLowerCase();
 
-        // Handle condition tags
         if (['if', 'then', 'else', 'elseif'].includes(tagName)) {
             if (!isClosing) {
-                // Find closing tag
                 const closingTag = `[/${tagName}]`;
                 const endIndex = eventContent.indexOf(closingTag, nextTagEnd + 1);
                 
@@ -126,12 +155,11 @@ function parseEventContent(eventContent) {
                     const innerEnd = endIndex;
                     const innerContent = eventContent.substring(innerStart, innerEnd);
                     
-                    // Extract condition content for [if] and [elseif]
                     let conditionContent = '';
                     if (tagName === 'if' || tagName === 'elseif') {
                         const contentBeforeFirstChild = innerContent.split(/\[(then|else|elseif)\]/i)[0];
                         conditionContent = contentBeforeFirstChild
-                            .replace(/#.*$/gm, '') // Remove comments
+                            .replace(/#.*$/gm, '')
                             .split('\n')
                             .map(line => line.trim())
                             .filter(line => line)
@@ -150,69 +178,49 @@ function parseEventContent(eventContent) {
                 }
             }
         }
-        
-    // Handle messages
-    else if (tagName === 'message' && !isClosing) {
-        const closingTag = '[/message]';
-        const endIndex = eventContent.indexOf(closingTag, nextTagEnd + 1);
-        
-        if (endIndex !== -1) {
-            const messageContent = eventContent.substring(nextTagStart, endIndex + closingTag.length);
+        else if (tagName === 'message' && !isClosing) {
+            const closingTag = '[/message]';
+            const endIndex = eventContent.indexOf(closingTag, nextTagEnd + 1);
             
-            // Improved speaker extraction
-            let speaker = 'narrator';
-            const speakerMatch = messageContent.match(/speaker\s*=\s*("([^"]*)"|'([^']*)'|([^\s#]+))/);
-            if (speakerMatch) {
-                speaker = (speakerMatch[2] || speakerMatch[3] || speakerMatch[4] || '').trim();
+            if (endIndex !== -1) {
+                const messageContent = eventContent.substring(nextTagStart, endIndex + closingTag.length);
+                
+                let speaker = 'narrator';
+                const speakerMatch = messageContent.match(/speaker\s*=\s*("([^"]*)"|'([^']*)'|([^\s#]+))/);
+                if (speakerMatch) {
+                    speaker = (speakerMatch[2] || speakerMatch[3] || speakerMatch[4] || '').trim();
+                }
+                
+                let messageText = '';
+                const messageMatch = messageContent.match(/message\s*=\s*_?\s*"((?:\\"|[^"])*)"/);
+                if (messageMatch) {
+                    messageText = messageMatch[1].replace(/\\"/g, '"');
+                }
+                
+                if (messageText) {
+                    result.push({
+                        type: 'message',
+                        speaker: speaker,
+                        text: messageText
+                    });
+                }
+                
+                currentIndex = endIndex + closingTag.length;
+                continue;
             }
-            
-            // Improved message extraction
-            let messageText = '';
-            const messageMatch = messageContent.match(/message\s*=\s*_?\s*"((?:\\"|[^"])*)"/);
-            if (messageMatch) {
-                messageText = messageMatch[1].replace(/\\"/g, '"');
-            }
-            
-            if (messageText) {
-                result.push({
-                    type: 'message',
-                    speaker: speaker,
-                    text: messageText
-                });
-            }
-            
-            currentIndex = endIndex + closingTag.length;
-            continue;
         }
-    }
         
-        // Move to next position if no valid tag was processed
         currentIndex = nextTagEnd + 1;
     }
     
     return result;
 }
-// Export functions if we are in a module context
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = {
-        extractValue,
-        extractEvents,
-        extractStoryParts,
-        parseEventContent
-    };
-}
 
-
-
-
-/* // In  HTML file
-<script src="wesnoth-utils.js"></script>
-
-// In  tool JavaScript files
-// Example usage for the event/message manager:
-const events = extractEvents(fileContent);
-const messages = parseEventContent(eventBlock);
-
-// Example usage for the story manager:
-const storyParts = extractStoryParts(scenarioContent);
-const scenarioId = extractValue(content, /id\s*=\s*(?:"([^"]*)"|'([^']*)'|([^#\r\n]+[^\s#]*))/); */
+// Export as global object
+window.wesnothWMLUtils = {
+    extractValue,
+    extractEvents,
+    extractMessages,
+    extractStoryParts,
+    parseEventContent
+};

@@ -1,3 +1,4 @@
+// story_mode.js
 document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
     const inputOptions = document.querySelectorAll('.mode-story-input-option');
@@ -90,9 +91,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function parseScenario(content, fileName) {
-        // Helper function to extract values (fixed regex patterns)
+        // Helper function to extract values
         const extractValue = (attrName, str) => {
-            // Robust regex to match: attr="value", attr='value', attr=value
             const regex = new RegExp(
                 `${attrName}\\s*=\\s*` + 
                 `(?:"([^"]*)"|'([^']*)'|([^\\s\\[\\]]+))`
@@ -111,22 +111,22 @@ document.addEventListener('DOMContentLoaded', function() {
             events: []
         };
 
-        // Extract scenario metadata using robust patterns
+        // Extract scenario metadata
         scenario.id = extractValue('id', content);
         scenario.name = extractValue('name', content);
         scenario.nextScenario = extractValue('next_scenario', content);
         
-        // Extract story parts using utility function
-        scenario.storyParts = extractStoryParts(content);
+        // Extract story parts
+        scenario.storyParts = wesnothWMLUtils.extractStoryParts(content);
         
-        // Extract events using utility function
-        const events = extractEvents(content);
+        // Extract events
+        const events = wesnothWMLUtils.extractEvents(content);
         const filterTypes = ['filter', 'filter_second', 'filter_side', 'filter_location'];
         
         events.forEach(event => {
             const eventContent = event.block;
             
-            // Extract filters using robust method
+            // Extract filters
             const allFilters = [];
             for (const filterType of filterTypes) {
                 const filterRegex = new RegExp(`\\[${filterType}\\]([\\s\\S]*?)\\[\\/${filterType}\\]`, 'gi');
@@ -151,11 +151,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Skip events without messages
             if (!/\[message\]/.test(eventContent)) return;
             
-            // FIX: Use event.name directly
             scenario.events.push({
                 name: event.name,
                 filters: filterSummary,
-                messages: parseEventContent(eventContent)
+                messages: wesnothWMLUtils.parseEventContent(eventContent)
             });
         });
         
@@ -163,143 +162,143 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function displayResults() {
-    outputContent.innerHTML = '';
-    
-    if (extractedData.length === 0) {
-        outputContent.innerHTML = `
-        <div class="mode-story-empty-state">
-            <div>📭</div>
-            <h3>${i18n.t('story_mode.no_scenarios')}</h3>
-            <p>${i18n.t('story_mode.try_uploading')}</p>
-        </div>
-        `;
-        return;
-    }
-    
-    extractedData.forEach(scenario => {
-        const scenarioElement = document.createElement('div');
-        scenarioElement.className = 'mode-story-scenario-card';
+        outputContent.innerHTML = '';
         
-        // Prepare events HTML
-        let eventsHTML = '';
+        if (extractedData.length === 0) {
+            outputContent.innerHTML = `
+                <div class="mode-story-empty-state">
+                    <div>📭</div>
+                    <h3>${i18n.t('story_mode.no_scenarios')}</h3>
+                    <p>${i18n.t('story_mode.try_uploading')}</p>
+                </div>
+            `;
+            return;
+        }
         
-        scenario.events.forEach((event, index) => {
-            const { name, filters, messages } = event;
+        extractedData.forEach(scenario => {
+            const scenarioElement = document.createElement('div');
+            scenarioElement.className = 'mode-story-scenario-card';
             
-            // Recursive function to render condition hierarchy
-            function renderMessages(messages) {
-                let html = '';
-                messages.forEach(entry => {
-                    if (entry.type === 'message') {
-                        html += `
-                        <div class="mode-story-dialogue-entry">
-                            <div class="mode-story-speaker">
-                                <span class="mode-story-icon">💬</span>${entry.speaker}
+            // Prepare events HTML
+            let eventsHTML = '';
+            
+            scenario.events.forEach((event, index) => {
+                const { name, filters, messages } = event;
+                
+                // Recursive function to render condition hierarchy
+                function renderMessages(messages) {
+                    let html = '';
+                    messages.forEach(entry => {
+                        if (entry.type === 'message') {
+                            html += `
+                                <div class="mode-story-dialogue-entry">
+                                    <div class="mode-story-speaker">
+                                        <span class="mode-story-icon">💬</span>${entry.speaker}
+                                    </div>
+                                    <div class="mode-story-message">${entry.text}</div>
+                                </div>
+                            `;
+                        }
+                        else if (entry.type === 'condition') {
+                            const childrenHTML = renderMessages(entry.children);
+                            const conditionContent = entry.content
+                                .replace(/^[\n\s]+|[\n\s]+$/g, '')
+                                .split('\n')
+                                .map(line => line.trim())
+                                .filter(line => line)
+                                .join('\n');
+                            
+                            html += `
+                                <div class="mode-story-condition-group">
+                                    <div class="mode-story-condition-header">
+                                        <span class="mode-story-icon">🔲</span>${entry.tag.toUpperCase()}
+                                    </div>
+                                    <div class="mode-story-condition-content"><pre>${conditionContent}</pre></div>
+                                    <div class="mode-story-message-container">
+                                        ${childrenHTML}
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    });
+                    return html;
+                }
+                
+                const eventEntriesHTML = renderMessages(messages);
+                
+                if (eventEntriesHTML) {
+                    eventsHTML += `
+                        <div class="mode-story-event-group">
+                            <h3 class="mode-story-event-title">
+                                <span class="mode-story-icon">📝</span>${name} 
+                                <span class="mode-story-event-count">#${index+1}</span>
+                            </h3>
+                            <div class="mode-story-event-filter">
+                                <strong><span class="mode-story-icon">🔍</span>${i18n.t('story_mode.filters')}:</strong>
+                                <pre>${filters}</pre>
                             </div>
-                            <div class="mode-story-message">${entry.text}</div>
-                        </div>
-                        `;
-                    }
-                    else if (entry.type === 'condition') {
-                        const childrenHTML = renderMessages(entry.children);
-                        const conditionContent = entry.content
-                            .replace(/^[\n\s]+|[\n\s]+$/g, '')
-                            .split('\n')
-                            .map(line => line.trim())
-                            .filter(line => line)
-                            .join('\n');
-                        
-                        html += `
-                        <div class="mode-story-condition-group">
-                            <div class="mode-story-condition-header">
-                                <span class="mode-story-icon">🔲</span>${entry.tag.toUpperCase()}
-                            </div>
-                            <div class="mode-story-condition-content"><pre>${conditionContent}</pre></div>
                             <div class="mode-story-message-container">
-                                ${childrenHTML}
+                                ${eventEntriesHTML}
                             </div>
                         </div>
-                        `;
-                    }
-                });
-                return html;
-            }
+                    `;
+                }
+            });
             
-            const eventEntriesHTML = renderMessages(messages);
-            
-            if (eventEntriesHTML) {
-                eventsHTML += `
-                <div class="mode-story-event-group">
-                    <h3 class="mode-story-event-title">
-                        <span class="mode-story-icon">📝</span>${name} 
-                        <span class="mode-story-event-count">#${index+1}</span>
-                    </h3>
-                    <div class="mode-story-event-filter">
-                        <strong><span class="mode-story-icon">🔍</span>${i18n.t('story_mode.filters')}:</strong>
-                        <pre>${filters}</pre>
+            // Build scenario content
+            scenarioElement.innerHTML = `
+                <div class="mode-story-card-header">
+                    <div>
+                        <h2 class="mode-story-card-title">
+                            <span class="mode-story-icon">📖</span>${scenario.name || i18n.t('story_mode.unnamed_scenario')}
+                        </h2>
+                        <div class="mode-story-card-id">
+                            <span class="mode-story-icon">🆔</span>${i18n.t('story_mode.id')}: ${scenario.id || 'N/A'}
+                        </div>
                     </div>
-                    <div class="mode-story-message-container">
-                        ${eventEntriesHTML}
+                    <div>
+                        <div><span class="mode-story-icon">📄</span>${i18n.t('story_mode.file')}: ${scenario.fileName}</div>
+                        ${scenario.nextScenario ? `
+                        <div>
+                            <span class="mode-story-icon">↪️</span>${i18n.t('story_mode.next_scenario')}: ${scenario.nextScenario}
+                        </div>` : ''}
+                        <div><span class="mode-story-icon">🎭</span>${i18n.t('story_mode.events')}: ${scenario.events.length}</div>
                     </div>
                 </div>
-                `;
-            }
+                
+                <div class="mode-story-card-content">
+                    ${scenario.storyParts.length > 0 ? `
+                    <div class="mode-story-story-section">
+                        <h3 class="mode-story-section-title">
+                            <span class="mode-story-icon">📜</span>${i18n.t('story_mode.story_section')}
+                        </h3>
+                        ${scenario.storyParts.map(part => `
+                            <div class="mode-story-story-part">
+                                <p class="mode-story-story-text">${part}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ` : ''}
+                    
+                    ${eventsHTML ? `
+                    <div class="mode-story-dialogue-section">
+                        <h3 class="mode-story-section-title">
+                            <span class="mode-story-icon">💬</span>${i18n.t('story_mode.dialogue_section')}
+                        </h3>
+                        ${eventsHTML}
+                    </div>
+                    ` : `
+                    <div class="mode-story-empty-state">
+                        <div>🔇</div>
+                        <p>${i18n.t('story_mode.no_dialogue')}</p>
+                    </div>
+                    `}
+                </div>
+            `;
+            
+            outputContent.appendChild(scenarioElement);
         });
-        
-        // Build scenario content
-        scenarioElement.innerHTML = `
-        <div class="mode-story-card-header">
-            <div>
-                <h2 class="mode-story-card-title">
-                    <span class="mode-story-icon">📖</span>${scenario.name || i18n.t('story_mode.unnamed_scenario')}
-                </h2>
-                <div class="mode-story-card-id">
-                    <span class="mode-story-icon">🆔</span>${i18n.t('story_mode.id')}: ${scenario.id || 'N/A'}
-                </div>
-            </div>
-            <div>
-                <div><span class="mode-story-icon">📄</span>${i18n.t('story_mode.file')}: ${scenario.fileName}</div>
-                ${scenario.nextScenario ? `
-                <div>
-                    <span class="mode-story-icon">↪️</span>${i18n.t('story_mode.next_scenario')}: ${scenario.nextScenario}
-                </div>` : ''}
-                <div><span class="mode-story-icon">🎭</span>${i18n.t('story_mode.events')}: ${scenario.events.length}</div>
-            </div>
-        </div>
-        
-        <div class="mode-story-card-content">
-            ${scenario.storyParts.length > 0 ? `
-            <div class="mode-story-story-section">
-                <h3 class="mode-story-section-title">
-                    <span class="mode-story-icon">📜</span>${i18n.t('story_mode.story_section')}
-                </h3>
-                ${scenario.storyParts.map(part => `
-                    <div class="mode-story-story-part">
-                        <p class="mode-story-story-text">${part}</p>
-                    </div>
-                `).join('')}
-            </div>
-            ` : ''}
-            
-            ${eventsHTML ? `
-            <div class="mode-story-dialogue-section">
-                <h3 class="mode-story-section-title">
-                    <span class="mode-story-icon">💬</span>${i18n.t('story_mode.dialogue_section')}
-                </h3>
-                ${eventsHTML}
-            </div>
-            ` : `
-            <div class="mode-story-empty-state">
-                <div>🔇</div>
-                <p>${i18n.t('story_mode.no_dialogue')}</p>
-            </div>
-            `}
-        </div>
-        `;
-        
-        outputContent.appendChild(scenarioElement);
-    });
-}
+    }
 
     function showNotification(message, isError = false) {
         notification.textContent = message;

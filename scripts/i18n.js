@@ -664,7 +664,13 @@ const i18n = {
 				parse_attack_error: "Error parsing attack",
 				parse_default_attack: "Added default attack (fist)",
 				sample_incomplete_warning: "This sample unit has missing attributes",
-				unit_issues: "issues detected"
+				unit_issues: "issues detected",
+    number_of_attacks: "Number of Attacks",
+    undo: "Undo",
+    redo: "Redo",
+    cancel: "Cancel",
+    confirm_changes: "Confirm Changes",
+    unit_updated: "Updated unit"
 			}
 		},
         fr: {
@@ -1308,7 +1314,13 @@ const i18n = {
 				parse_attack_error: "Erreur d'analyse de l'attaque",
 				parse_default_attack: "Attaque par défaut ajoutée (poing)",
 				sample_incomplete_warning: "Cette unité d'exemple a des attributs manquants",
-				unit_issues: "problèmes détectés"
+				unit_issues: "problèmes détectés",
+    number_of_attacks: "Nombre d'attaques",
+undo: "Annuler",
+redo: "Rétablir",
+cancel: "Annuler",
+confirm_changes: "Confirmer les modifications",
+unit_updated: "Unité mise à jour"
 			}
 		}
 	},
