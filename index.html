@@ -25,7 +25,8 @@
 							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
 							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
 							<a href="ressources/big_map_tracker.html" data-i18n="card.big_map_tracker">Big Map Coordinate Tracker</a>
-        <a href="ressources/unit_comparator.html" data-i18n="card.unit_comparator">Unit Comparator</a>
+							<a href="ressources/unit_comparator.html" data-i18n="card.unit_comparator">Unit Comparator</a>
+							<a href="ressources/po_dictionary_manager.html" data-i18n="card.dictionary_manager">Dictionary Manager</a>
 							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
 							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
 							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
@@ -287,50 +288,96 @@
 					</div>
 				</a>
 				<!-- Unit Comparator Card -->
-<a href="ressources/unit_comparator.html" class="wts-index-card-link">
-    <div class="wts-index-card" data-card="unit_comparator">
-        <div class="wts-index-card-header">
-            <div class="wts-index-card-icon">
-                <svg viewBox="0 0 640 512">
-                    <path d="M592 0H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h544c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48zM160 432H64V208h96v224zm0-240H64V80h96v112zm224 240H224V208h160v224zm0-240H224V80h160v112zm224 240H448V208h160v224zm0-240H448V80h160v112z"/>
-                </svg>
-            </div>
-            <h3 class="wts-index-tooltip" data-i18n="card.unit_comparator">Unit Comparator</h3>
-        </div>
-        <div class="wts-index-card-content">
-            <p class="wts-index-card-description" data-i18n="card.unit_comparator_description">
-                Compare unit stats and combat effectiveness from configuration files
-            </p>
-            <ul class="wts-index-card-features">
-                <li>
-                    <svg viewBox="0 0 512 512">
-                        <path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
-                    </svg>
-                    <span data-i18n="card.unit_comparator_feature1">
-                        Analyze multiple unit files simultaneously
-                    </span>
-                </li>
-                <li>
-                    <svg viewBox="0 0 512 512">
-                        <path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
-                    </svg>
-                    <span data-i18n="card.unit_comparator_feature2">
-                        Calculate combat metrics and effectiveness
-                    </span>
-                </li>
-                <li>
-                    <svg viewBox="0 0 512 512">
-                        <path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
-                    </svg>
-                    <span data-i18n="card.unit_comparator_feature3">
-                        Identify balance issues and compare stats
-                    </span>
-                </li>
-            </ul>
-            <button class="wts-index-card-button outline" data-i18n="card.use_tool">Use Tool</button>
-        </div>
-    </div>
-</a>
+				<a href="ressources/unit_comparator.html" class="wts-index-card-link">
+					<div class="wts-index-card" data-card="unit_comparator">
+						<div class="wts-index-card-header">
+							<div class="wts-index-card-icon">
+								<svg viewBox="0 0 640 512">
+									<path d="M592 0H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h544c26.5 0 48-21.5 48-48V48c0-26.5-21.5-48-48-48zM160 432H64V208h96v224zm0-240H64V80h96v112zm224 240H224V208h160v224zm0-240H224V80h160v112zm224 240H448V208h160v224zm0-240H448V80h160v112z"/>
+								</svg>
+							</div>
+							<h3 class="wts-index-tooltip" data-i18n="card.unit_comparator">Unit Comparator</h3>
+						</div>
+						<div class="wts-index-card-content">
+							<p class="wts-index-card-description" data-i18n="card.unit_comparator_description">
+								Compare unit stats and combat effectiveness from configuration files
+							</p>
+							<ul class="wts-index-card-features">
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.unit_comparator_feature1">
+										Analyze multiple unit files simultaneously
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.unit_comparator_feature2">
+										Calculate combat metrics and effectiveness
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.unit_comparator_feature3">
+										Identify balance issues and compare stats
+									</span>
+								</li>
+							</ul>
+							<button class="wts-index-card-button outline" data-i18n="card.use_tool">Use Tool</button>
+						</div>
+					</div>
+				</a>
+				<!-- Dictionary Manager Card -->
+				<a href="ressources/po_dictionary_manager.html" class="wts-index-card-link">
+					<div class="wts-index-card" data-card="dictionary">
+						<div class="wts-index-card-header">
+							<div class="wts-index-card-icon">
+								<svg viewBox="0 0 24 24">
+									<path d="M0 0h24v24H0z" fill="none"/>
+									<path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/>
+								</svg>
+							</div>
+							<h3 class="wts-index-tooltip" data-i18n="card.dictionary_manager">Dictionary Manager</h3>
+						</div>
+						<div class="wts-index-card-content">
+							<p class="wts-index-card-description" data-i18n="card.dictionary_manager_description">
+								Manage and apply translation dictionaries for .po files
+							</p>
+							<ul class="wts-index-card-features">
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.dictionary_manager_feature1">
+										Extract translation dictionaries from .po files
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.dictionary_manager_feature2">
+										Apply dictionaries to update translations automatically
+									</span>
+								</li>
+								<li>
+									<svg viewBox="0 0 512 512">
+										<path d="M504 256c0 136.967-111.033 248-248 248S8 392.967 8 256 119.033 8 256 8s248 111.033 248 248zM227.314 387.314l184-184c6.248-6.248 6.248-16.379 0-22.627l-22.627-22.627c-6.248-6.249-16.379-6.249-22.628 0L216 308.118l-70.059-70.059c-6.248-6.248-16.379-6.248-22.627 0l-22.627 22.627c-6.248 6.248-6.248 16.379 0 22.627l104 104c6.249 6.249 16.379 6.249 22.628.001z"/>
+									</svg>
+									<span data-i18n="card.dictionary_manager_feature3">
+										Manage and edit dictionary entries with conflict resolution
+									</span>
+								</li>
+							</ul>
+							<button class="wts-index-card-button outline" data-i18n="card.use_tool">Use Tool</button>
+						</div>
+					</div>
+				</a>
 				<a href="ressources/sample.html" class="wts-index-card-link">
 					<div class="wts-index-card">
 						<div class="wts-index-card-header">

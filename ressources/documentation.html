@@ -66,7 +66,8 @@
 					<li><a href="#story-mode" data-i18n="doc.story_mode">Story Mode</a></li>
 					<li><a href="#gif-creator" data-i18n="doc.gif_creator">GIF Creator</a></li>
 					<li><a href="#big-map-tracker" data-i18n="doc.big_map_tracker">Big Map Tracker</a></li>
-<li><a href="#unit-comparator" data-i18n="doc.unit_comparator">Unit Comparator</a></li>
+					<li><a href="#unit-comparator" data-i18n="doc.unit_comparator">Unit Comparator</a></li>
+					<li><a href="#dictionary-manager" data-i18n="doc.dictionary_manager">Dictionary Manager</a></li>
 					<li><a href="#best-practices" data-i18n="doc.best_practices">Best Practices</a></li>
 					<li><a href="#api-reference" data-i18n="doc.api_reference">API Reference</a></li>
 					<li><a href="#faq" data-i18n="doc.faq">FAQ</a></li>
@@ -77,7 +78,7 @@
 				<section id="introduction">
 					<h2 data-i18n="doc.introduction">Introduction</h2>
 					<p data-i18n="doc.intro_p1">Welcome to the Wesnoth Campaign Tools Suite documentation. This comprehensive guide will help you effectively use our tools to create and manage Battle for Wesnoth campaigns.</p>
-					<p data-i18n="doc.intro_p2">The suite includes three main tools: Unit Editor for creating custom units, Scenario Builder for designing campaign scenarios, and WML Validator for ensuring your code is error-free.</p>
+					<p data-i18n="doc.intro_p2">The suite includes many inactive tools: Unit Editor for creating custom units, Scenario Builder for designing campaign scenarios, and WML Validator for ensuring your code is error-free.</p>
 					
 					<div class="wts-doc-feature">
 						<h3 data-i18n="doc.key_features">Key Features</h3>
@@ -301,44 +302,85 @@
 						</span>
 					</div>
 				</section>
-
-<section id="unit-comparator">
-  <h2 data-i18n="doc.unit_comparator">Unit Comparator</h2>
-  <p data-i18n="doc.unit_comparator_desc">
-    The Unit Comparator tool allows you to upload multiple unit configuration files, 
-    compare their stats, and calculate various effectiveness metrics.
-  </p>
-  
-  <h3 data-i18n="doc.using_unit_comparator">Using the Unit Comparator</h3>
-  <ol>
-    <li data-i18n="doc.uc_step1">Upload unit configuration files (.cfg) using the drag-and-drop area or the browse button</li>
-    <li data-i18n="doc.uc_step2">Optionally, load sample units to see how the tool works</li>
-    <li data-i18n="doc.uc_step3">Select a comparison metric from the available options</li>
-    <li data-i18n="doc.uc_step4">Adjust sorting and filtering options as needed</li>
-    <li data-i18n="doc.uc_step5">Click 'Compare Units' to generate the comparison table</li>
-    <li data-i18n="doc.uc_step6">Click on any unit row to view detailed information</li>
-  </ol>
-  
-  <h3 data-i18n="doc.key_features">Key Features</h3>
-  <ul>
-    <li data-i18n="doc.uc_feature1">Compare multiple units side-by-side</li>
-    <li data-i18n="doc.uc_feature2">Multiple metrics for unit effectiveness</li>
-    <li data-i18n="doc.uc_feature3">Sort by any attribute or calculated metric</li>
-    <li data-i18n="doc.uc_feature4">Filter units by race/faction</li>
-    <li data-i18n="doc.uc_feature5">Robust parser with default values for missing attributes</li>
-    <li data-i18n="doc.uc_feature6">Sample units for demonstration</li>
-    <li data-i18n="doc.uc_feature7">Detailed log of processing and warnings</li>
-  </ul>
-  
-  <div class="wts-doc-note">
-    <strong data-i18n="doc.note">Note:</strong>
-    <span data-i18n="doc.uc_note">
-      The parser will automatically fill in missing attributes with default values 
-      and provide warnings about any issues found in the unit files.
-    </span>
-  </div>
-</section>
 				
+				<section id="unit-comparator">
+					<h2 data-i18n="doc.unit_comparator">Unit Comparator</h2>
+					<p data-i18n="doc.unit_comparator_desc">
+						The Unit Comparator tool allows you to upload multiple unit configuration files, 
+						compare their stats, and calculate various effectiveness metrics.
+					</p>
+					
+					<h3 data-i18n="doc.using_unit_comparator">Using the Unit Comparator</h3>
+					<ol>
+						<li data-i18n="doc.uc_step1">Upload unit configuration files (.cfg) using the drag-and-drop area or the browse button</li>
+						<li data-i18n="doc.uc_step2">Optionally, load sample units to see how the tool works</li>
+						<li data-i18n="doc.uc_step3">Select a comparison metric from the available options</li>
+						<li data-i18n="doc.uc_step4">Adjust sorting and filtering options as needed</li>
+						<li data-i18n="doc.uc_step5">Click 'Compare Units' to generate the comparison table</li>
+						<li data-i18n="doc.uc_step6">Click on any unit row to view detailed information</li>
+					</ol>
+					
+					<h3 data-i18n="doc.key_features">Key Features</h3>
+					<ul>
+						<li data-i18n="doc.uc_feature1">Compare multiple units side-by-side</li>
+						<li data-i18n="doc.uc_feature2">Multiple metrics for unit effectiveness</li>
+						<li data-i18n="doc.uc_feature3">Sort by any attribute or calculated metric</li>
+						<li data-i18n="doc.uc_feature4">Filter units by race/faction</li>
+						<li data-i18n="doc.uc_feature5">Robust parser with default values for missing attributes</li>
+						<li data-i18n="doc.uc_feature6">Sample units for demonstration</li>
+						<li data-i18n="doc.uc_feature7">Detailed log of processing and warnings</li>
+					</ul>
+					
+					<div class="wts-doc-note">
+						<strong data-i18n="doc.note">Note:</strong>
+						<span data-i18n="doc.uc_note">
+							The parser will automatically fill in missing attributes with default values 
+							and provide warnings about any issues found in the unit files.
+						</span>
+					</div>
+				</section>
+				<section id="dictionary-manager">
+					<h2 data-i18n="doc.dictionary_manager">.po File Dictionary Manager</h2>
+					<p data-i18n="doc.dictionary_manager_desc">
+						The .po File Dictionary Manager helps you manage translation dictionaries for Wesnoth campaigns. 
+						It extracts terms from .po files, creates translation dictionaries, and applies them to other .po files.
+					</p>
+					
+					<h3 data-i18n="doc.using_dictionary_manager">Using the Dictionary Manager</h3>
+					<ol>
+						<li data-i18n="doc.dm_step1">Upload .po files or paste content directly</li>
+						<li data-i18n="doc.dm_step2">Select your target language from the dropdown</li>
+						<li data-i18n="doc.dm_step3">Choose processing options (single words, two words, or both)</li>
+						<li data-i18n="doc.dm_step4">Click 'Process Files' to extract dictionary entries</li>
+						<li data-i18n="doc.dm_step5">Edit, save, or download the dictionary as needed</li>
+						<li data-i18n="doc.dm_step6">Use the dictionary to apply translations to other .po files</li>
+					</ol>
+					
+					<h3 data-i18n="doc.key_features">Key Features</h3>
+					<ul>
+						<li data-i18n="doc.dm_feature1">Extract terms from .po files to build translation dictionaries</li>
+						<li data-i18n="doc.dm_feature2">Filter by word count (single words or two-word phrases)</li>
+						<li data-i18n="doc.dm_feature3">Edit dictionary entries directly in the interface</li>
+						<li data-i18n="doc.dm_feature4">Save dictionaries to browser storage for future use</li>
+						<li data-i18n="doc.dm_feature5">Apply dictionaries to modify .po files with translations</li>
+						<li data-i18n="doc.dm_feature6">Export modified .po files with applied translations</li>
+						<li data-i18n="doc.dm_feature7">All processing happens locally in your browser</li>
+					</ul>
+					
+					<h3 data-i18n="doc.workflow_example">Workflow Example</h3>
+					<pre><code>1. Upload English-to-French .po file
+						2. Process to create French dictionary
+						3. Upload untranslated .po file
+						4. Apply French dictionary
+					5. Download modified .po file with translations</code></pre>
+					
+					<div class="wts-doc-note">
+						<strong data-i18n="doc.note">Note:</strong>
+						<span data-i18n="doc.dm_note">
+							The Dictionary Manager preserves your original .po files and only modifies content when you explicitly save changes.
+						</span>
+					</div>
+				</section>				
 				<section id="best-practices">
 					<h2 data-i18n="doc.best_practices">Best Practices</h2>
 					<ul>

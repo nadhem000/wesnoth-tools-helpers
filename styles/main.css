@@ -40,6 +40,7 @@
   --special-card-3: #db3434;
     --special-card-4: #7b2cbf;
     --special-card-5: #ffcc00;
+    --special-card-6: #a4c639;
 }
 
 [data-theme="dark"] {
@@ -67,6 +68,7 @@
     --special-card-2: #2ecc76;
     --special-card-4: #9d4edd;
     --special-card-5: #d4a017;
+    --special-card-6: #8aac2f;
 }
 /* INDEX PAGE STYLES */
 .wts-index-body {
@@ -156,6 +158,9 @@
 }
 .wts-index-card[data-card="unit_comparator"] .wts-index-card-header {
     background: var(--special-card-5);
+}
+.wts-index-card[data-card="dictionary"] .wts-index-card-header {
+    background: var(--special-card-6);
 }
 
 .wts-index-card-icon {
