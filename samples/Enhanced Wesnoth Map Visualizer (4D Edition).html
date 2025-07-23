@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced Wesnoth Map Visualizer (4D Edition)</title>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #34495e;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --success: #2ecc71;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .map-anim-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .map-anim-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        @media (max-width: 900px) {
+            .map-anim-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .map-anim-control-panel {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .control-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-title i {
+            font-size: 1.5rem;
+        }
+        
+        .map-anim-input {
+            width: 100%;
+            min-height: 150px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--accent);
+            color: var(--light);
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            resize: vertical;
+        }
+        
+        .map-anim-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .map-anim-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .map-anim-btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .map-anim-btn-success {
+            background: var(--success);
+            color: white;
+        }
+        
+        .map-anim-btn-warning {
+            background: var(--warning);
+            color: white;
+        }
+        
+        .map-anim-btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .map-anim-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .map-anim-btn:active {
+            transform: translateY(0);
+        }
+        
+        .map-anim-display {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .map-viewport {
+            background: #1a2a38;
+            border-radius: 5px;
+            overflow: auto;
+            max-height: 600px;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+            border: 1px solid var(--accent);
+        }
+        
+        .map-anim-grid {
+            position: relative;
+        }
+        
+        .map-anim-row {
+            display: flex;
+        }
+        
+        .map-anim-row:nth-child(even) {
+            margin-left: 25px;
+        }
+        
+        .map-anim-hex {
+            width: 50px;
+            height: 43.3px; /* (sqrt(3)/2 * width) */
+            position: relative;
+            margin: 1px;
+        }
+        
+        .hex-inner {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+            text-shadow: 0 0 2px black;
+            transition: transform 0.2s ease;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .hex-inner:hover {
+            transform: scale(1.1);
+            z-index: 10;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+        
+        .terrain-overlay {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 4px;
+            border-radius: 3px;
+            z-index: 2;
+        }
+        
+        .coordinate-overlay {
+            position: absolute;
+            bottom: 5px;
+            left: 5px;
+            font-size: 8px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 4px;
+            border-radius: 3px;
+            z-index: 2;
+        }
+        
+        .unit-marker {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            text-shadow: 0 0 2px black;
+            z-index: 1;
+        }
+        
+        .map-anim-legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        
+        .legend-image {
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .options-panel {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 20px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* Time of day filters */
+        .time-dawn {
+            filter: sepia(0.3) hue-rotate(-20deg) brightness(1.1);
+        }
+        
+        .time-morning {
+            filter: saturate(1.2) brightness(1.1);
+        }
+        
+        .time-noon {
+            filter: contrast(1.1) brightness(1.2);
+        }
+        
+        .time-afternoon {
+            filter: sepia(0.2) hue-rotate(10deg);
+        }
+        
+        .time-dusk {
+            filter: sepia(0.5) hue-rotate(30deg) brightness(0.9);
+        }
+        
+        .time-night {
+            filter: brightness(0.5) hue-rotate(-20deg) saturate(0.8);
+        }
+        
+        /* New 4D options - Weather effects */
+        .weather-clear {
+            /* Default state - no additional effect */
+        }
+        
+        .weather-rain {
+            filter: brightness(0.9) saturate(0.8);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .weather-rain::before {
+            content: "";
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(90deg, transparent, rgba(173, 216, 230, 0.2), transparent);
+            animation: rainEffect 1.5s linear infinite;
+            z-index: 5;
+        }
+        
+        .weather-snow {
+            filter: brightness(1.1) contrast(0.9);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .weather-snow::before {
+            content: "";
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background-image: 
+                radial-gradient(white 1px, transparent 2px),
+                radial-gradient(white 1px, transparent 2px),
+                radial-gradient(white 1px, transparent 2px);
+            background-size: 50px 50px;
+            background-position: 0 0, 20px 20px, 40px 40px;
+            opacity: 0.3;
+            animation: snowEffect 5s linear infinite;
+            z-index: 5;
+        }
+        
+        .weather-fog {
+            filter: blur(1px) brightness(0.8) contrast(0.8);
+            position: relative;
+        }
+        
+        .weather-fog::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(200, 200, 200, 0.2);
+            z-index: 5;
+        }
+        
+        /* New 4D options - Season variations */
+        .season-spring {
+            filter: hue-rotate(10deg) saturate(1.1);
+        }
+        
+        .season-summer {
+            filter: saturate(1.2) brightness(1.05);
+        }
+        
+        .season-autumn {
+            filter: hue-rotate(-30deg) saturate(1.1);
+        }
+        
+        .season-winter {
+            filter: hue-rotate(180deg) saturate(0.8) brightness(1.1);
+        }
+        
+        /* New 4D options - Elevation levels */
+        .elevation-low {
+            /* Default - no change */
+        }
+        
+        .elevation-medium {
+            filter: brightness(0.95);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .elevation-high {
+            filter: brightness(0.9);
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+        
+        .elevation-high::after {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            border-radius: 50%;
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+            z-index: 4;
+        }
+        
+        /* Animation keyframes */
+        @keyframes rainEffect {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(100px, 100px); }
+        }
+        
+        @keyframes snowEffect {
+            0% { transform: translateY(0) translateX(0); }
+            100% { transform: translateY(100px) translateX(50px); }
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .map-anim-hex {
+                width: 40px;
+                height: 34.64px;
+            }
+            
+            .map-anim-row:nth-child(even) {
+                margin-left: 20px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .map-anim-hex {
+                width: 30px;
+                height: 25.98px;
+            }
+            
+            .map-anim-row:nth-child(even) {
+                margin-left: 15px;
+            }
+            
+            .terrain-overlay, .unit-marker {
+                font-size: 8px;
+            }
+            
+            .unit-marker {
+                width: 15px;
+                height: 15px;
+            }
+            
+            .options-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="map-anim-container">
+        <header>
+            <h1>Wesnoth Map Visualizer (4D Edition)</h1>
+            <p>Visualize maps with time, weather, season, and elevation dimensions</p>
+        </header>
+        
+        <div class="map-anim-controls">
+            <div class="map-anim-control-panel">
+                <div class="control-title">
+                    <span>📤 Upload Map File</span>
+                </div>
+                <input type="file" id="map-anim-upload" accept=".map" class="map-anim-input">
+                <div class="map-anim-buttons">
+                    <button id="map-anim-load-sample" class="map-anim-btn map-anim-btn-primary">
+                        <span>📋 Load Sample Map</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="map-anim-control-panel">
+                <div class="control-title">
+                    <span>📝 Paste Map Content</span>
+                </div>
+                <textarea id="map-anim-textarea" class="map-anim-input" placeholder="Paste your .map file content here..."></textarea>
+                <div class="map-anim-buttons">
+                    <button id="map-anim-render" class="map-anim-btn map-anim-btn-success">
+                        <span>🔄 Render Map</span>
+                    </button>
+                    <button id="map-anim-download" class="map-anim-btn map-anim-btn-warning">
+                        <span>💾 Download as PNG</span>
+                    </button>
+                    <button id="map-anim-reset" class="map-anim-btn map-anim-btn-danger">
+                        <span>❌ Reset Options</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="map-anim-control-panel" style="grid-column: span 2;">
+                <div class="control-title">
+                    <span>⚙️ Display Options</span>
+                </div>
+                <div class="options-panel">
+                    <div class="option-group">
+                        <div class="option-label">
+                            <input type="checkbox" id="show-terrain-codes" checked>
+                            <label for="show-terrain-codes">Show Terrain Codes</label>
+                        </div>
+                        <div class="option-label">
+                            <input type="checkbox" id="show-coordinates" checked>
+                            <label for="show-coordinates">Show Coordinates (x,y)</label>
+                        </div>
+                        <div class="option-label">
+                            <input type="checkbox" id="use-images">
+                            <label for="use-images">Use Terrain Images</label>
+                        </div>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="time-of-day">Time of Day:</label>
+                        <select id="time-of-day">
+                            <option value="dawn">Dawn</option>
+                            <option value="morning">Morning</option>
+                            <option value="noon" selected>Noon</option>
+                            <option value="afternoon">Afternoon</option>
+                            <option value="dusk">Dusk</option>
+                            <option value="night">Night</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="hex-size">Hex Size:</label>
+                        <input type="range" id="hex-size" min="30" max="70" value="50">
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="color-theme">Color Theme:</label>
+                        <select id="color-theme">
+                            <option value="default" selected>Default</option>
+                            <option value="vibrant">Vibrant</option>
+                            <option value="pastel">Pastel</option>
+                            <option value="dark">Dark Mode</option>
+                        </select>
+                    </div>
+                    
+                    <!-- New 4D Options -->
+                    <div class="option-group">
+                        <label for="weather">Weather:</label>
+                        <select id="weather">
+                            <option value="clear" selected>Clear</option>
+                            <option value="rain">Rain</option>
+                            <option value="snow">Snow</option>
+                            <option value="fog">Fog</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="season">Season:</label>
+                        <select id="season">
+                            <option value="spring">Spring</option>
+                            <option value="summer" selected>Summer</option>
+                            <option value="autumn">Autumn</option>
+                            <option value="winter">Winter</option>
+                        </select>
+                    </div>
+                    
+                    <div class="option-group">
+                        <label for="elevation">Elevation:</label>
+                        <select id="elevation">
+                            <option value="none" selected>None</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="map-anim-display">
+            <div class="control-title">
+                <span>🗺️ Map Visualization (4D)</span>
+            </div>
+            <div class="map-viewport">
+                <div class="map-anim-grid" id="mapGrid">
+                    <!-- Map will be rendered here -->
+                </div>
+            </div>
+            
+            <div class="map-anim-legend" id="mapLegend">
+                <!-- Legend will be generated here -->
+            </div>
+        </div>
+        
+        <footer>
+            <p>Works offline | Hover over hexes to see terrain details | Drag to navigate large maps</p>
+            <p>4D Dimensions: Time, Weather, Season, Elevation</p>
+        </footer>
+    </div>
+
+    <script>
+        // Sample map content
+        const sampleMap = `border_size=1
+usage=map
+
+Ql,       Ql,   Uu,       Ql,       Ql,       Ql,       Ql,      Qxu,       Xu,       Xu,       Uu,   Gs^Fp,      Chr,      Chr,      Chr,   Gs^Fp,       Uu,       Xu,       Xu,      Qxu,       Ql,       Ql,       Ql,       Ql,   Uu,       Ql,       Ql
+Ql,       Ql,   Uu^Vud,       Ql,       Ql,       Ql,       Ql,      Qxu,       Xu,       Xu,       Uu,   Gg^Fet,      Chr,      Chr,      Chr,   Gg^Fet,       Uu,       Xu,       Xu,      Qxu,       Ql,       Ql,       Ql,       Ql,   Uu^Vud,       Ql,       Ql
+Ql,       Ql,       Rd,       Rd,       Rd,       Ql,       Ql,      Qxu,      Qxu,       Xu,       Uu,   Gg^Fet,      Chr,     1 Kh,      Chr,   Gg^Fet,       Uu,       Xu,      Qxu,      Qxu,       Ql,       Ql,       Rd,       Rd,       Rd,       Ql,       Ql
+Ql,       Ql,       Rd,       Ql,       Ql,       Rd,       Rd,      Qxu,   Gg^Fet,       Xu,       Aa,    Uu^Ii,       Uu,      Chr,       Uu,    Uu^Ii,       Aa,       Xu,   Gg^Fet,      Qxu,       Rd,       Rd,       Ql,       Ql,       Rd,       Ql,       Ql
+Ql,       Ql,    Gs^Ft,       Ql,    Gs^Ft,       Ql,    Gs^Ft,   Gg^Fet,    Gs^Ft,       Aa,    Gs^Ft,       Ai,    Gs^Ft,       Rr,    Gs^Ft,       Ai,    Gs^Ft,       Aa,    Gs^Ft,   Gg^Fet,    Gs^Ft,       Ql,    Gs^Ft,       Ql,    Gs^Ft,       Ql,       Ql
+Gs^Ft,    Gs^Ft,       Ds,    Gs^Ft,       Ds,    Gs^Ft,       Ds,    Gs^Ft,       Ds,    Gs^Ft,       Ds,    Gs^Ft,    Gs^Ft,       Rr,    Gs^Ft,    Gs^Ft,       Ds,    Gs^Ft,       Ds,    Gs^Ft,       Ds,    Gs^Ft,       Ds,    Gs^Ft,       Ds,    Gs^Ft,    Gs^Ft
+Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,    Gg^Vh,    Gs^Ft,       Rr,    Gs^Ft,    Gg^Ve,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds
+Ds,       Ds,       Dd,       Ds,       Dd,       Ds,       Dd,       Ds,       Dd,       Ds,       Dd,       Dd,       Dd,       Rr,       Dd,       Dd,       Dd,       Ds,       Dd,       Ds,       Dd,       Ds,       Dd,       Ds,       Dd,       Ds,       Ds
+Dd,       Dd,       Gg,       Dd,       Gg,       Dd,    Gs^Fp,       Dd,    Gs^Fp,       Dd,    Gs^Fp,       Dd,       Rr,       Rr,       Rr,       Dd,    Gs^Fp,       Dd,    Gs^Fp,       Dd,    Gs^Fp,       Dd,       Gg,       Dd,       Gg,       Dd,       Dd
+Gg,       Gg,       Ha,       Ha,       Ha,   Aa^Fpa,    Gs^Fp,    Gs^Fp,       Hh,    Gs^Fp,    Gs^Fp,   Aa^Fpa,   Gg^Fet,       Rr,   Gg^Fet,   Aa^Fpa,    Gs^Fp,    Gs^Fp,       Hh,    Gs^Fp,    Gs^Fp,   Aa^Fpa,       Ha,       Ha,       Ha,       Gg,       Gg
+Gg,       Gg,       Ha,       Ql,       Ha,   Aa^Fpa,    Gs^Fp,       Hh,   Hh^Vhh,       Hh,    Gs^Fp,   Aa^Fpa,       Ha,       Ha,       Ha,   Aa^Fpa,    Gs^Fp,       Hh,   Hh^Vhh,       Hh,    Gs^Fp,   Aa^Fpa,       Ha,       Ql,       Ha,       Gg,       Gg
+Xu,       Xu,       Gg,       Ha,    Uu^Uf,   Aa^Fpa,    Gs^Fp,       Hh,       Hh,       Hh,    Gs^Fp,   Aa^Fpa,       Ha,       Ql,       Ha,   Aa^Fpa,    Gs^Fp,       Hh,       Hh,       Hh,    Gs^Fp,   Aa^Fpa,    Uu^Uf,       Ha,       Gg,       Xu,       Xu
+Xu,       Xu,       Gg,       Gg,    Uu^Uf,   Aa^Fpa,   Aa^Fpa,    Gs^Fp,    Gs^Fp,    Gs^Fp,   Aa^Fpa,   Aa^Fpa,      Chr,       Ha,      Chr,   Aa^Fpa,   Aa^Fpa,    Gs^Fp,    Gs^Fp,    Gs^Fp,   Aa^Fpa,   Aa^Fpa,    Uu^Uf,       Gg,       Gg,       Xu,       Xu
+Xu,       Xu,       Gg,       Gg,       Gg,    Uu^Uf,    Uu^Uf,   Aa^Fpa,       Gg,   Aa^Fpa,    Uu^Uf,    Uu^Uf,   Hh^Vhh,       Kh,   Hh^Vhh,    Uu^Uf,    Uu^Uf,   Aa^Fpa,       Gg,   Aa^Fpa,    Uu^Uf,    Uu^Uf,       Gg,       Gg,       Gg,       Xu,       Xu
+Xu,       Xu,       Md,       Md,       Md,       Gg,   Ww^Bw\\,       Ww,   Ww^Bw|,       Ww,   Ww^Bw/,       Gg,    Mm^Xm,    Mm^Xm,    Mm^Xm,       Gg,   Ww^Bw\\,       Ss,   Ww^Bw|,       Ss,   Ww^Bw/,       Gg,       Md,       Md,       Md,       Xu,       Xu
+Md,       Md,       Md,       Md,       Md,       Md,       Ww,   Ww^Bw\\,   Ww^Bw|,   Ww^Bw/,       Ww,    Mm^Xm,      Qxu,    Mm^Xm,      Qxu,    Mm^Xm,       Ss,   Ww^Bw\\,   Ww^Bw|,   Ww^Bw/,       Ss,       Md,       Md,       Md,       Md,       Md,       Md
+Md,       Md,       Md,   Hh^Vhh,       Md,       Md,       Ww,       Ww,   Ww^Bw|,       Ww,       Ww,    Mm^Xm,       Ql,    Mm^Xm,       Ql,    Mm^Xm,       Ss,       Ss,   Ww^Bw\\,       Ss,       Ss,       Md,       Md,   Hh^Vhh,       Md,       Md,       Md
+Md,       Md,       Md,       Md,       Md,       Md,   Ww^Bw/,   Ww^Bw/,   Ww^Bw|,   Ww^Bw\\,   Ww^Bw\\,    Mm^Xm,    Mm^Xm,    Mm^Xm,    Mm^Xm,    Mm^Xm,   Ww^Bw/,   Ww^Bw/,   Ww^Bw|,   Ww^Bw\\,   Ww^Bw\\,       Md,       Md,       Md,       Md,       Md,       Md
+Xu,       Xu,       Gg,       Md,       Gg,       Gg,    Uu^Uf,       Ww,       Gg,       Ww,    Uu^Uf,       Gg,   Hh^Vhh,    Mm^Xm,   Hh^Vhh,       Gg,    Uu^Uf,       Ss,       Gg,       Ss,    Uu^Uf,       Gg,       Gg,       Md,       Gg,       Xu,       Xu
+Xu,       Xu,       Gg,       Gg,    Uu^Uf,    Uu^Uf,   Aa^Fpa,   Aa^Fpa,    Gs^Fp,   Aa^Fpa,   Aa^Fpa,    Uu^Uf,      Chr,       Kh,      Chr,    Uu^Uf,   Aa^Fpa,   Aa^Fpa,    Gs^Fp,   Aa^Fpa,   Aa^Fpa,    Uu^Uf,    Uu^Uf,       Gg,       Gg,       Xu,       Xu
+Xu,       Xu,       Gg,       Gg,    Uu^Uf,   Aa^Fpa,    Gs^Fp,    Gs^Fp,       Hh,    Gs^Fp,    Gs^Fp,   Aa^Fpa,       Ha,       Ha,       Ha,   Aa^Fpa,    Gs^Fp,    Gs^Fp,       Hh,    Gs^Fp,    Gs^Fp,   Aa^Fpa,    Uu^Uf,       Gg,       Gg,       Xu,       Xu
+Xu,       Xu,       Ha,       Ha,       Ha,   Aa^Fpa,    Gs^Fp,       Hh,   Hh^Vhh,       Hh,    Gs^Fp,   Aa^Fpa,       Ha,       Ql,       Ha,   Aa^Fpa,    Gs^Fp,       Hh,   Hh^Vhh,       Hh,    Gs^Fp,   Aa^Fpa,       Ha,       Ha,       Ha,       Xu,       Xu
+Gg,       Gg,       Ha,       Ql,       Ha,   Aa^Fpa,    Gs^Fp,       Hh,       Hh,       Hh,    Gs^Fp,   Aa^Fpa,   Gg^Fet,       Ha,   Gg^Fet,   Aa^Fpa,    Gs^Fp,       Hh,       Hh,       Hh,    Gs^Fp,   Aa^Fpa,       Ha,       Ql,       Ha,       Gg,       Gg
+Gg,       Gg,       Gg,       Ha,       Gg,   Aa^Fpa,    Gs^Fp,    Gs^Fp,    Gs^Fp,    Gs^Fp,    Gs^Fp,   Aa^Fpa,       Rr,       Rr,       Rr,   Aa^Fpa,    Gs^Fp,    Gs^Fp,    Gs^Fp,    Gs^Fp,    Gs^Fp,   Aa^Fpa,       Gg,       Ha,       Gg,       Gg,       Gg
+Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Rr,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd,       Dd
+Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Dd,    Gs^Ft,       Rr,    Gs^Ft,       Dd,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds
+Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,    Gg^Vh,    Gs^Ft,       Rr,    Gs^Ft,    Gg^Ve,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds,       Ds
+Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,       Rr,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft,    Gs^Ft
+Ql,       Ql,       Rd,       Ql,       Ql,       Ql,       Rd,   Gg^Fet,   Gg^Fet,       Aa,       Aa,       Ai,       Uu,       Rr,       Uu,       Ai,       Aa,       Aa,   Gg^Fet,   Gg^Fet,       Rd,       Ql,       Ql,       Ql,       Rd,       Ql,       Ql
+Ql,       Ql,       Rd,       Ql,       Rd,       Rd,       Ql,      Qxu,      Qxu,       Xu,       Uu,    Uu^Ii,      Chr,      Chr,      Chr,    Uu^Ii,       Uu,       Xu,      Qxu,      Qxu,       Ql,       Rd,       Rd,       Ql,       Rd,       Ql,       Ql
+Ql,       Ql,   Uu^Vud,       Rd,       Ql,       Ql,       Ql,      Qxu,       Xu,       Xu,       Uu,   Gg^Fet,      Chr,     2 Kh,      Chr,   Gg^Fet,       Uu,       Xu,       Xu,      Qxu,       Ql,       Ql,       Ql,       Rd,   Uu^Vud,       Ql,       Ql
+Ql,       Ql,       Ql,       Ql,       Ql,       Ql,       Ql,      Qxu,       Xu,       Xu,       Xu,   Gg^Fet,   Gg^Fet,      Chr,   Gg^Fet,   Gg^Fet,       Xu,       Xu,       Xu,      Qxu,       Ql,       Ql,       Ql,       Ql,       Ql,       Ql,       Ql
+Ql,       Ql,       Ql,       Ql,       Ql,       Ql,       Ql,      Qxu,       Xu,       Xu,       Xu,   Gs^Fp,   Gs^Fp,      Chr,   Gs^Fp,   Gs^Fp,       Xu,       Xu,       Xu,      Qxu,       Ql,       Ql,       Ql,       Ql,       Ql,       Ql,       Ql`;
+
+        // Terrain color mappings with multiple themes
+        const terrainColorThemes = {
+            default: {
+                'Ql': '#a0a0a0', // Quarry
+                'Uu': '#404040', // Underground
+                'Xu': '#606060', // Cave
+                'Gs': '#70c070', // Grass
+                'Chr': '#c0a040', // Castle Human
+                'Rd': '#d0b050', // Road
+                'Gg': '#60a060', // Grass Green
+                'Aa': '#4080c0', // Water
+                'Ai': '#a0e0e0', // Ice
+                'Rr': '#202020', // Rock
+                'Ds': '#e0e0a0', // Desert
+                'Dd': '#c0b070', // Dirt
+                'Ha': '#a06060', // Lava
+                'Hh': '#a04040', // Lava Hill
+                'Md': '#303030', // Mountains
+                'Ww': '#a0a0ff', // Water
+                'Ss': '#a0a0a0', // Stone
+                'Mm': '#505050', // Mountain
+                'Kh': '#ff0000', // Keep
+                'Gg^Fet': '#50a050', // Grass with Forest
+                'Uu^Vud': '#505080', // Underground with Village
+                'Gs^Fp': '#80c080', // Grass with Flowers
+                'default': '#000000' // Default color
+            },
+            vibrant: {
+                'Ql': '#c0c0c0',
+                'Uu': '#606060',
+                'Xu': '#808080',
+                'Gs': '#80e080',
+                'Chr': '#e0c040',
+                'Rd': '#f0d060',
+                'Gg': '#70c070',
+                'Aa': '#60a0ff',
+                'Ai': '#c0f0f0',
+                'Rr': '#404040',
+                'Ds': '#f0f0c0',
+                'Dd': '#e0d090',
+                'Ha': '#e07070',
+                'Hh': '#e05050',
+                'Md': '#505050',
+                'Ww': '#b0b0ff',
+                'Ss': '#c0c0c0',
+                'Mm': '#707070',
+                'Kh': '#ff5050',
+                'Gg^Fet': '#60c060',
+                'Uu^Vud': '#7070b0',
+                'Gs^Fp': '#90e090',
+                'default': '#303030'
+            },
+            pastel: {
+                'Ql': '#d0d0d0',
+                'Uu': '#808080',
+                'Xu': '#a0a0a0',
+                'Gs': '#a0e0a0',
+                'Chr': '#e0d080',
+                'Rd': '#f0e0a0',
+                'Gg': '#90d090',
+                'Aa': '#90c0f0',
+                'Ai': '#d0f0f0',
+                'Rr': '#606060',
+                'Ds': '#f0f0d0',
+                'Dd': '#e0e0b0',
+                'Ha': '#e0a0a0',
+                'Hh': '#e08080',
+                'Md': '#707070',
+                'Ww': '#c0c0ff',
+                'Ss': '#d0d0d0',
+                'Mm': '#909090',
+                'Kh': '#ff9090',
+                'Gg^Fet': '#a0d0a0',
+                'Uu^Vud': '#a0a0d0',
+                'Gs^Fp': '#b0e0b0',
+                'default': '#505050'
+            },
+            dark: {
+                'Ql': '#707070',
+                'Uu': '#202020',
+                'Xu': '#404040',
+                'Gs': '#408040',
+                'Chr': '#a08020',
+                'Rd': '#b09030',
+                'Gg': '#308030',
+                'Aa': '#2060a0',
+                'Ai': '#60c0c0',
+                'Rr': '#000000',
+                'Ds': '#c0c080',
+                'Dd': '#a09050',
+                'Ha': '#804040',
+                'Hh': '#802020',
+                'Md': '#101010',
+                'Ww': '#6060c0',
+                'Ss': '#707070',
+                'Mm': '#303030',
+                'Kh': '#c00000',
+                'Gg^Fet': '#308030',
+                'Uu^Vud': '#303060',
+                'Gs^Fp': '#50a050',
+                'default': '#000000'
+            }
+        };
+
+        // Terrain names for legend
+        const terrainNames = {
+            'Ql': 'Quarry',
+            'Uu': 'Underground',
+            'Xu': 'Cave',
+            'Gs': 'Grass',
+            'Chr': 'Castle (Human)',
+            'Rd': 'Road',
+            'Gg': 'Green Grass',
+            'Aa': 'Water',
+            'Ai': 'Ice',
+            'Rr': 'Rock',
+            'Ds': 'Desert',
+            'Dd': 'Dirt',
+            'Ha': 'Lava',
+            'Hh': 'Lava Hill',
+            'Md': 'Mountains',
+            'Ww': 'Water',
+            'Ss': 'Stone',
+            'Mm': 'Mountain',
+            'Kh': 'Keep',
+            'Gg^Fet': 'Grass with Forest',
+            'Uu^Vud': 'Underground Village',
+            'Gs^Fp': 'Grass with Flowers',
+            'default': 'Unknown'
+        };
+
+        // Terrain images (base64 encoded for offline use)
+        const terrainImages = {
+            'Gs': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiM3MGMwNzAiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSIzIiBmaWxsPSIjNjBhMDYwIi8+PGNpcmNsZSBjeD0iMjUiIGN5PSIxNSIgcj0iNCIgZmlsbD0iIzYwYTA2MCIvPjxjaXJjbGUgY3g9IjQwIiBjeT0iMTIiIHI9IjIiIGZpbGw9IiM2MGEwNjAiLz48Y2lyY2xlIGN4PSIxNSIgY3k9IjMwIiByPSIzIiBmaWxsPSIjNjBhMDYwIi8+PGNpcmNsZSBjeD0iMzUiIGN5PSIzMCIgcj0iNCIgZmlsbD0iIzYwYTA2MCIvPjxjaXJjbGUgY3g9IjIwIiBjeT0iNDAiIHI9IjMiIGZpbGw9IiM2MGEwNjAiLz48L3N2Zz4=',
+            'Aa': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiM0MDgwYzAiLz48cGF0aCBkPSJNMTAgMTVDMjAgMTUgMTUgMzAgMjUgMzAgMzUgMzAgMzAgMTUgNDAgMTVzNSA0MCAxMCA0MC0xMC0yMC0yMC0yMFMzMCA1NSAyMCAxNXoiIGZpbGw9IiM4MGMwZmYiIGZpbGwtb3BhY2l0eT0iMC42Ii8+PC9zdmc+',
+            'Ds': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiNlMGUwYTAiLz48Y2lyY2xlIGN4PSIxMCIgY3k9IjEwIiByPSI0IiBmaWxsPSIjZjBmMGMwIi8+PGNpcmNsZSBjeD0iMzAiIGN5PSIyMCIgcj0iNSIgZmlsbD0iI2YwZjBjMCIvPjxjaXJjbGUgY3g9IjE1IiBjeT0iMzUiIHI9IjQiIGZpbGw9IiNmMGYwYzAiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSIzIiBmaWxsPSIjZjBmMGMwIi8+PC9zdmc+',
+            'Gg': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiM2MGEwNjAiLz48cGF0aCBkPSJNMTAgMTBDMTAgMTAgMjAgMCAzMCA1IDQwIDEwIDM1IDIwIDMwIDMwIDI1IDQwIDEwIDM1IDEwIDM1eiIgZmlsbD0iIzgwZDA4MCIvPjxwYXRoIGQ9Ik0zMCAxMGMwIDAgLTEwIDAgLTEwIDEwIDAgMTAgMTAgMTAgMTAgMTBzMTAgLTEwIDAgLTIweiIgZmlsbD0iIzgwZDA4MCIvPjxwYXRoIGQ9Ik00MCAyMGMwIDAgLTEwIC01IC0xMCA1IDAgMTAgMTAgMTAgMTAgMTBzMTAgLTEwIDAgLTIweiIgZmlsbD0iIzgwZDA4MCIvPjwvc3ZnPg==',
+            'Ha': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiNhMDYwNjAiLz48Y2lyY2xlIGN4PSIyNSIgY3k9IjE1IiByPSI4IiBmaWxsPSIjZmYwMDAwIi8+PHBhdGggZD0iTTEwIDMwQzEwIDMwIDE1IDIwIDI1IDIwIDM1IDIwIDQwIDMwIDQwIDMwIDQwIDQwIDM1IDQ1IDI1IDQ1IDE1IDQ1IDEwIDQwIDEwIDMweiIgZmlsbD0iI2ZmODAwMCIvPjwvc3ZnPg==',
+            'Ww': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiNhMGEwZmYiLz48cGF0aCBkPSJNMTAgMTVDMTAgMTUgMTUgNSAyNSA1IDM1IDUgNDAgMTUgNDAgMTVzNSA0MCAxMCA0MC0xMC0yMC0yMC0yMFMzMCA1NSAyMCAxNXoiIGZpbGw9IiM4MGMwZmYiIGZpbGwtb3BhY2l0eT0iMC43Ii8+PC9zdmc+',
+            'Rr': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiMyMDIwMjAiLz48Y2lyY2xlIGN4PSIxNSIgY3k9IjE1IiByPSI1IiBmaWxsPSIjNDA0MDQwIi8+PGNpcmNsZSBjeD0iMzUiIGN5PSIyMCIgcj0iNiIgZmlsbD0iIzQwNDA0MCIvPjxjaXJjbGUgY3g9IjI1IiBjeT0iMzUiIHI9IjQiIGZpbGw9IiM0MDQwNDAiLz48Y2lyY2xlIGN4PSI0MCIgY3k9IjQwIiByPSI1IiBmaWxsPSIjNDA0MDQwIi8+PC9zdmc+',
+            'Gg^Fet': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiM1MGEwNTAiLz48cGF0aCBkPSJNMjUgMTBDMTAgMjAgMjUgMzAgNDAgMjAgMzAgMzAgMzAgMTAgMjUgMTB6IiBmaWxsPSIjMjA4MDIwIi8+PHBhdGggZD0iTTEwIDIwQzIwIDEwIDMwIDIwIDIwIDMwIDIwIDQwIDAgMzAgMTAgMjB6IiBmaWxsPSIjMjA4MDIwIi8+PHBhdGggZD0iTTQwIDIwQzMwIDMwIDQwIDQwIDUwIDMwIDUwIDIwIDQwIDEwIDQwIDIweiIgZmlsbD0iIzIwODAyMCIvPjwvc3ZnPg==',
+            'default': 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgdmlld0JveD0iMCAwIDUwIDUwIj48cmVjdCB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIGZpbGw9IiMwMDAwMDAiLz48L3N2Zz4='
+        };
+
+        // DOM elements
+        const uploadInput = document.getElementById('map-anim-upload');
+        const textarea = document.getElementById('map-anim-textarea');
+        const renderBtn = document.getElementById('map-anim-render');
+        const downloadBtn = document.getElementById('map-anim-download');
+        const loadSampleBtn = document.getElementById('map-anim-load-sample');
+        const resetBtn = document.getElementById('map-anim-reset');
+        const mapGrid = document.getElementById('mapGrid');
+        const mapLegend = document.getElementById('mapLegend');
+        
+        // Options elements
+        const showTerrainCodes = document.getElementById('show-terrain-codes');
+        const showCoordinates = document.getElementById('show-coordinates');
+        const useImages = document.getElementById('use-images');
+        const timeOfDay = document.getElementById('time-of-day');
+        const hexSize = document.getElementById('hex-size');
+        const colorTheme = document.getElementById('color-theme');
+        
+        // New 4D options elements
+        const weatherSelect = document.getElementById('weather');
+        const seasonSelect = document.getElementById('season');
+        const elevationSelect = document.getElementById('elevation');
+
+        // Initialize with sample map
+        textarea.value = sampleMap;
+        renderMap(sampleMap);
+
+        // Event listeners
+        uploadInput.addEventListener('change', handleFileUpload);
+        renderBtn.addEventListener('click', () => renderMap(textarea.value));
+        loadSampleBtn.addEventListener('click', () => {
+            textarea.value = sampleMap;
+            renderMap(sampleMap);
+        });
+        downloadBtn.addEventListener('click', downloadMapAsImage);
+        resetBtn.addEventListener('click', resetOptions);
+        
+        // Options event listeners
+        showTerrainCodes.addEventListener('change', () => renderMap(textarea.value));
+        showCoordinates.addEventListener('change', () => renderMap(textarea.value));
+        useImages.addEventListener('change', () => renderMap(textarea.value));
+        timeOfDay.addEventListener('change', updateTimeOfDay);
+        hexSize.addEventListener('input', updateHexSize);
+        colorTheme.addEventListener('change', () => renderMap(textarea.value));
+        
+        // New 4D options event listeners
+        weatherSelect.addEventListener('change', () => updateWeatherEffect());
+        seasonSelect.addEventListener('change', () => updateSeasonEffect());
+        elevationSelect.addEventListener('change', () => updateElevationEffect());
+
+        // Handle file upload
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                textarea.value = e.target.result;
+                renderMap(e.target.result);
+            };
+            reader.readAsText(file);
+        }
+
+        // Reset options to default
+        function resetOptions() {
+            showTerrainCodes.checked = true;
+            showCoordinates.checked = true;
+            useImages.checked = false;
+            timeOfDay.value = 'noon';
+            hexSize.value = 50;
+            colorTheme.value = 'default';
+            weatherSelect.value = 'clear';
+            seasonSelect.value = 'summer';
+            elevationSelect.value = 'none';
+            
+            updateHexSize();
+            updateTimeOfDay();
+            updateWeatherEffect();
+            updateSeasonEffect();
+            updateElevationEffect();
+            renderMap(textarea.value);
+        }
+
+        // Update hex size
+        function updateHexSize() {
+            const size = hexSize.value;
+            document.documentElement.style.setProperty('--hex-size', `${size}px`);
+            
+            // Update all hexes
+            const hexes = document.querySelectorAll('.map-anim-hex');
+            hexes.forEach(hex => {
+                hex.style.width = `${size}px`;
+                hex.style.height = `${size * 0.866}px`;
+            });
+            
+            // Adjust even row margin
+            const evenRows = document.querySelectorAll('.map-anim-row:nth-child(even)');
+            evenRows.forEach(row => {
+                row.style.marginLeft = `${size * 0.5}px`;
+            });
+        }
+
+        // Update time of day filter
+        function updateTimeOfDay() {
+            const time = timeOfDay.value;
+            mapGrid.className = 'map-anim-grid';
+            mapGrid.classList.add(`time-${time}`);
+        }
+
+        // Update weather effect
+        function updateWeatherEffect() {
+            const weather = weatherSelect.value;
+            mapGrid.classList.remove('weather-clear', 'weather-rain', 'weather-snow', 'weather-fog');
+            mapGrid.classList.add(`weather-${weather}`);
+        }
+
+        // Update season effect
+        function updateSeasonEffect() {
+            const season = seasonSelect.value;
+            mapGrid.classList.remove('season-spring', 'season-summer', 'season-autumn', 'season-winter');
+            mapGrid.classList.add(`season-${season}`);
+        }
+
+        // Update elevation effect
+        function updateElevationEffect() {
+            const elevation = elevationSelect.value;
+            const hexes = document.querySelectorAll('.hex-inner');
+            
+            hexes.forEach(hex => {
+                // Remove all elevation classes
+                hex.classList.remove('elevation-low', 'elevation-medium', 'elevation-high');
+                
+                // Apply new elevation class if not "none"
+                if (elevation !== 'none') {
+                    // For demo, randomly assign elevation levels
+                    const levels = ['low', 'medium', 'high'];
+                    const randomLevel = levels[Math.floor(Math.random() * levels.length)];
+                    hex.classList.add(`elevation-${randomLevel}`);
+                }
+            });
+        }
+
+        // Render the map based on content
+        function renderMap(content) {
+            const grid = parseMap(content);
+            if (!grid) return;
+
+            mapGrid.innerHTML = '';
+            mapLegend.innerHTML = '';
+            
+            // Update time of day class
+            updateTimeOfDay();
+            updateWeatherEffect();
+            updateSeasonEffect();
+            updateElevationEffect();
+            
+            // Get current theme
+            const theme = colorTheme.value;
+            const terrainColors = terrainColorThemes[theme] || terrainColorThemes.default;
+            
+            // Create legend
+            const uniqueTerrains = new Set();
+            grid.forEach(row => row.forEach(cell => {
+                const [base, overlay] = parseTerrain(cell);
+                uniqueTerrains.add(overlay ? `${base}^${overlay}` : base);
+            }));
+            
+            // Add default terrain to legend if needed
+            uniqueTerrains.add('default');
+            
+            Array.from(uniqueTerrains).forEach(terrain => {
+                const legendItem = document.createElement('div');
+                legendItem.className = 'legend-item';
+                
+                if (useImages.checked && terrainImages[terrain]) {
+                    const imageBox = document.createElement('div');
+                    imageBox.className = 'legend-image';
+                    imageBox.style.backgroundImage = `url(${terrainImages[terrain]})`;
+                    legendItem.appendChild(imageBox);
+                } else {
+                    const colorBox = document.createElement('div');
+                    colorBox.className = 'legend-color';
+                    colorBox.style.backgroundColor = terrainColors[terrain] || terrainColors['default'];
+                    legendItem.appendChild(colorBox);
+                }
+                
+                const label = document.createElement('span');
+                label.textContent = terrainNames[terrain] || terrain;
+                
+                legendItem.appendChild(label);
+                mapLegend.appendChild(legendItem);
+            });
+
+            // Render grid
+            grid.forEach((row, rowIndex) => {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = 'map-anim-row';
+                
+                row.forEach((cell, colIndex) => {
+                    const [base, overlay] = parseTerrain(cell);
+                    const hex = document.createElement('div');
+                    hex.className = 'map-anim-hex';
+                    hex.style.width = `${hexSize.value}px`;
+                    hex.style.height = `${hexSize.value * 0.866}px`;
+                    
+                    const hexInner = document.createElement('div');
+                    hexInner.className = 'hex-inner';
+                    
+                    // Set background - image or color
+                    const terrainCode = overlay ? `${base}^${overlay}` : base;
+                    const color = terrainColors[terrainCode] || terrainColors['default'];
+                    
+                    if (useImages.checked && terrainImages[base]) {
+                        hexInner.style.backgroundImage = `url(${terrainImages[base]})`;
+                    } else {
+                        hexInner.style.backgroundColor = color;
+                    }
+                    
+                    // Add unit marker if present
+                    const unitMatch = cell.match(/\d\s+Kh/);
+                    if (unitMatch) {
+                        const unit = document.createElement('div');
+                        unit.className = 'unit-marker';
+                        unit.textContent = unitMatch[0].charAt(0);
+                        unit.style.backgroundColor = unitMatch[0].charAt(0) === '1' ? '#3498db' : '#e74c3c';
+                        hexInner.appendChild(unit);
+                    }
+                    
+                    // Add terrain overlay indicator if enabled
+                    if (showTerrainCodes.checked) {
+                        const overlayEl = document.createElement('div');
+                        overlayEl.className = 'terrain-overlay';
+                        overlayEl.textContent = overlay || base;
+                        hexInner.appendChild(overlayEl);
+                    }
+                    
+                    // Add coordinates if enabled
+                    if (showCoordinates.checked) {
+                        const coordEl = document.createElement('div');
+                        coordEl.className = 'coordinate-overlay';
+                        coordEl.textContent = `${colIndex},${rowIndex}`;
+                        hexInner.appendChild(coordEl);
+                    }
+                    
+                    // Tooltip with terrain info
+                    hexInner.title = `${terrainNames[base] || base}${overlay ? ` (${overlay})` : ''}`;
+                    
+                    hex.appendChild(hexInner);
+                    rowDiv.appendChild(hex);
+                });
+                
+                mapGrid.appendChild(rowDiv);
+            });
+            
+            // Adjust even row margin
+            const evenRows = document.querySelectorAll('.map-anim-row:nth-child(even)');
+            evenRows.forEach(row => {
+                row.style.marginLeft = `${hexSize.value * 0.5}px`;
+            });
+            
+            // Apply elevation effect
+            updateElevationEffect();
+        }
+
+        // Parse map content into 2D array
+        function parseMap(content) {
+            if (!content) return null;
+            
+            const lines = content.split('\n');
+            const grid = [];
+            
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed || 
+                    trimmed.startsWith('border_size=') || 
+                    trimmed.startsWith('usage=')) {
+                    continue;
+                }
+                
+                // Split by commas and clean up
+                const cells = trimmed.split(',').map(cell => {
+                    return cell.trim().replace(/\s+/g, ' ');
+                });
+                
+                grid.push(cells);
+            }
+            
+            return grid;
+        }
+
+        // Parse terrain code into base and overlay
+        function parseTerrain(terrain) {
+            const parts = terrain.split('^');
+            const base = parts[0].split(' ').pop(); // Handle cases like "1 Kh"
+            const overlay = parts.length > 1 ? parts[1] : null;
+            return [base, overlay];
+        }
+
+        // Download map as PNG
+        function downloadMapAsImage() {
+            html2canvas(mapGrid).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'wesnoth-map.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+    </script>
+</body>
+</html>

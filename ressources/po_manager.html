@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="../styles/main.css">
+		<link rel="stylesheet" href="../styles/po_manager.css">
+		<script src="../scripts/i18n.js"></script>
+		<title data-i18n="po_manager.page_title">PO manager</title>
+		<style>
+		</style>
+	</head>
+	<body>
+		<body class="wts-index-body">
+			<header class="wts-index-header">
+				<nav class="wts-index-nav">
+					<div>
+						<button id="wts-index-dashboard" class="wts-index-tooltip" data-i18n="nav.dashboard">Dashboard</button>
+						<!-- Updated Tools Dropdown -->
+						<div class="wts-index-dropdown">
+							<button id="wts-index-tools" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.tools">Tools</button>
+							<div class="wts-index-dropdown-content">
+								<a href="ressources/events_manager.html" data-i18n="card.events_manager">Events Manager</a>
+								<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
+								<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
+								<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
+								<a href="ressources/big_map_tracker.html" data-i18n="card.big_map_tracker">Big Map Coordinate Tracker</a>
+								<a href="ressources/unit_comparator.html" data-i18n="card.unit_comparator">Unit Comparator</a>
+								<a href="ressources/po_dictionary_manager.html" data-i18n="card.dictionary_manager">Dictionary Manager</a>
+								<a href="ressources/po_manager.html" data-i18n="card.po_manager">PO Manager</a>
+								<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
+								<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
+								<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
+							</div>
+						</div>
+						<button id="wts-index-community" class="wts-index-tooltip" data-i18n="nav.community">Community</button>
+						<button id="wts-index-documentation" class="wts-index-tooltip" data-i18n="nav.documentation">Documentation</button>
+						<button id="wts-index-about" class="wts-index-tooltip" data-i18n="nav.about">About</button>
+					</div>
+					<div class="wts-index-nav-right">
+						<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme" aria-label="Toggle theme">
+							<svg viewBox="0 0 24 24" width="24" height="24">
+								<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z" 
+								fill="none" 
+								stroke="currentColor" 
+								stroke-width="2"/>
+							</svg>
+						</button>
+						<div class="wts-index-dropdown">
+							<button id="wts-index-languages" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.languages">Languages</button>
+							<div class="wts-index-dropdown-content">
+								<a href="#" data-lang="en" data-i18n="lang.en">English</a>
+								<a href="#" data-lang="fr" data-i18n="lang.fr">Français</a>
+								<a href="#" data-lang="de" data-i18n="lang.de">Deutsch</a>
+								<a href="#" data-lang="es" data-i18n="lang.es">Español</a>
+								<a href="#" data-lang="it" data-i18n="lang.it">Italiano</a>
+							</div>
+						</div>
+					</div>
+				</nav>
+			</header>
+			
+			<div class="wts-content-container">
+				<!-- Modal for analysis report -->
+				<div id="po-manager-analysisModal" class="po-manager-modal">
+					<div class="po-manager-modal-content">
+						<span class="po-manager-close" data-i18n="po_manager.close_modal">&times;</span>
+						<h2 data-i18n="po_manager.analysis_report_title">Translation Analysis Report</h2>
+						<div id="po-manager-analysisReport"></div>
+					</div>
+				</div>
+				<h1 class="po-manager-h1" data-i18n="po_manager.main_title">PO manager</h1>
+				<div class="po-manager-instructions">
+					<h3 class="po-manager-h3" data-i18n="po_manager.usage_instructions">How to use:</h3>
+					<ol>
+						<li>
+							<strong data-i18n="po_manager.step1_strong">Paste your PO file content</strong> 
+							<span data-i18n="po_manager.step1_text">in the left textarea (or use the sample provided)</span>
+						</li>
+						<li>
+							<strong data-i18n="po_manager.step2_strong">Select target language</strong> 
+							<span data-i18n="po_manager.step2_text">from the dropdown menu</span>
+						</li>
+						<li>
+							<span data-i18n="po_manager.step3_click">Click</span>
+							<strong data-i18n="po_manager.step3_strong">"Extract Strings"</strong> 
+							<span data-i18n="po_manager.step3_text">to parse the PO file and display all translatable strings</span>
+						</li>
+						<li>
+							<strong data-i18n="po_manager.step4_strong">Translate the strings</strong> 
+							<span data-i18n="po_manager.step4_text">in the middle column:</span>
+							<ul>
+								<li data-i18n="po_manager.substep1">Edit directly in the table cells</li>
+								<li data-i18n="po_manager.substep2">For multi-line strings, preserve the original line breaks</li>
+								<li>
+									<span data-i18n="po_manager.substep3_part1">Special markup (like</span>
+									<code>&lt;header&gt;</code>
+									<span data-i18n="po_manager.substep3_part2">tags) should be kept intact</span>
+								</li>
+								<li>
+									<span data-i18n="po_manager.substep4_use">Use</span>
+									<strong data-i18n="po_manager.substep4_strong">"Upload Translations"</strong>
+									<span data-i18n="po_manager.substep4_text">to bulk import translations from a text file</span>
+								</li>
+								<li>
+									<span data-i18n="po_manager.substep5_use">Use</span>
+									<strong data-i18n="po_manager.substep5_strong">"Download Original Text"</strong>
+									<span data-i18n="po_manager.substep5_text">to export all strings for external translation</span>
+								</li>
+							</ul>
+						</li>
+						<li>
+							<span data-i18n="po_manager.step5_click">Click</span>
+							<strong data-i18n="po_manager.step5_strong">"Apply Translations"</strong> 
+							<span data-i18n="po_manager.step5_text">to generate the translated PO file</span>
+						</li>
+						<li>
+							<strong data-i18n="po_manager.step6_strong">Review and copy</strong> 
+							<span data-i18n="po_manager.step6_text">the translated content from the right textarea or use the download buttons:</span>
+							<ul>
+								<li>
+									<strong data-i18n="po_manager.substep6a_strong">"Upload Input PO"</strong>
+									<span data-i18n="po_manager.substep6a_text">- Upload a PO file to translate</span>
+								</li>
+								<li>
+									<strong data-i18n="po_manager.substep6b_strong">"Download Output PO"</strong>
+									<span data-i18n="po_manager.substep6b_text">- Download the translated PO file</span>
+								</li>
+							</ul>
+						</li>
+					</ol>
+					<p><strong data-i18n="po_manager.special_features_title">Special features:</strong></p>
+					<ul>
+						<li data-i18n="po_manager.feature1">Handles multi-line strings and special PO file formatting</li>
+						<li data-i18n="po_manager.feature2">Preserves metadata headers and comments</li>
+						<li>
+							<span data-i18n="po_manager.feature3_part1">Supports obsolete messages (marked with</span>
+							<code>#~</code>
+							<span data-i18n="po_manager.feature3_part2">)</span>
+						</li>
+						<li data-i18n="po_manager.feature4">Includes validation for common PO file issues</li>
+						<li data-i18n="po_manager.feature5">Bulk import/export capabilities</li>
+					</ul>
+					<p><strong data-i18n="po_manager.note_title">Note:</strong> 
+					<span data-i18n="po_manager.note_text">This tool simulates the translation workflow while maintaining proper PO file structure.</span></p>
+				</div>
+				<div class="po-manager-container">
+					<!-- Original PO File Section -->
+					<div class="po-manager-section">
+						<h3 class="po-manager-h3">
+							<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+								<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+								<polyline points="14 2 14 8 20 8"/>
+							</svg>
+							<span data-i18n="po_manager.original_po_title">Original PO File</span>
+						</h3>
+						<textarea 
+						id="po-manager-sourceText" 
+						placeholder="Paste your PO file content here..."
+						data-i18n="[placeholder]po_manager.source_placeholder"></textarea>
+						<div class="po-manager-stats" id="po-manager-sourceStats"></div>
+					</div>
+					<!-- Translated PO File Section -->
+					<div class="po-manager-section">
+						<h3 class="po-manager-h3">
+							<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+								<path d="M5 12h14M12 5l7 7-7 7"/>
+							</svg>
+							<span data-i18n="po_manager.translated_po_title">Translated PO File</span>
+						</h3>
+						<textarea 
+						id="po-manager-translatedText" 
+						readonly 
+						placeholder="Translation will appear here..."
+						data-i18n="[placeholder]po_manager.translation_placeholder"></textarea>
+						<div class="po-manager-stats" id="po-manager-translatedStats"></div>
+					</div>
+					<!-- Translation Table Section -->
+					<div class="po-manager-section">
+						<div class="po-manager-table-header">
+							<h3 class="po-manager-h3">
+								<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+									<rect width="18" height="18" x="3" y="3" rx="2" ry="2"/>
+									<line x1="3" y1="9" x2="21" y2="9"/>
+									<line x1="3" y1="14" x2="21" y2="14"/>
+									<line x1="3" y1="19" x2="21" y2="19"/>
+								</svg>
+								<span data-i18n="po_manager.translation_table_title">Translation Table</span>
+							</h3>
+							<div class="po-manager-table-actions">
+								<div class="po-manager-dropdown">
+									<button id="po-manager-downloadOriginalBtn" class="po-manager-button" disabled>
+										<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+											<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+										</svg>
+										<span data-i18n="po_manager.download_text_button">Download Text</span>
+									</button>
+									<div class="po-manager-dropdown-content">
+										<a href="#" id="po-manager-downloadAll" data-i18n="po_manager.download_all">All Strings</a>
+										<a href="#" id="po-manager-downloadUntranslated" data-i18n="po_manager.download_untranslated">Only Untranslated</a>
+										<a href="#" id="po-manager-downloadTranslated" data-i18n="po_manager.download_translated">Only Translated</a>
+										<a href="#" id="po-manager-downloadFuzzy" data-i18n="po_manager.download_fuzzy">Only Fuzzy</a>
+										<a href="#" id="po-manager-downloadObsolete" data-i18n="po_manager.download_obsolete">Only Obsolete</a>
+										<a href="#" id="po-manager-downloadwithContext" data-i18n="po_manager.download_with_context">With Context</a>
+										<a href="#" id="po-manager-downloadCSV" data-i18n="po_manager.download_csv">CSV Format</a>
+									</div>
+								</div>
+								<button id="po-manager-uploadTranslationsBtn" class="po-manager-button">
+									<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+										<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+									</svg>
+									<span data-i18n="po_manager.upload_translations_button">Upload Translations</span>
+								</button>
+							</div>
+						</div>
+						<div id="po-manager-translationTableContainer">
+							<p data-i18n="po_manager.extract_prompt">Click "Extract Strings" to populate the translation table</p>
+						</div>
+					</div>
+				</div>
+				<div class="po-manager-controls">
+					
+					<div class="po-manager-select-wrapper">
+						<select id="po-manager-targetLang">
+							<option value="en_GB" data-i18n="po_manager.language_en_GB">British English</option>
+							<option value="it" data-i18n="po_manager.language_it">Italian</option>
+							<option value="cs" data-i18n="po_manager.language_cs">Czech</option>
+							<option value="de" data-i18n="po_manager.language_de">German</option>
+							<option value="ar" data-i18n="po_manager.language_ar">Arabic</option>
+							<option value="ja" data-i18n="po_manager.language_ja">Japanese</option>
+							<option value="sk" data-i18n="po_manager.language_sk">Slovak</option>
+							<option value="zh_CN" data-i18n="po_manager.language_zh_CN">Chinese (Simplified)</option>
+							<option value="tr" data-i18n="po_manager.language_tr">Turkish</option>
+							<option value="fr" data-i18n="po_manager.language_fr">French</option>
+							<option value="es" selected data-i18n="po_manager.language_es">Spanish</option>
+							<option value="ru" data-i18n="po_manager.language_ru">Russian</option>
+							<option value="fi" data-i18n="po_manager.language_fi">Finnish</option>
+							<option value="pt_BR" data-i18n="po_manager.language_pt_BR">Brazilian Portuguese</option>
+							<option value="zh_TW" data-i18n="po_manager.language_zh_TW">Chinese (Taiwan)</option>
+							<option value="pl" data-i18n="po_manager.language_pl">Polish</option>
+							<option value="bg" data-i18n="po_manager.language_bg">Bulgarian</option>
+							<option value="hu" data-i18n="po_manager.language_hu">Hungarian</option>
+							<option value="ca" data-i18n="po_manager.language_ca">Catalan</option>
+							<option value="gl" data-i18n="po_manager.language_gl">Galician</option>
+							<option value="pt" data-i18n="po_manager.language_pt">Portuguese</option>
+							<option value="vi" data-i18n="po_manager.language_vi">Vietnamese</option>
+							<option value="id" data-i18n="po_manager.language_id">Indonesian</option>
+							<option value="et" data-i18n="po_manager.language_et">Estonian</option>
+							<option value="uk" data-i18n="po_manager.language_uk">Ukrainian</option>
+							<option value="sv" data-i18n="po_manager.language_sv">Swedish</option>
+							<option value="lt" data-i18n="po_manager.language_lt">Lithuanian</option>
+							<option value="sr" data-i18n="po_manager.language_sr">Serbian</option>
+							<option value="eo" data-i18n="po_manager.language_eo">Esperanto</option>
+							<option value="da" data-i18n="po_manager.language_da">Danish</option>
+							<option value="ko" data-i18n="po_manager.language_ko">Korean</option>
+							<option value="la" data-i18n="po_manager.language_la">Latin</option>
+							<option value="nl" data-i18n="po_manager.language_nl">Dutch</option>
+							<option value="gd" data-i18n="po_manager.language_gd">Scottish Gaelic</option>
+							<option value="el" data-i18n="po_manager.language_el">Greek</option>
+							<option value="nb_NO" data-i18n="po_manager.language_nb_NO">Norwegian</option>
+							<option value="en@shaw" data-i18n="po_manager.language_en_shaw">English (Shavian characters)</option>
+							<option value="ga" data-i18n="po_manager.language_ga">Irish</option>
+							<option value="racv" data-i18n="po_manager.language_racv">RACV Language</option>
+							<option value="bn" data-i18n="po_manager.language_bn">Bengali</option>
+							<option value="lv" data-i18n="po_manager.language_lv">Latvian</option>
+							<option value="af" data-i18n="po_manager.language_af">Afrikaans</option>
+							<option value="he" data-i18n="po_manager.language_he">Hebrew</option>
+							<option value="is" data-i18n="po_manager.language_is">Icelandic</option>
+							<option value="sl" data-i18n="po_manager.language_sl">Slovenian</option>
+							<option value="eu" data-i18n="po_manager.language_eu">Basque</option>
+							<option value="ang@latin" data-i18n="po_manager.language_ang_latin">Old English (Latin characters)</option>
+							<option value="hr" data-i18n="po_manager.language_hr">Croatian</option>
+							<option value="ca_ES@valencia" data-i18n="po_manager.language_ca_ES_valencia">Valencian (Southern Catalan)</option>
+							<option value="tl" data-i18n="po_manager.language_tl">Filipino</option>
+							<option value="grc" data-i18n="po_manager.language_grc">Ancient Greek</option>
+							<option value="mr" data-i18n="po_manager.language_mr">Marathi</option>
+							<option value="mk" data-i18n="po_manager.language_mk">Macedonian</option>
+							<option value="ro" data-i18n="po_manager.language_ro">Romanian</option>
+							<option value="cy" data-i18n="po_manager.language_cy">Welsh</option>
+							<option value="es_419" data-i18n="po_manager.language_es_419">Spanish (Latin American)</option>
+							<option value="my" data-i18n="po_manager.language_my">Burmese</option>
+						</select>
+						<svg class="po-manager-select-icon" viewBox="0 0 16 16" fill="currentColor">
+							<path d="M8 11L3 6h10z"/>
+						</svg>
+					</div>
+					<button id="po-manager-extractBtn" class="po-manager-button">
+						<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+							<polyline points="14 2 14 8 20 8"/>
+							<line x1="16" y1="13" x2="8" y2="13"/>
+							<line x1="16" y1="17" x2="8" y2="17"/>
+							<polyline points="10 9 9 9 8 9"/>
+						</svg>
+						<span data-i18n="po_manager.extract_button">Extract Strings</span>
+					</button>
+					<button id="po-manager-applyBtn" class="po-manager-button" disabled>
+						<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+							<polyline points="22 4 12 14.01 9 11.01"/>
+						</svg>
+						<span data-i18n="po_manager.apply_button">Apply Translations</span>
+					</button>
+					<button id="po-manager-analyzeBtn" class="po-manager-button">
+						<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+						</svg>
+						<span data-i18n="po_manager.analyze_button">Analyze</span>
+					</button>
+					<button id="po-manager-uploadInputBtn" class="po-manager-button">
+						<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+						</svg>
+						<span data-i18n="po_manager.upload_input_button">Upload Input PO</span>
+					</button>
+					<button id="po-manager-downloadOutputBtn" class="po-manager-button" disabled>
+						<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/>
+						</svg>
+						<span data-i18n="po_manager.download_output_button">Download Output PO</span>
+					</button>
+					<button id="po-manager-emptyShellBtn" class="po-manager-button">
+						<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+							<path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>
+						</svg>
+						<span data-i18n="po_manager.empty_shell_button">Empty Shell</span>
+					</button>
+					<button id="po-manager-fuzzyAllBtn" class="po-manager-button">
+						<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+							<circle cx="12" cy="12" r="10"/>
+							<circle cx="12" cy="12" r="4"/>
+							<line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/>
+							<line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/>
+							<line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/>
+							<line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/>
+						</svg>
+						<span data-i18n="po_manager.fuzzy_all_button">Fuzzy All</span>
+					</button>
+					<button id="po-manager-unfuzzyAllBtn" class="po-manager-button">
+						<svg class="po-manager-btn-icon" viewBox="0 0 24 24" fill="currentColor">
+							<circle cx="12" cy="12" r="10"/>
+							<line x1="15" y1="9" x2="9" y2="15"/>
+							<line x1="9" y1="9" x2="15" y2="15"/>
+						</svg>
+						<span data-i18n="po_manager.unfuzzy_all_button">Unfuzzy All</span>
+					</button>
+				</div>
+				<div class="po-manager-progress-container">
+					<div class="po-manager-progress-bar" id="po-manager-progressBar"></div>
+					<div class="po-manager-progress-text" id="po-manager-progressText"></div>
+				</div>
+				<div class="po-manager-loading" id="po-manager-loadingIndicator">
+					<div class="po-manager-spinner"></div>
+					<p data-i18n="po_manager.loading_message">Processing... Please wait.</p>
+				</div>
+			</main>
+		</div>
+		<footer class="wts-index-footer">
+			<div class="wts-index-footer-links">
+				<a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
+				<a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
+				<a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
+			</div>
+			<span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025</span>
+		</footer>
+		
+		<script src="../scripts/main.js"></script>
+		<script src="../scripts/po_manager.js"></script>
+	</body>
+</html>

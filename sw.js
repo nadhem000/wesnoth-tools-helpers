@@ -3,7 +3,7 @@
 	* Version: 1.6
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v8';
+const CACHE_NAME = 'wesnoth-tools-v9';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -17,6 +17,7 @@ const PRECACHE_URLS = [
 	'/ressources/gif_creator.html',
 	'/ressources/big_map_tracker.html',
 	'/ressources/po_dictionary_manager.html',
+	'/ressources/po_manager.html',
 	'/ressources/unit_comparator.html',
 	'/ressources/sample.html',
 	'/styles/main.css',
@@ -28,6 +29,7 @@ const PRECACHE_URLS = [
 	'/styles/gif_creator.css',
 	'/styles/big_map_tracker.css',
 	'/styles/po_dictionary_manager.css',
+	'/styles/po_manager.css',
 	'/styles/unit_comparator.css',
 	'/styles/sample.css',
 	'/scripts/main.js',
@@ -41,6 +43,7 @@ const PRECACHE_URLS = [
 	'/scripts/gif_creator.js',
 	'/scripts/big_map_tracker.js',
 	'/scripts/po_dictionary_manager.js',
+	'/scripts/po_manager.js',
 	'/scripts/unit_comparator.js',
 	'/scripts/sample.js',
 	'/scripts/i18n.js',

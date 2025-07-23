@@ -22,6 +22,9 @@
 							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
 							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
 							<a href="ressources/big_map_tracker.html" data-i18n="card.big_map_tracker">Big Map Coordinate Tracker</a>
+							<a href="ressources/unit_comparator.html" data-i18n="card.unit_comparator">Unit Comparator</a>
+							<a href="ressources/po_dictionary_manager.html" data-i18n="card.dictionary_manager">Dictionary Manager</a>
+							<a href="ressources/po_manager.html" data-i18n="card.po_manager">PO Manager</a>
 							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
 							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
 							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
@@ -54,20 +57,22 @@
 			</nav>
 		</header>
 		
+		
 		<main class="wts-doc-main">
 			<aside class="wts-doc-sidebar">
 				<h2 data-i18n="doc.toc">Table of Contents</h2>
 				<ul>
 					<li><a href="#introduction" data-i18n="doc.introduction">Introduction</a></li>
-					<li><a href="#unit-editor" data-i18n="doc.unit_editor">Unit Editor</a></li>
+					<!-- <li><a href="#unit-editor" data-i18n="doc.unit_editor">Unit Editor</a></li>
 					<li><a href="#scenario-builder" data-i18n="doc.scenario_builder">Scenario Builder</a></li>
-					<li><a href="#wml-validator" data-i18n="doc.wml_validator">WML Validator</a></li>
+					<li><a href="#wml-validator" data-i18n="doc.wml_validator">WML Validator</a></li> -->
 					<li><a href="#events-manager" data-i18n="doc.events_manager">Events Manager</a></li>
 					<li><a href="#story-mode" data-i18n="doc.story_mode">Story Mode</a></li>
 					<li><a href="#gif-creator" data-i18n="doc.gif_creator">GIF Creator</a></li>
 					<li><a href="#big-map-tracker" data-i18n="doc.big_map_tracker">Big Map Tracker</a></li>
 					<li><a href="#unit-comparator" data-i18n="doc.unit_comparator">Unit Comparator</a></li>
 					<li><a href="#dictionary-manager" data-i18n="doc.dictionary_manager">Dictionary Manager</a></li>
+					<li><a href="#po-manager" data-i18n="doc.po_manager">PO File Manager</a></li>
 					<li><a href="#best-practices" data-i18n="doc.best_practices">Best Practices</a></li>
 					<li><a href="#api-reference" data-i18n="doc.api_reference">API Reference</a></li>
 					<li><a href="#faq" data-i18n="doc.faq">FAQ</a></li>
@@ -380,7 +385,52 @@
 							The Dictionary Manager preserves your original .po files and only modifies content when you explicitly save changes.
 						</span>
 					</div>
-				</section>				
+				</section>
+				
+				<section id="po-manager">
+	<h2 data-i18n="doc.po_manager">PO File Manager</h2>
+	<p data-i18n="doc.po_manager_desc">
+		The PO File Manager provides a comprehensive interface for managing PO translation files. 
+		It allows you to extract strings, manage translations, and generate translated PO files 
+		while preserving all metadata and formatting.
+	</p>
+	
+	<h3 data-i18n="doc.using_po_manager">Using the PO Manager</h3>
+	<ol>
+		<li data-i18n="doc.po_step1">Upload .po files or paste content directly into the source textarea</li>
+		<li data-i18n="doc.po_step2">Select target language from the dropdown menu</li>
+		<li data-i18n="doc.po_step3">Click 'Extract Strings' to parse the PO file and display translatable content</li>
+		<li data-i18n="doc.po_step4">Translate strings directly in the table cells or bulk upload translations</li>
+		<li data-i18n="doc.po_step5">Use 'Apply Translations' to generate the translated PO file</li>
+		<li data-i18n="doc.po_step6">Download the translated PO file with language code in filename</li>
+	</ol>
+	
+	<h3 data-i18n="doc.key_features">Key Features</h3>
+	<ul>
+		<li data-i18n="doc.po_feature1">Full PO file parsing with metadata extraction</li>
+		<li data-i18n="doc.po_feature2">Interactive translation table with editable cells</li>
+		<li data-i18n="doc.po_feature3">Bulk operations (Fuzzy All, Unfuzzy All, Empty Shell)</li>
+		<li data-i18n="doc.po_feature4">Plural form handling with contextual explanations</li>
+		<li data-i18n="doc.po_feature5">Multiple export formats (CSV, with context, filtered sets)</li>
+		<li data-i18n="doc.po_feature6">Translation statistics and analysis reports</li>
+		<li data-i18n="doc.po_feature7">All processing happens locally in your browser</li>
+	</ul>
+	
+	<h3 data-i18n="doc.workflow_example">Workflow Example</h3>
+	<pre><code>1. Upload original .po file
+2. Extract strings and translate messages
+3. Apply translations to generate output
+4. Download es.po (Spanish translation)
+5. Use Analyze to compare original and translated files</code></pre>
+	
+	<div class="wts-doc-note">
+		<strong data-i18n="doc.note">Note:</strong>
+		<span data-i18n="doc.po_note">
+			The PO Manager preserves all comments, references, and metadata during processing. 
+			Obsolete messages (#~) are maintained but excluded from translation counts.
+		</span>
+	</div>
+</section>
 				<section id="best-practices">
 					<h2 data-i18n="doc.best_practices">Best Practices</h2>
 					<ul>

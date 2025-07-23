@@ -162,6 +162,9 @@
 .wts-index-card[data-card="dictionary"] .wts-index-card-header {
     background: var(--special-card-6);
 }
+.wts-index-card[data-card="po_manager"] .wts-index-card-header {
+    background: var(--special-card-6);
+}
 
 .wts-index-card-icon {
     width: 40px;
