@@ -24,7 +24,8 @@
 							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
 							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
 							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
-							<li><a href="#images-manager" data-i18n="doc.images_manager">Images Manager</a></li>
+    <a href="ressources/images_manager.html" data-i18n="card.images_manager">Image Manager</a>
+    <a href="ressources/images_animation_manager.html" data-i18n="card.images_animation_manager">Image Animation Manager</a>
 							<a href="ressources/big_map_tracker.html" data-i18n="card.big_map_tracker">Big Map Coordinate Tracker</a>
 							<a href="ressources/unit_comparator.html" data-i18n="card.unit_comparator">Unit Comparator</a>
 							<a href="ressources/po_dictionary_manager.html" data-i18n="card.dictionary_manager">Dictionary Manager</a>
@@ -193,10 +194,23 @@
 								</div>
 							</div>
 							
-							<div class="image-animator-slider-container">
-								<span data-i18n="image_animator.speed">Speed:</span>
-								<input type="range" min="1" max="10" value="5" class="image-animator-slider" id="speedSlider">
-							</div>
+<div class="image-animator-sliders-container">
+    <div class="image-animator-slider-container">
+        <svg class="image-animator-slider-icon" viewBox="0 0 24 24">
+            <path d="M17,17H7V15H17V17M17,13H7V11H17V13M17,9H7V7H17V9Z" />
+        </svg>
+        <span data-i18n="image_animator.speed">Speed:</span>
+        <input type="range" min="1" max="10" value="5" class="image-animator-slider" id="speedSlider">
+    </div>
+    
+    <div class="image-animator-slider-container">
+        <svg class="image-animator-slider-icon" viewBox="0 0 24 24">
+            <path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+        </svg>
+        <span data-i18n="image_animator.volume">Volume:</span>
+        <input type="range" min="0" max="100" value="100" class="image-animator-slider" id="volumeSlider">
+    </div>
+</div>
 						</div>
 					</div>
 				</div>

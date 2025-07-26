@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.6
+	* Version: 1.10
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v9';
+const CACHE_NAME = 'wesnoth-tools-v10';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -19,6 +19,8 @@ const PRECACHE_URLS = [
 	'/ressources/po_dictionary_manager.html',
 	'/ressources/po_manager.html',
 	'/ressources/unit_comparator.html',
+	'/ressources/images_manager.html',
+	'/ressources/images_animation_manager.html',
 	'/ressources/sample.html',
 	'/styles/main.css',
 	'/styles/about.css',
@@ -31,6 +33,8 @@ const PRECACHE_URLS = [
 	'/styles/po_dictionary_manager.css',
 	'/styles/po_manager.css',
 	'/styles/unit_comparator.css',
+	'/styles/images_manager.css',
+	'/styles/images_animation_manager.css',
 	'/styles/sample.css',
 	'/scripts/main.js',
 	'/scripts/about.js',
@@ -45,6 +49,8 @@ const PRECACHE_URLS = [
 	'/scripts/po_dictionary_manager.js',
 	'/scripts/po_manager.js',
 	'/scripts/unit_comparator.js',
+	'/scripts/images_manager.js',
+	'/scripts/images_animation_manager.js',
 	'/scripts/sample.js',
 	'/scripts/i18n.js',
 	'/templates/header.html',

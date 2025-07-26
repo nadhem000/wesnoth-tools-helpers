@@ -5,13 +5,230 @@ let isPlaying = false;
 let animationDirection = 'forward'; // 'forward', 'reverse', 'alternate'
 let animationLoop = 'loop'; // 'loop', 'play_once'
 let animationSpeed = 5; // 1-10 scale
+let currentVolume = 1.0; // Default volume (100%)
 let uploadedImages = [];
 let uploadedEffects = [];
 let uploadedSounds = [];
 let history = [];
 let currentHistoryIndex = -1;
 let selectedFrame = null;
+let preloadedBaseImages = [];
+let preloadedEffectImages = [];
+let animationStartTime = 0;
+let lastFrameTime = 0;
+let frameRequestId = null;
+// Add this class at the top of the file
+class GIFEncoder {
+    constructor(width, height, colors = 256) {
+        this.width = width;
+        this.height = height;
+        this.colors = colors;
+        this.frames = [];
+        this.delays = [];
+        this.globalPalette = null;
+    }
 
+		addFrame(imageData, delay) {
+			this.frames.push(imageData);
+			this.delays.push(delay);
+		}
+		
+		encode() {
+			this.globalPalette = this.createGlobalPalette();
+			const buffer = [];
+			
+			// GIF Header
+			buffer.push(0x47, 0x49, 0x46, 0x38, 0x39, 0x61); // "GIF89a"
+			
+			// Logical Screen Descriptor
+			buffer.push(...this.numToBytes(this.width, 2));
+			buffer.push(...this.numToBytes(this.height, 2));
+			buffer.push(0xF0 | (Math.log2(this.colors) - 1)); // Packed field
+			buffer.push(0x00); // Background color index
+			buffer.push(0x00); // Pixel aspect ratio
+			
+			// Global Color Table
+			for (let i = 0; i < this.colors * 3; i++) {
+				buffer.push(this.globalPalette[i] || 0);
+			}
+			
+			// Application Extension (for looping)
+			buffer.push(0x21, 0xFF, 0x0B, ...'NETSCAPE2.0'.split('').map(c => c.charCodeAt(0)), 0x03, 0x01, 0x00, 0x00, 0x00);
+			
+			// Add frames
+			for (let i = 0; i < this.frames.length; i++) {
+				this.addImageFrame(buffer, this.frames[i], this.delays[i]);
+			}
+			
+			// Trailer
+			buffer.push(0x3B);
+			
+			return new Uint8Array(buffer);
+		}
+		
+		addImageFrame(buffer, imageData, delay) {
+			// Graphic Control Extension
+			buffer.push(0x21, 0xF9, 0x04, 0x00, ...this.numToBytes(delay / 10, 2), 0x00, 0x00);
+			
+			// Image Descriptor
+			buffer.push(0x2C, ...this.numToBytes(0, 2), ...this.numToBytes(0, 2),
+			...this.numToBytes(this.width, 2), ...this.numToBytes(this.height, 2), 0x00);
+			
+			// Encode pixel data
+			const indexStream = this.imageToIndexed(imageData);
+			const lzwData = this.encodeLZW(indexStream);
+			
+			buffer.push(8); // LZW minimum code size
+			for (let i = 0; i < lzwData.length; i += 255) {
+				const chunk = lzwData.slice(i, i + 255);
+				buffer.push(chunk.length);
+				buffer.push(...chunk);
+			}
+			buffer.push(0x00); // Block terminator
+		}
+		
+		createGlobalPalette() {
+			// Fixed 256-color palette
+			const palette = new Uint8Array(256 * 3);
+			let idx = 0;
+			
+			// Color cube
+			const levels = [0, 51, 102, 153, 204, 255];
+			for (const r of levels) {
+				for (const g of levels) {
+					for (const b of levels) {
+						palette[idx++] = r;
+						palette[idx++] = g;
+						palette[idx++] = b;
+					}
+				}
+			}
+			
+			// Grayscale ramp
+			for (let i = 0; i < 40; i++) {
+				const val = Math.min(255, Math.floor(i * 6.4));
+				palette[idx++] = val;
+				palette[idx++] = val;
+				palette[idx++] = val;
+			}
+			
+			return palette;
+		}
+		
+		imageToIndexed(imageData) {
+			const indices = new Uint8Array(imageData.length / 4);
+			const palette = this.globalPalette;
+			
+			for (let i = 0, j = 0; i < imageData.length; i += 4, j++) {
+				const r = imageData[i];
+				const g = imageData[i + 1];
+				const b = imageData[i + 2];
+				
+				// Find closest color in palette
+				let minDist = Infinity;
+				let bestIdx = 0;
+				
+				for (let k = 0; k < this.colors; k++) {
+					const p = k * 3;
+					const dr = r - palette[p];
+					const dg = g - palette[p + 1];
+					const db = b - palette[p + 2];
+					const dist = dr * dr + dg * dg + db * db;
+					
+					if (dist < minDist) {
+						minDist = dist;
+						bestIdx = k;
+						if (dist === 0) break;
+					}
+				}
+				
+				indices[j] = bestIdx;
+			}
+			
+			return indices;
+		}
+		
+		encodeLZW(data) {
+			// Initialize dictionary
+			const dict = new Map();
+			for (let i = 0; i < 256; i++) {
+				dict.set(String.fromCharCode(i), i);
+			}
+			
+			let nextCode = 258;
+			let current = '';
+			let codeSize = 9;
+			let buffer = 0;
+			let bitsInBuffer = 0;
+			const output = [];
+			
+			const writeCode = (code) => {
+				buffer |= code << bitsInBuffer;
+				bitsInBuffer += codeSize;
+				
+				while (bitsInBuffer >= 8) {
+					output.push(buffer & 0xFF);
+					buffer >>>= 8;
+					bitsInBuffer -= 8;
+				}
+				
+				if (nextCode === (1 << codeSize) && codeSize < 12) {
+					codeSize++;
+				}
+			};
+			
+			// Write clear code at the beginning
+			writeCode(256);
+			
+			for (const byte of data) {
+				const char = String.fromCharCode(byte);
+				const combined = current + char;
+				
+				if (dict.has(combined)) {
+					current = combined;
+					} else {
+					writeCode(dict.get(current));
+					dict.set(combined, nextCode++);
+					current = char;
+					
+					// Reset dictionary when full
+					if (nextCode === 4096) {
+						writeCode(256); // Clear code
+						dict.clear();
+						for (let i = 0; i < 256; i++) {
+							dict.set(String.fromCharCode(i), i);
+						}
+						nextCode = 258;
+						codeSize = 9;
+					}
+				}
+			}
+			
+			// Output the last code
+			if (current) {
+				writeCode(dict.get(current));
+			}
+			
+			// Write end code
+			writeCode(257);
+			
+			// Flush remaining bits
+			if (bitsInBuffer > 0) {
+				output.push(buffer & 0xFF);
+			}
+			
+			return output;
+		}
+		
+		numToBytes(num, bytes) {
+			const arr = [];
+			for (let i = 0; i < bytes; i++) {
+				arr.push(num & 0xFF);
+				num >>= 8;
+			}
+			return arr;
+		}
+}
 // Initialize upload boxes
 document.addEventListener('DOMContentLoaded', () => {
 	setupUploadBox('uploadImages', 'imageInput', 'images');
@@ -33,6 +250,25 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedFrame = frame;
 		}
 	});
+    // Volume slider
+    const volumeSlider = document.getElementById('volumeSlider');
+    volumeSlider.addEventListener('input', () => {
+        currentVolume = parseInt(volumeSlider.value) / 100;
+    });
+    
+    // Speed slider
+    const speedSlider = document.getElementById('speedSlider');
+    speedSlider.addEventListener('input', () => {
+        try {
+            animationSpeed = parseInt(speedSlider.value);
+            if (isPlaying) {
+                pauseAnimation();
+                playAnimation();
+            }
+        } catch (error) {
+            console.error('Error in speed slider handler:', error);
+        }
+    });
 });
 
 function getSelectedFrameWrapper() {
@@ -595,47 +831,170 @@ durationTimeInput.addEventListener('change', () => {
 	console.error('Error initializing timeline controls:', error);
 }
 
-// Placeholder functions
-function playAnimation() {
+async function playAnimation() {
     try {
         const previewDisplay = document.querySelector('.image-animator-preview-display');
-        if (!previewDisplay) {
-            throw new Error('Preview display element not found');
-        }
-
+        if (!previewDisplay) throw new Error('Preview display element not found');
+        
         // Clear any existing content
         previewDisplay.innerHTML = '';
         
         const canvas = setupAnimationPreview();
-        updateAnimation(canvas);
+        const frameCount = getFrameCount();
         
-        // Update status text if the placeholder exists
-        const placeholder = previewDisplay.querySelector('.image-animator-preview-placeholder');
-        if (placeholder) {
-            placeholder.textContent = i18n.t('image_animator.playing_status');
+        if (frameCount === 0) {
+            throw new Error(i18n.t('image_animator.no_frames_to_play'));
         }
+        
+        // Show loading indicator
+        const placeholder = document.querySelector('.image-animator-preview-placeholder');
+        if (placeholder) placeholder.textContent = i18n.t('image_animator.loading_animation');
+        
+        // Preload media
+        await preloadMedia();
+        
+        // Update status
+        if (placeholder) placeholder.textContent = i18n.t('image_animator.playing_status');
+        
+        // Start animation
+        isPlaying = true;
+        currentFrameIndex = 0;
+        animationStartTime = performance.now();
+        lastFrameTime = animationStartTime;
+        animateFrame(canvas);
     } catch (error) {
         console.error('Error in playAnimation:', error);
-        alert(i18n.t('image_animator.play_error'));
+        alert(error.message || i18n.t('image_animator.play_error'));
     }
 }
-
+async function preloadMedia() {
+    return new Promise((resolve) => {
+        try {
+            const frameCount = getFrameCount();
+            preloadedBaseImages = new Array(frameCount);
+            preloadedEffectImages = new Array(frameCount);
+            
+            let loadedCount = 0;
+            const totalToLoad = frameCount * 2; // Base images + effects
+            
+            if (totalToLoad === 0) {
+                resolve();
+                return;
+            }
+            
+            const checkCompletion = () => {
+                if (++loadedCount >= totalToLoad) resolve();
+            };
+            
+            for (let i = 0; i < frameCount; i++) {
+                // Preload base image
+                const imgSrc = getCurrentFrame('images', i);
+                if (imgSrc) {
+                    const img = new Image();
+                    img.onload = () => {
+                        preloadedBaseImages[i] = img;
+                        checkCompletion();
+                    };
+                    img.onerror = checkCompletion;
+                    img.src = imgSrc;
+                } else {
+                    preloadedBaseImages[i] = null;
+                    loadedCount++;
+                }
+                
+                // Preload effect image
+                const effectSrc = getCurrentFrame('effects', i);
+                if (effectSrc) {
+                    const effectImg = new Image();
+                    effectImg.onload = () => {
+                        preloadedEffectImages[i] = effectImg;
+                        checkCompletion();
+                    };
+                    effectImg.onerror = checkCompletion;
+                    effectImg.src = effectSrc;
+                } else {
+                    preloadedEffectImages[i] = null;
+                    loadedCount++;
+                }
+            }
+        } catch (error) {
+            console.error('Error in preloadMedia:', error);
+            resolve(); // Resolve anyway to prevent blocking
+        }
+    });
+}
+function getFrameCount() {
+    const imagesTimeline = document.getElementById('imagesTimeline');
+    return imagesTimeline.querySelectorAll('.image-animator-timeline-wrapper').length;
+}
 
 function pauseAnimation() {
     try {
-        if (animationInterval) {
-            clearInterval(animationInterval);
-            animationInterval = null;
-            isPlaying = false;
-            
-            const placeholder = document.querySelector('.image-animator-preview-display .image-animator-preview-placeholder');
-            if (placeholder) {
-                placeholder.textContent = i18n.t('image_animator.paused_status');
-            }
+        if (frameRequestId) {
+            cancelAnimationFrame(frameRequestId);
+            frameRequestId = null;
+        }
+        isPlaying = false;
+        
+        const placeholder = document.querySelector('.image-animator-preview-display .image-animator-preview-placeholder');
+        if (placeholder) {
+            placeholder.textContent = i18n.t('image_animator.paused_status');
         }
     } catch (error) {
         console.error('Error in pauseAnimation:', error);
     }
+}
+function animateFrame(canvas) {
+    if (!isPlaying) return;
+    
+    const now = performance.now();
+    const elapsed = now - lastFrameTime;
+    lastFrameTime = now;
+    
+    const ctx = canvas.getContext('2d');
+    drawFrame(canvas, ctx, currentFrameIndex);
+    
+    // Calculate next frame timing
+    const durationInput = document.getElementById('durationTime');
+    const speedSlider = document.getElementById('speedSlider');
+    const baseDuration = parseInt(durationInput.value) || 200;
+    const speedFactor = 1 + (10 - parseInt(speedSlider.value)) * 0.2;
+    const frameDuration = baseDuration / speedFactor;
+    
+    // Handle playback options
+    animationLoop = document.querySelector('.image-animator-select:nth-of-type(1)').value;
+    animationDirection = document.querySelector('.image-animator-select:nth-of-type(2)').value;
+    
+    const frameCount = getFrameCount();
+    let nextFrameIndex = currentFrameIndex;
+    let direction = 1;
+    
+    if (animationDirection === 'alternate') {
+        direction = (currentFrameIndex >= frameCount - 1) ? -1 : 
+                   (currentFrameIndex <= 0) ? 1 : direction;
+        nextFrameIndex = currentFrameIndex + direction;
+    } else if (animationDirection === 'reverse') {
+        nextFrameIndex = (currentFrameIndex - 1 + frameCount) % frameCount;
+    } else {
+        nextFrameIndex = (currentFrameIndex + 1) % frameCount;
+    }
+    
+    // Handle play once mode
+    if (animationLoop === 'play_once' && 
+        ((animationDirection === 'forward' && nextFrameIndex === 0) ||
+         (animationDirection === 'reverse' && nextFrameIndex === frameCount - 1) ||
+         (animationDirection === 'alternate' && nextFrameIndex === 0 && direction === 1))) {
+        pauseAnimation();
+        return;
+    }
+    
+    // Schedule next frame
+    currentFrameIndex = nextFrameIndex;
+    const timeToNextFrame = Math.max(0, frameDuration - elapsed);
+    
+    frameRequestId = requestAnimationFrame(() => {
+        animateFrame(canvas);
+    });
 }
 
 function reloadAnimation() {
@@ -844,47 +1203,60 @@ function getCurrentFrame(type, index) {
     if (!frame) return null;
     
     if (type === 'sounds') {
-        const soundIndex = uploadedSounds.findIndex(s => s?.name === frame.dataset.filename);
-        return soundIndex >= 0 ? uploadedSounds[soundIndex] : null;
+        // Get sound file using frame number
+        if (index < uploadedSounds.length) {
+            return uploadedSounds[index];
+        }
+        return null;
     } else {
         const img = frame.querySelector('img');
         return img ? img.src : null;
     }
 }
 
-function drawAnimationFrame(canvas, ctx, frameIndex) {
+function drawFrame(canvas, ctx, frameIndex) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
-    // Draw base image
-    const imageSrc = getCurrentFrame('images', frameIndex);
-    if (imageSrc) {
-        const img = new Image();
-        img.src = imageSrc;
-        img.onload = () => {
-            const scale = Math.min(canvas.width / img.width, canvas.height / img.height);
-            const width = img.width * scale;
-            const height = img.height * scale;
-            const x = (canvas.width - width) / 2;
-            const y = (canvas.height - height) / 2;
-            ctx.drawImage(img, x, y, width, height);
-            
-            // Draw effects on top
-            const effectSrc = getCurrentFrame('effects', frameIndex);
-            if (effectSrc) {
-                const effectImg = new Image();
-                effectImg.src = effectSrc;
-                effectImg.onload = () => {
-                    ctx.drawImage(effectImg, x, y, width, height);
-                };
-            }
-        };
+    // Draw base image if available
+    const baseImg = preloadedBaseImages[frameIndex];
+    if (baseImg) {
+        const scale = Math.min(canvas.width / baseImg.width, canvas.height / baseImg.height);
+        const width = baseImg.width * scale;
+        const height = baseImg.height * scale;
+        const x = (canvas.width - width) / 2;
+        const y = (canvas.height - height) / 2;
+        ctx.drawImage(baseImg, x, y, width, height);
+    }
+    
+    // Draw effect on top
+    const effectImg = preloadedEffectImages[frameIndex];
+    if (effectImg) {
+        const scale = Math.min(canvas.width / effectImg.width, canvas.height / effectImg.height);
+        const width = effectImg.width * scale;
+        const height = effectImg.height * scale;
+        const x = (canvas.width - width) / 2;
+        const y = (canvas.height - height) / 2;
+        ctx.drawImage(effectImg, x, y, width, height);
     }
     
     // Play sound if available
-    const soundFile = getCurrentFrame('sounds', frameIndex);
+     const soundFile = getCurrentFrame('sounds', frameIndex);
     if (soundFile) {
-        const audio = new Audio(URL.createObjectURL(soundFile));
-        audio.play().catch(e => console.error('Sound playback failed:', e));
+        playSound(soundFile);
+    }
+}
+function playSound(soundFile) {
+    try {
+        if (soundFile) {
+            const audio = new Audio(URL.createObjectURL(soundFile));
+            audio.volume = currentVolume;
+            audio.play().catch(e => console.error('Sound playback failed:', e));
+            
+            // Remove played flag - we want sounds to play every frame
+            delete soundFile.played;
+        }
+    } catch (error) {
+        console.error('Error playing sound:', error);
     }
 }
 
@@ -941,81 +1313,150 @@ function updateAnimation(canvas) {
         }
     }, frameDuration);
 }
-function exportGIF() {
-	try {
-		console.log("Export as GIF");
-		alert(i18n.t('image_animator.gif_export_message'));
-		} catch (error) {
-		console.error('Error in exportGIF:', error);
-	}
+async function exportGIF() {
+    try {
+        const placeholder = document.querySelector('.image-animator-export-option:nth-child(1) .image-animator-export-placeholder');
+        placeholder.textContent = i18n.t('image_animator.gif_export_processing');
+        placeholder.classList.add('loading');
+        
+        // Get all valid image frames
+        const imageWrappers = document.querySelectorAll('#imagesTimeline .image-animator-timeline-wrapper');
+        const validFrames = [];
+        
+        imageWrappers.forEach(wrapper => {
+            const frame = wrapper.querySelector('.image-animator-timeline-frame');
+            const img = frame.querySelector('img');
+            if (img) validFrames.push(img.src);
+        });
+
+        if (validFrames.length === 0) {
+            throw new Error(i18n.t('image_animator.gif_export_no_images'));
+        }
+
+        // Load first image to get dimensions
+        const firstImg = await new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = validFrames[0];
+        });
+
+        const width = firstImg.naturalWidth;
+        const height = firstImg.naturalHeight;
+        const delay = parseInt(document.getElementById('durationTime').value) || 200;
+
+        // Create GIF encoder
+        const encoder = new GIFEncoder(width, height);
+        
+        // Add all frames
+        for (const src of validFrames) {
+            const img = await new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+            
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            
+            const imageData = ctx.getImageData(0, 0, width, height).data;
+            encoder.addFrame(imageData, delay);
+        }
+
+        // Generate and download GIF
+        const gifData = encoder.encode();
+        const blob = new Blob([gifData], { type: 'image/gif' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'wesnoth_animation.gif';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        // Show success
+        placeholder.textContent = i18n.t('image_animator.gif_export_success');
+        setTimeout(() => {
+            placeholder.textContent = i18n.t('image_animator.export_preview');
+            placeholder.classList.remove('loading');
+        }, 3000);
+        
+    } catch (error) {
+        console.error('GIF Export Error:', error);
+        const placeholder = document.querySelector('.image-animator-export-option:nth-child(1) .image-animator-export-placeholder');
+        placeholder.textContent = error.message || i18n.t('image_animator.gif_export_error');
+        setTimeout(() => {
+            placeholder.textContent = i18n.t('image_animator.export_preview');
+            placeholder.classList.remove('loading');
+        }, 3000);
+    }
 }
 
 function exportWML() {
     try {
-        // Get all frames from the timeline
+        // Get start time and duration
+        const startTime = parseInt(document.getElementById('startTime').value) || 0;
+        const duration = parseInt(document.getElementById('durationTime').value) || 200;
+        const placeholder = document.querySelector('.image-animator-export-option:nth-child(2) .image-animator-export-placeholder');
+placeholder.classList.add('loading');
+
+        // Get timeline elements
         const imageWrappers = document.querySelectorAll('#imagesTimeline .image-animator-timeline-wrapper');
         const effectWrappers = document.querySelectorAll('#effectsTimeline .image-animator-timeline-wrapper');
         const soundWrappers = document.querySelectorAll('#soundsTimeline .image-animator-timeline-wrapper');
-        
+
         if (imageWrappers.length === 0) {
             alert(i18n.t('image_animator.no_frames_to_export'));
             return;
         }
-        
-        // Start building WML content
+
+        // Build WML content
         let wmlContent = "[animation]\n";
         
-        // Process each frame
+        // Add frames with timing
+        let currentBegin = startTime;
+        
         for (let i = 0; i < imageWrappers.length; i++) {
             const imageFrame = imageWrappers[i].querySelector('.image-animator-timeline-frame');
             const effectFrame = effectWrappers[i]?.querySelector('.image-animator-timeline-frame');
             const soundFrame = soundWrappers[i]?.querySelector('.image-animator-timeline-frame');
             
-            // Get image filename
-            const imageSrc = imageFrame.querySelector('img')?.src;
-            let imageName = "missing.png";
-            if (imageSrc) {
-                if (imageSrc.startsWith('blob:')) {
-                    imageName = imageFrame.dataset.filename || `frame_${i+1}.png`;
-                } else {
-                    imageName = imageSrc.split('/').pop();
-                }
-            }
+            // Calculate timing
+            const begin = currentBegin;
+            const end = begin + duration;
+            currentBegin = end;
             
-            // Get effect filename if exists
-            let effectName = "";
-            if (effectFrame) {
-                const effectSrc = effectFrame.querySelector('img')?.src;
-                if (effectSrc) {
-                    if (effectSrc.startsWith('blob:')) {
-                        effectName = effectFrame.dataset.filename || `effect_${i+1}.png`;
-                    } else {
-                        effectName = effectSrc.split('/').pop();
-                    }
-                }
-            }
+            // Get filenames
+            const imageName = imageFrame.dataset.filename || "";
+            const effectName = effectFrame?.dataset.filename || "";
+            const soundName = soundFrame?.dataset.filename || "";
             
-            // Get sound filename if exists
-            let soundName = "";
-            if (soundFrame) {
-                soundName = soundFrame.dataset.filename || `sound_${i+1}.ogg`;
-            }
-            
-            // Build frame content
-            wmlContent += "    [frame]\n";
+            // Build frame block
+            wmlContent += `    [frame]\n`;
+            wmlContent += `        begin=${begin}\n`;
+            wmlContent += `        end=${end}\n`;
             wmlContent += `        image="${imageName}"\n`;
+            
             if (effectName) {
                 wmlContent += `        halo="${effectName}"\n`;
             }
+            
             if (soundName) {
                 wmlContent += `        sound="${soundName}"\n`;
             }
-            wmlContent += "    [/frame]\n";
+            
+            wmlContent += `    [/frame]\n`;
         }
         
         wmlContent += "[/animation]";
         
-        // Create download link
+        // Create and download file
         const blob = new Blob([wmlContent], { type: 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1026,8 +1467,9 @@ function exportWML() {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
         
-        // Update preview placeholder
-        const placeholder = document.querySelector('.image-animator-export-option:nth-child(2) .image-animator-export-placeholder');
+        // Show success message
+placeholder.classList.remove('loading');
+        /* const placeholder = document.querySelector('.image-animator-export-option:nth-child(2) .image-animator-export-placeholder'); */
         if (placeholder) {
             placeholder.textContent = i18n.t('image_animator.wml_export_success');
             setTimeout(() => {
@@ -1040,13 +1482,101 @@ function exportWML() {
     }
 }
 
-function exportSpriteSheet() {
-	try {
-		console.log("Export as Sprite Sheet");
-		alert(i18n.t('image_animator.spritesheet_export_message'));
-		} catch (error) {
-		console.error('Error in exportSpriteSheet:', error);
-	}
+async function exportSpriteSheet() {
+    try {
+        const placeholder = document.querySelector('.image-animator-export-option:nth-child(3) .image-animator-export-placeholder');
+        placeholder.textContent = i18n.t('image_animator.spritesheet_export_processing');
+placeholder.classList.add('loading');
+        
+        // Get all valid image frames
+        const imageWrappers = document.querySelectorAll('#imagesTimeline .image-animator-timeline-wrapper');
+        const validFrames = [];
+        
+        imageWrappers.forEach(wrapper => {
+            const frame = wrapper.querySelector('.image-animator-timeline-frame');
+            const img = frame.querySelector('img');
+            if (img) validFrames.push(img.src);
+        });
+
+        if (validFrames.length === 0) {
+            throw new Error(i18n.t('image_animator.spritesheet_export_no_images'));
+        }
+
+        // Load all images
+        const images = await Promise.all(validFrames.map(src => 
+            new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            })
+        ));
+
+        // Create sprite sheet
+        const width = images[0].naturalWidth;
+        const height = images[0].naturalHeight;
+        const cols = Math.ceil(Math.sqrt(images.length));
+        const rows = Math.ceil(images.length / cols);
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = width * cols;
+        canvas.height = height * rows;
+        const ctx = canvas.getContext('2d');
+        
+        // Draw all frames
+        images.forEach((img, index) => {
+            const col = index % cols;
+            const row = Math.floor(index / cols);
+            ctx.drawImage(img, col * width, row * height, width, height);
+        });
+
+        // Generate and download PNG
+        const dataURL = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = dataURL;
+        a.download = 'wesnoth_spritesheet.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // Generate and download JSON metadata
+        const metadata = {
+            frameWidth: width,
+            frameHeight: height,
+            frameCount: images.length,
+            frameDuration: parseInt(document.getElementById('durationTime').value) || 200,
+            layout: {
+                cols: cols,
+                rows: rows
+            }
+        };
+        
+        const metaBlob = new Blob([JSON.stringify(metadata, null, 2)], { type: 'application/json' });
+        const metaURL = URL.createObjectURL(metaBlob);
+        
+        const metaLink = document.createElement('a');
+        metaLink.href = metaURL;
+        metaLink.download = 'spritesheet_metadata.json';
+        document.body.appendChild(metaLink);
+        metaLink.click();
+        document.body.removeChild(metaLink);
+        URL.revokeObjectURL(metaURL);
+
+        // Show success
+placeholder.classList.remove('loading');
+        placeholder.textContent = i18n.t('image_animator.spritesheet_export_success');
+        setTimeout(() => {
+            placeholder.textContent = i18n.t('image_animator.export_preview');
+        }, 3000);
+        
+    } catch (error) {
+        console.error('Sprite Sheet Export Error:', error);
+        const placeholder = document.querySelector('.image-animator-export-option:nth-child(3) .image-animator-export-placeholder');
+        placeholder.textContent = error.message || i18n.t('image_animator.spritesheet_export_error');
+        setTimeout(() => {
+            placeholder.textContent = i18n.t('image_animator.export_preview');
+        }, 3000);
+    }
 }
 
 // Collect all i18n keys and values
@@ -1078,6 +1608,7 @@ const translatableStrings = {
 		reverse: "Reverse",
 		alternate: "Alternate",
 		speed: "Speed:",
+		volume: "Volume:",
 		animation_timeline: "Animation Timeline",
 		add_frame: "Add Frame",
 		remove_frame: "Remove Frame",
@@ -1135,8 +1666,20 @@ const translatableStrings = {
         preview_status: "Animation Preview",
         playing_status: "Playing animation...",
         paused_status: "Animation paused",
-        no_frames_to_export: "No frames available to export. Please upload images first.",
         wml_export_success: "WML exported successfully!",
-        wml_export_error: "Error exporting WML. Please try again."
+wml_export_error: "Error exporting WML. Please try again.",
+no_frames_to_export: "No frames available to export. Please upload images first.",
+gif_export_processing: "Processing GIF...",
+gif_export_success: "GIF exported successfully!",
+gif_export_error: "Error exporting GIF. Please try again.",
+gif_export_no_images: "No images available to export. Please upload images first.",
+spritesheet_export_processing: "Processing Sprite Sheet...",
+spritesheet_export_success: "Sprite Sheet exported successfully!",
+spritesheet_export_error: "Error exporting Sprite Sheet. Please try again.",
+spritesheet_export_no_images: "No images available to export. Please upload images first.",
+loading_animation: "Loading animation...",
+preview_status: "Animation Preview",
+playing_status: "Playing animation...",
+paused_status: "Animation paused"
 	}
 };				

@@ -168,6 +168,9 @@
 .wts-index-card[data-card="images_manager"] .wts-index-card-header {
     background: var(--special-card-3);
 }
+.wts-index-card[data-card="images_animation_manager"] .wts-index-card-header {
+    background: var(--special-card-3);
+}
 
 .wts-index-card-icon {
     width: 40px;
