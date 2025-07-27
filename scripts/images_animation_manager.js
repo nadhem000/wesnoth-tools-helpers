@@ -1005,6 +1005,11 @@ function reloadAnimation() {
             previewDisplay.innerHTML = '<div class="image-animator-preview-placeholder" data-i18n="image_animator.preview_status">Animation Preview</div>';
             currentFrameIndex = 0;
             
+            // Reset sound played flags
+            uploadedSounds.forEach(sound => {
+                if (sound) sound.played = false;
+            });
+            
             const placeholder = previewDisplay.querySelector('.image-animator-preview-placeholder');
             if (placeholder) {
                 placeholder.textContent = i18n.t('image_animator.preview_status');
@@ -1240,10 +1245,8 @@ function drawFrame(canvas, ctx, frameIndex) {
     }
     
     // Play sound if available
-     const soundFile = getCurrentFrame('sounds', frameIndex);
-    if (soundFile) {
-        playSound(soundFile);
-    }
+    const soundFile = getCurrentFrame('sounds', frameIndex);
+    playSound(soundFile);
 }
 function playSound(soundFile) {
     try {
@@ -1251,9 +1254,6 @@ function playSound(soundFile) {
             const audio = new Audio(URL.createObjectURL(soundFile));
             audio.volume = currentVolume;
             audio.play().catch(e => console.error('Sound playback failed:', e));
-            
-            // Remove played flag - we want sounds to play every frame
-            delete soundFile.played;
         }
     } catch (error) {
         console.error('Error playing sound:', error);
@@ -1680,6 +1680,9 @@ spritesheet_export_no_images: "No images available to export. Please upload imag
 loading_animation: "Loading animation...",
 preview_status: "Animation Preview",
 playing_status: "Playing animation...",
-paused_status: "Animation paused"
+paused_status: "Animation paused",
+        sound_playback_error: "Error playing sound",
+        no_sound_to_play: "No sound file for this frame",
+        sound_playing: "Playing sound..."
 	}
-};				
+};

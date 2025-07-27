@@ -24,8 +24,7 @@
 							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
 							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
 							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
-    <a href="ressources/images_manager.html" data-i18n="card.images_manager">Image Manager</a>
-    <a href="ressources/images_animation_manager.html" data-i18n="card.images_animation_manager">Image Animation Manager</a>
+							<li><a href="#images-manager" data-i18n="doc.images_manager">Images Manager</a></li>
 							<a href="ressources/big_map_tracker.html" data-i18n="card.big_map_tracker">Big Map Coordinate Tracker</a>
 							<a href="ressources/unit_comparator.html" data-i18n="card.unit_comparator">Unit Comparator</a>
 							<a href="ressources/po_dictionary_manager.html" data-i18n="card.dictionary_manager">Dictionary Manager</a>
@@ -155,62 +154,66 @@
 							<span data-i18n="image_animator.animation_preview">Animation Preview</span>
 						</h2>
 						
-						<div class="image-animator-preview-area">
-							<div class="image-animator-preview-display">
-								<div class="image-animator-preview-placeholder" data-i18n="image_animator.preview_placeholder">Animation Preview</div>
-							</div>
-							
-							<div class="image-animator-preview-controls">
-								<button class="image-animator-preview-button" onclick="playAnimation()">
-									<svg viewBox="0 0 24 24">
-										<path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
-									</svg>
-									<span data-i18n="image_animator.play">Play</span>
-								</button>
-								<button class="image-animator-preview-button" onclick="pauseAnimation()">
-									<svg viewBox="0 0 24 24">
-										<path d="M14,19H18V5H14M6,19H10V5H6V19Z" />
-									</svg>
-									<span data-i18n="image_animator.pause">Pause</span>
-								</button>
-								<button class="image-animator-preview-button" onclick="reloadAnimation()">
-									<svg viewBox="0 0 24 24">
-										<path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" />
-									</svg>
-									<span data-i18n="image_animator.reload">Reload</span>
-								</button>
+						<div class="image-animator-preview-options-container">
+							<div class="image-animator-preview-area">
+								<div class="image-animator-preview-display">
+									<div class="image-animator-preview-placeholder" data-i18n="image_animator.preview_placeholder">Animation Preview</div>
+								</div>
 								
-								<div class="image-animator-preview-options">
-									<select class="image-animator-select">
-										<option value="loop" data-i18n="image_animator.loop">Loop</option>
-										<option value="play_once" data-i18n="image_animator.play_once">Play Once</option>
-									</select>
+								<div class="image-animator-preview-controls">
+									<button class="image-animator-preview-button" onclick="playAnimation()">
+										<svg viewBox="0 0 24 24">
+											<path d="M8,5.14V19.14L19,12.14L8,5.14Z" />
+										</svg>
+										<span data-i18n="image_animator.play">Play</span>
+									</button>
+									<button class="image-animator-preview-button" onclick="pauseAnimation()">
+										<svg viewBox="0 0 24 24">
+											<path d="M14,19H18V5H14M6,19H10V5H6V19Z" />
+										</svg>
+										<span data-i18n="image_animator.pause">Pause</span>
+									</button>
+									<button class="image-animator-preview-button" onclick="reloadAnimation()">
+										<svg viewBox="0 0 24 24">
+											<path d="M17.65,6.35C16.2,4.9 14.21,4 12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20C15.73,20 18.84,17.45 19.73,14H17.65C16.83,16.33 14.61,18 12,18A6,6 0 0,1 6,12A6,6 0 0,1 12,6C13.66,6 15.14,6.69 16.22,7.78L13,11H20V4L17.65,6.35Z" />
+										</svg>
+										<span data-i18n="image_animator.reload">Reload</span>
+									</button>
 									
-									<select class="image-animator-select">
-										<option value="forward" data-i18n="image_animator.forward">Forward</option>
-										<option value="reverse" data-i18n="image_animator.reverse">Reverse</option>
-										<option value="alternate" data-i18n="image_animator.alternate">Alternate</option>
-									</select>
+									<div class="image-animator-preview-options">
+										<select class="image-animator-select">
+											<option value="loop" data-i18n="image_animator.loop">Loop</option>
+											<option value="play_once" data-i18n="image_animator.play_once">Play Once</option>
+										</select>
+										
+										<select class="image-animator-select">
+											<option value="forward" data-i18n="image_animator.forward">Forward</option>
+											<option value="reverse" data-i18n="image_animator.reverse">Reverse</option>
+											<option value="alternate" data-i18n="image_animator.alternate">Alternate</option>
+										</select>
+									</div>
+								</div>
+								
+								<div class="image-animator-slider-container">
+									<!-- Speed Slider Group -->
+									<div class="mage-animator-slider-group">
+										<svg class="image-animator-slider-icon" viewBox="0 0 24 24">
+											<path d="M17,17H7V15H17V17M17,13H7V11H17V13M17,9H7V7H17V9Z" />
+										</svg>
+										<span data-i18n="image_animator.speed">Speed:</span>
+										<input type="range" min="1" max="10" value="5" class="image-animator-slider" id="speedSlider">
+									</div>
+									
+									<!-- Volume Slider Group -->
+									<div class="mage-animator-slider-group">
+										<svg class="image-animator-slider-icon" viewBox="0 0 24 24">
+											<path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+										</svg>
+										<span data-i18n="image_animator.volume">Volume:</span>
+										<input type="range" min="0" max="100" value="100" class="image-animator-slider" id="volumeSlider">
+									</div>
 								</div>
 							</div>
-							
-<div class="image-animator-sliders-container">
-    <div class="image-animator-slider-container">
-        <svg class="image-animator-slider-icon" viewBox="0 0 24 24">
-            <path d="M17,17H7V15H17V17M17,13H7V11H17V13M17,9H7V7H17V9Z" />
-        </svg>
-        <span data-i18n="image_animator.speed">Speed:</span>
-        <input type="range" min="1" max="10" value="5" class="image-animator-slider" id="speedSlider">
-    </div>
-    
-    <div class="image-animator-slider-container">
-        <svg class="image-animator-slider-icon" viewBox="0 0 24 24">
-            <path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
-        </svg>
-        <span data-i18n="image_animator.volume">Volume:</span>
-        <input type="range" min="0" max="100" value="100" class="image-animator-slider" id="volumeSlider">
-    </div>
-</div>
 						</div>
 					</div>
 				</div>
@@ -254,18 +257,18 @@
 								<span data-i18n="image_animator.duration_time">Duration (ms):</span>
 								<input type="number" value="200" min="1" class="image-animator-duration_time-input" id="durationTime">
 							</div>
-    <button class="image-animator-timeline-button" onclick="undo()">
-        <svg viewBox="0 0 24 24">
-            <path d="M12.5,8C9.85,8 7.45,9 5.6,10.6L2,7V16H11L7.38,12.38C8.77,11.22 10.54,10.5 12.5,10.5C16.04,10.5 19.05,12.81 20.1,16L22.47,15.22C21.08,11.03 17.15,8 12.5,8Z"/>
-        </svg>
-        <span data-i18n="image_animator.undo">Undo</span>
-    </button>
-    <button class="image-animator-timeline-button" onclick="redo()">
-        <svg viewBox="0 0 24 24">
-            <path d="M18.4,10.6C16.55,9 14.15,8 11.5,8C6.85,8 2.92,11.03 1.54,15.22L3.9,16C4.95,12.81 7.95,10.5 11.5,10.5C13.45,10.5 15.23,11.22 16.62,12.38L13,16H22V7L18.4,10.6Z"/>
-        </svg>
-        <span data-i18n="image_animator.redo">Redo</span>
-    </button>
+							<button class="image-animator-timeline-button" onclick="undo()">
+								<svg viewBox="0 0 24 24">
+									<path d="M12.5,8C9.85,8 7.45,9 5.6,10.6L2,7V16H11L7.38,12.38C8.77,11.22 10.54,10.5 12.5,10.5C16.04,10.5 19.05,12.81 20.1,16L22.47,15.22C21.08,11.03 17.15,8 12.5,8Z"/>
+								</svg>
+								<span data-i18n="image_animator.undo">Undo</span>
+							</button>
+							<button class="image-animator-timeline-button" onclick="redo()">
+								<svg viewBox="0 0 24 24">
+									<path d="M18.4,10.6C16.55,9 14.15,8 11.5,8C6.85,8 2.92,11.03 1.54,15.22L3.9,16C4.95,12.81 7.95,10.5 11.5,10.5C13.45,10.5 15.23,11.22 16.62,12.38L13,16H22V7L18.4,10.6Z"/>
+								</svg>
+								<span data-i18n="image_animator.redo">Redo</span>
+							</button>
 						</div>
 					</div>
 					
@@ -275,77 +278,78 @@
 								<div class="image-animator-timeline-label" data-i18n="image_animator.images_line">Images</div>
 								<div class="image-animator-timeline-frames" id="imagesTimeline">
 								</div>
-<div class="image-animator-drag-hint" data-i18n="image_animator.drag_drop_hint"></div>
+								<div class="image-animator-drag-hint" data-i18n="image_animator.drag_drop_hint"></div>
 							</div>
 							
 							<div class="image-animator-timeline-line">
 								<div class="image-animator-timeline-label" data-i18n="image_animator.effects_line">Special Effects</div>
 								<div class="image-animator-timeline-frames" id="effectsTimeline">
 								</div>
-<div class="image-animator-drag-hint" data-i18n="image_animator.drag_drop_hint"></div>
+								<div class="image-animator-drag-hint" data-i18n="image_animator.drag_drop_hint"></div>
 							</div>
 							
 							<div class="image-animator-timeline-line">
 								<div class="image-animator-timeline-label" data-i18n="image_animator.sounds_line">Sounds</div>
 								<div class="image-animator-timeline-frames" id="soundsTimeline">
 								</div>
-<div class="image-animator-drag-hint" data-i18n="image_animator.drag_drop_hint"></div>
+								<div class="image-animator-drag-hint" data-i18n="image_animator.drag_drop_hint"></div>
 							</div>
 						</div>
 					</div>
-				
-				<!-- Exporting Section -->
-				<h2 class="image-animator-section-title" style="margin-bottom: 20px;" data-i18n="image_animator.exporting">Export Your Animation</h2>
-				<div class="image-animator-exporting">
-					<div class="image-animator-export-option">
-						<div class="image-animator-export-icon">
-							<svg viewBox="0 0 24 24">
-								<path d="M14,12L10,8V11H2V13H10V16M20,18V6C20,4.89 19.1,4 18,4H6A2,2 0 0,0 4,6V18A2,2 0 0,0 6,20H18A2,2 0 0,0 20,18Z" />
-							</svg>
-						</div>
-						<h3 data-i18n="image_animator.export_gif">Export as GIF</h3>
-						<p data-i18n="image_animator.export_gif_desc">Animated GIF format for easy sharing</p>
-						<div class="image-animator-export-placeholder" data-i18n="image_animator.export_preview">Preview will appear here</div>
-						<button class="image-animator-export-button" onclick="exportGIF()">
-							<svg viewBox="0 0 24 24">
-								<path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
-							</svg>
-							<span data-i18n="image_animator.download">Download</span>
-						</button>
-					</div>
 					
-					<div class="image-animator-export-option">
-						<div class="image-animator-export-icon">
-							<svg viewBox="0 0 24 24">
-								<path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
-							</svg>
+					<!-- Exporting Section -->
+					<h2 class="image-animator-section-title" style="margin-bottom: 20px;" data-i18n="image_animator.exporting">Export Your Animation</h2>
+					<div class="image-animator-exporting">
+						<div class="image-animator-export-option">
+							<div class="image-animator-export-icon">
+								<svg viewBox="0 0 24 24">
+									<path d="M14,12L10,8V11H2V13H10V16M20,18V6C20,4.89 19.1,4 18,4H6A2,2 0 0,0 4,6V18A2,2 0 0,0 6,20H18A2,2 0 0,0 20,18Z" />
+								</svg>
+							</div>
+							<h3 data-i18n="image_animator.export_gif">Export as GIF</h3>
+							<p data-i18n="image_animator.export_gif_desc">Animated GIF format for easy sharing</p>
+							<div class="image-animator-export-placeholder" data-i18n="image_animator.export_preview">Preview will appear here</div>
+							<button class="image-animator-export-button" onclick="exportGIF()">
+								<svg viewBox="0 0 24 24">
+									<path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+								</svg>
+								<span data-i18n="image_animator.download">Download</span>
+							</button>
 						</div>
-						<h3 data-i18n="image_animator.export_wml">Export as WML</h3>
-						<p data-i18n="image_animator.export_wml_desc">Wesnoth Markup Language for game integration</p>
-						<div class="image-animator-export-placeholder" data-i18n="image_animator.export_preview">Preview will appear here</div>
-						<button class="image-animator-export-button" onclick="exportWML()">
-							<svg viewBox="0 0 24 24">
-								<path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
-							</svg>
-							<span data-i18n="image_animator.download">Download</span>
-						</button>
-					</div>
-					
-					<div class="image-animator-export-option">
-						<div class="image-animator-export-icon">
-							<svg viewBox="0 0 24 24">
-								<path d="M8,16H12V12H8V16M12,12H16V8H12V12M2,20V4C2,2.89 2.89,2 4,2H20A2,2 0 0,1 22,4V20A2,2 0 0,1 20,22H4C2.89,22 2,21.1 2,20M16,16H20V12H16V16M16,4H20V8H16V4M4,4H8V8H4V4M4,16H8V20H4V16M4,12H8V12H4V12Z" />
-							</svg>
+						
+						<div class="image-animator-export-option">
+							<div class="image-animator-export-icon">
+								<svg viewBox="0 0 24 24">
+									<path d="M14,3.23V5.29C16.89,6.15 19,8.83 19,12C19,15.17 16.89,17.84 14,18.7V20.77C18,19.86 21,16.28 21,12C21,7.72 18,4.14 14,3.23M16.5,12C16.5,10.23 15.5,8.71 14,7.97V16C15.5,15.29 16.5,13.76 16.5,12M3,9V15H7L12,20V4L7,9H3Z" />
+								</svg>
+							</div>
+							<h3 data-i18n="image_animator.export_wml">Export as WML</h3>
+							<p data-i18n="image_animator.export_wml_desc">Wesnoth Markup Language for game integration</p>
+							<div class="image-animator-export-placeholder" data-i18n="image_animator.export_preview">Preview will appear here</div>
+							<button class="image-animator-export-button" onclick="exportWML()">
+								<svg viewBox="0 0 24 24">
+									<path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+								</svg>
+								<span data-i18n="image_animator.download">Download</span>
+							</button>
 						</div>
-						<h3 data-i18n="image_animator.export_sprite">Export as Sprite Sheet</h3>
-						<p data-i18n="image_animator.export_sprite_desc">Sprite sheet for advanced animation control</p>
-						<div class="image-animator-export-placeholder" data-i18n="image_animator.export_preview">Preview will appear here</div>
-						<button class="image-animator-export-button" onclick="exportSpriteSheet()">
-							<svg viewBox="0 0 24 24">
-								<path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
-							</svg>
-							<span data-i18n="image_animator.download">Download</span>
-						</button>
+						
+						<div class="image-animator-export-option">
+							<div class="image-animator-export-icon">
+								<svg viewBox="0 0 24 24">
+									<path d="M8,16H12V12H8V16M12,12H16V8H12V12M2,20V4C2,2.89 2.89,2 4,2H20A2,2 0 0,1 22,4V20A2,2 0 0,1 20,22H4C2.89,22 2,21.1 2,20M16,16H20V12H16V16M16,4H20V8H16V4M4,4H8V8H4V4M4,16H8V20H4V16M4,12H8V12H4V12Z" />
+								</svg>
+							</div>
+							<h3 data-i18n="image_animator.export_sprite">Export as Sprite Sheet</h3>
+							<p data-i18n="image_animator.export_sprite_desc">Sprite sheet for advanced animation control</p>
+							<div class="image-animator-export-placeholder" data-i18n="image_animator.export_preview">Preview will appear here</div>
+							<button class="image-animator-export-button" onclick="exportSpriteSheet()">
+								<svg viewBox="0 0 24 24">
+									<path d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+								</svg>
+								<span data-i18n="image_animator.download">Download</span>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -365,4 +369,4 @@
 		<script src="../scripts/images_animation_manager.js"></script>
 		<script src="../scripts/main.js"></script>
 	</body>
-</html>
+</html>		
