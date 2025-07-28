@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.10
+	* Version: 1.11
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v10';
+const CACHE_NAME = 'wesnoth-tools-v11';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -57,17 +57,18 @@ const PRECACHE_URLS = [
 	'/templates/footer.html',
 	'/assets/icons/icon-192.png',
 	'/assets/icons/icon-512.png',
+	'/assets/icons/icon-maskable.png',
 	'/assets/halos/fireball-impact-2.png',
 	'/assets/halos/flame-burst-1.png',
 	'/assets/halos/mage-halo1.png',
+	'/assets/screenshots/screenshot_01.png',
+	'/assets/screenshots/screenshot_02.png',
+	'/assets/screenshots/screenshot_03.png',
 	'/assets/sounds/bow.ogg',
 	'/assets/sounds/flail.ogg',
 	'/assets/sounds/human-die-1.ogg',
 	'/assets/sounds/magic-holy-1.ogg',
-	'/assets/sounds/sword-1.ogg',
-	'/assets/screenshots/Screenshot-133612.png',
-	'/assets/screenshots/Screenshot-133639.png',
-	'/assets/screenshots/Screenshot-133706.png'
+	'/assets/sounds/sword-1.ogg'
 ];
 
 // Install Event

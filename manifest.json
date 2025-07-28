@@ -1,31 +1,74 @@
 {
-  "name": "Wesnoth Tools Suite",
-  "short_name": "WesnothTools",
-  "start_url": "/index.html",
-  "display": "standalone",
-  "background_color": "#2c3e50",
-  "theme_color": "#3498db",
-  "description": "A suite of tools for Battle for Wesnoth campaign developers",
-  "categories": ["games", "utilities", "development"],
-  "lang": "en",
-  "dir": "ltr",
-  "icons": [
-    {
-      "src": "assets/icons/icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "assets/icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    },
-    {
-      "src": "assets/icons/icon-maskable.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
-  ]
+	"name": "Wesnoth Tools Suite",
+	"short_name": "WesnothTools",
+	"id": "WesnothToolsSuite",
+	"start_url": "/index.html",
+	"display": "standalone",
+	"background_color": "#2c3e50",
+	"theme_color": "#3498db",
+	"orientation": "portrait",
+	"description": "A suite of tools for Battle for Wesnoth campaign developers",
+	"categories": ["games", "utilities", "development"],
+	"lang": "en",
+	"dir": "ltr",
+	"scope": "/",
+	"edge_side_panel": {
+		"preferred_width": 400
+	},
+	"display_override": [
+		"window-controls-overlay",
+		"standalone",
+		"minimal-ui",
+		"browser"
+	],
+	"iarc_rating_id": "e58c174a-81d2-5c3c-32cc-34b8de4a52e9",
+	"icons": [
+		{
+			"src": "assets/icons/icon-192.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "any"
+		},
+		{
+			"src": "assets/icons/icon-512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
+			"src": "assets/icons/icon-maskable.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"purpose": "maskable"
+		}
+	],
+	"screenshots": [
+		{
+			"src": "assets/screenshots/screenshot_01.png",
+			"sizes": "1331x590",
+			"type": "image/png",
+			"platform": "wide"
+		},
+		{
+			"src": "assets/screenshots/screenshot_02.png",
+			"sizes": "1275x570",
+			"type": "image/png",
+			"platform": "narrow"
+		},
+		{
+			"src": "assets/screenshots/screenshot_03.png",
+			"sizes": "1320x586",
+			"type": "image/png",
+			"platform": "narrow"
+		}
+	],
+	"file_handlers": [
+		{
+			"action": "/handle-file",
+			"accept": {
+				"text/plain": [".txt",".cfg",".map"],
+				"image/*": [".jpg", ".jpeg", ".png"],
+				"audios/*": [".ogg", ".wav", ".mp3"]
+			}
+		}
+	]
 }
