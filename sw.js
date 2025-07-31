@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.15
+	* Version: 1.18
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v16';
+const CACHE_NAME = 'wesnoth-tools-v18';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -198,7 +198,7 @@ async function checkForUpdates() {
     try {
         const response = await fetch('/version.json');
         const data = await response.json();
-        const currentVersion = '1.16';
+        const currentVersion = '1.18';
         
         if (data.version !== currentVersion) {
             // Notify about update

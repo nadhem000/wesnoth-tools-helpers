@@ -12,7 +12,7 @@
 	"lang": "en",
 	"dir": "ltr",
 	"scope": "/",
-    "version": "1.16",
+    "version": "1.18",
 	"edge_side_panel": {
 		"preferred_width": 400
 	},
@@ -70,6 +70,64 @@
 				"image/*": [".jpg", ".jpeg", ".png"],
 				"audio/*": [".ogg", ".wav", ".mp3"]
 			}
+		}
+	],
+	"shortcuts": [
+		{
+			"name": "Events Manager",
+			"url": "/ressources/events_manager.html",
+			"short_name": "Events Manager",
+			"description": "Edit Events.",
+			"icons": [
+				{
+					"src": "assets/icons/event-icon-192.png",
+					"sizes": "192x192",
+					"type": "image/png",
+					"purpose": "any"
+				}
+			]
+		},
+		{
+			"name": "Story Mode",
+			"url": "/ressources/story_mode.html",
+			"short_name": "Story Mode",
+			"description": "Read Scenarios Stories.",
+			"icons": [
+				{
+					"src": "assets/icons/story-icon-192.png",
+					"sizes": "192x192",
+					"type": "image/png",
+					"purpose": "any"
+				}
+			]
+		},
+		{
+			"name": "PO Manager",
+			"url": "/ressources/po_manager.html",
+			"short_name": "PO Manager",
+			"description": "Edit .po File.",
+			"icons": [
+				{
+					"src": "assets/icons/po-icon-192.png",
+					"sizes": "192x192",
+					"type": "image/png",
+					"purpose": "any"
+				}
+			]
+		},
+		{
+			"name": "Unit Comparator",
+			"url": "/ressources/unit_comparator.html",
+			"short_name": "Unit Comparator",
+			"description": "Compare Units.",
+			"icons": [
+				{
+					"src": "assets/icons/unit-icon-192.png",
+					"sizes": "192x192",
+					"type": "image/png",
+					"purpose": "any"
+				}
+			]
 		}
 	]
 }
