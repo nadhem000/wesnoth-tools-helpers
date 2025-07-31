@@ -25,6 +25,18 @@ const i18n = {
                 es: "Spanish",
                 it: "Italian"
 			},
+			update: {
+				auto_check: "Automatic update checks",
+				interval: "Check interval:",
+				hourly: "Hourly",
+				daily: "Daily",
+				weekly: "Weekly",
+				check_now: "Check Now"
+			},
+notifications: {
+    enable: "Enable notifications",
+    disable: "Disable notifications"
+},
             card: {
                 events_manager: "Events Manager",
                 unit_editor: "Unit Editor",
@@ -1499,6 +1511,18 @@ const i18n = {
                 es: "Espagnol",
                 it: "Italien"
 			},
+			update: {
+				auto_check: "Vérification automatique des mises à jour",
+				interval: "Intervalle de vérification :",
+				hourly: "Toutes les heures",
+				daily: "Quotidiennement",
+				weekly: "Hebdomadaire",
+				check_now: "Vérifier maintenant"
+			},
+notifications: {
+    enable: "Activer les notifications",
+    disable: "Désactiver les notifications"
+},
             card: {
 			    events_manager: "Gestionnaire d'événements",
                 story_mode: "Mode Histoire",
@@ -1766,21 +1790,21 @@ const i18n = {
 				po_feature6: "Statistiques de traduction et rapports d'analyse",
 				po_feature7: "Tout le traitement s'effectue localement dans votre navigateur",
 				po_note: "Le Gestionnaire PO préserve tous les commentaires, références et métadonnées pendant le traitement. Les messages obsolètes (#~) sont conservés mais exclus des comptes de traduction.",
-				"images_manager_desc": "Le Gestionnaire d'Images vous aide à organiser, prévisualiser et gérer les ressources graphiques pour vos campagnes Wesnoth. Il permet de parcourir les répertoires d'images, copier les chemins pour les fichiers de configuration, et effectuer des modifications basiques d'images.",
-				"using_images_manager": "Utilisation du Gestionnaire d'Images",
-				"im_step1": "Ajoutez des répertoires contenant vos images de jeu avec le bouton 'Ajouter un Répertoire'",
-				"im_step2": "Parcourez les images organisées par répertoire, taille de fichier ou date de création",
-				"im_step3": "Cliquez sur une image pour la visualiser en détail et accéder aux outils d'édition",
-				"im_step4": "Utilisez le bouton 'Copier le Chemin' pour obtenir le chemin de l'image à utiliser dans les fichiers WML",
-				"im_step5": "Modifiez les images avec l'éditeur intégré (luminosité, contraste, filtres)",
-				"im_step6": "Téléchargez les images modifiées ou utilisez des données d'exemple pour les tests",
-				"im_feature1": "Traitement local - aucune image n'est envoyée sur des serveurs",
-				"im_feature2": "Plusieurs méthodes d'organisation (dossier, taille, date)",
-				"im_feature3": "Éditeur d'image intégré avec filtres et réglages",
-				"im_feature4": "Copie du chemin en un clic pour la configuration WML",
-				"im_feature5": "Images Wesnoth d'exemple pour des tests rapides",
-				"im_feature6": "Tailles de prévisualisation ajustables (petit, moyen, grand)",
-				"im_note": "Tout le traitement d'image s'effectue localement dans votre navigateur. Aucune ressource n'est envoyée sur un serveur.",
+				images_manager_desc: "Le Gestionnaire d'Images vous aide à organiser, prévisualiser et gérer les ressources graphiques pour vos campagnes Wesnoth. Il permet de parcourir les répertoires d'images, copier les chemins pour les fichiers de configuration, et effectuer des modifications basiques d'images.",
+				using_images_manager: "Utilisation du Gestionnaire d'Images",
+				im_step1: "Ajoutez des répertoires contenant vos images de jeu avec le bouton 'Ajouter un Répertoire'",
+				im_step2: "Parcourez les images organisées par répertoire, taille de fichier ou date de création",
+				im_step3: "Cliquez sur une image pour la visualiser en détail et accéder aux outils d'édition",
+				im_step4: "Utilisez le bouton 'Copier le Chemin' pour obtenir le chemin de l'image à utiliser dans les fichiers WML",
+				im_step5: "Modifiez les images avec l'éditeur intégré (luminosité, contraste, filtres)",
+				im_step6: "Téléchargez les images modifiées ou utilisez des données d'exemple pour les tests",
+				im_feature1: "Traitement local - aucune image n'est envoyée sur des serveurs",
+				im_feature2: "Plusieurs méthodes d'organisation (dossier, taille, date)",
+				im_feature3: "Éditeur d'image intégré avec filtres et réglages",
+				im_feature4: "Copie du chemin en un clic pour la configuration WML",
+				im_feature5: "Images Wesnoth d'exemple pour des tests rapides",
+				im_feature6: "Tailles de prévisualisation ajustables (petit, moyen, grand)",
+				im_note: "Tout le traitement d'image s'effectue localement dans votre navigateur. Aucune ressource n'est envoyée sur un serveur.",
 				images_animation_manager_desc: "Le gestionnaire d'animations d'images vous permet de créer et gérer des animations de combat pour The Battle for Wesnoth. Vous pouvez télécharger des images de sprites, des effets spéciaux et des sons, puis les organiser sur une timeline pour créer des animations personnalisées. L'outil permet de prévisualiser l'animation et de l'exporter dans plusieurs formats.",
 				using_images_animation_manager: "Utilisation du gestionnaire d'animations d'images",
 				iam_step1: "Téléchargez les images, effets et sons à l'aide des zones de téléchargement",
