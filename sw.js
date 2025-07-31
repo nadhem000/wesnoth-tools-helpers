@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.19
+	* Version: 1.20
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v19';
+const CACHE_NAME = 'wesnoth-tools-v20';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -90,59 +90,33 @@ self.addEventListener('install', event => {
 	);
 });
 
-self.addEventListener('push', event => {
-    let title, body, url;
-    
-    try {
-        // Try to parse as JSON first
-        const data = event.data.json();
-        title = data.title;
-        body = data.body;
-        url = data.url || '/';
-    } catch (e) {
-        // Fallback to text if JSON parsing fails
-        const text = event.data.text();
-        title = 'Wesnoth Tools';
-        body = text;
-        url = '/';
-    }
-
-    event.waitUntil(
-        self.registration.showNotification(title, {
-            body: body,
-            icon: '/assets/icons/icon-192.png',
-            badge: '/assets/icons/icon-72.png',
-            data: { url: url }
-        })
-    );
-});
-
 // Fetch Event
+// Update the fetch handler
 self.addEventListener('fetch', event => {
-	if (event.request.method !== 'GET') return;
-	
-	const requestUrl = new URL(event.request.url);
-	
-	// Unified handling for both file:// and https://
-	event.respondWith(
-		caches.match(event.request).then(cachedResponse => {
-			if (cachedResponse) return cachedResponse;
-			
-			return fetch(event.request).then(response => {
-				if (response && response.status === 200) {
-					const responseToCache = response.clone();
-					caches.open(CACHE_NAME).then(cache => {
-						cache.put(event.request, responseToCache);
-					});
-				}
-				return response;
-				}).catch(() => {
-				if (event.request.mode === 'navigate') {
-					return caches.match(OFFLINE_URL);
-				}
-			});
-		})
-	);
+  if (event.request.method !== 'GET') return;
+  
+  const requestUrl = new URL(event.request.url);
+  
+  // Unified handling for both file:// and https://
+  event.respondWith(
+    caches.match(event.request).then(cachedResponse => {
+      if (cachedResponse) return cachedResponse;
+      
+      return fetch(event.request).then(response => {
+        if (response && response.status === 200) {
+          const responseToCache = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseToCache);
+          });
+        }
+        return response;
+      }).catch(() => {
+        if (event.request.mode === 'navigate') {
+          return caches.match(OFFLINE_URL);
+        }
+      });
+    })
+  );
 });
 
 // Activate Event (Clean old caches)
@@ -158,85 +132,4 @@ self.addEventListener('activate', event => {
 			);
 		})
 	);
-	self.addEventListener('notificationclick', event => {
-		event.notification.close();
-		event.waitUntil(
-			clients.openWindow(event.notification.data.url)
-		);
-	});
 });
-self.addEventListener('message', event => {
-    if (event.data.type === 'version-update') {
-        self.registration.showNotification(event.data.title, {
-            body: event.data.body,
-            icon: '/assets/icons/icon-192.png',
-            badge: '/assets/icons/icon-72.png',
-            data: { url: event.data.url }
-        });
-    }
-});
-// Add to the bottom of the file
-self.addEventListener('sync', event => {
-    if (event.tag === 'wts-data-sync') {
-        console.log('Background Sync triggered');
-        event.waitUntil(handleSync());
-    }
-});
-
-self.addEventListener('periodicsync', event => {
-    if (event.tag === 'wts-periodic-sync') {
-        console.log('Periodic Sync triggered');
-        event.waitUntil(handleSync());
-    }
-});
-
-async function handleSync() {
-    try {
-        // Check if data needs synchronization
-        const needsSync = await checkDataStatus();
-        
-        if (needsSync) {
-            // Perform synchronization
-            await synchronizeData();
-            console.log('Data synchronized successfully');
-        }
-        
-        // Always check for updates
-        return checkForUpdates();
-    } catch (error) {
-        console.error('Sync failed:', error);
-        return Promise.reject(error);
-    }
-}
-async function checkDataStatus() {
-    // Implement a logic to check if data needs synchronization
-    // For example: compare local data with server data
-    return true; // Return true if sync needed
-}
-async function synchronizeData() {
-    // Implement a data synchronization logic here
-    // For example: upload local changes to server
-    console.log('Synchronizing data...');
-    // Add an actual sync logic
-}
-
-async function checkForUpdates() {
-    try {
-        const response = await fetch('/version.json');
-        const data = await response.json();
-        const currentVersion = '1.19';
-        
-        if (data.version !== currentVersion) {
-            // Notify about update
-            self.registration.showNotification('Update Available', {
-                body: `New version ${data.version} is available!`,
-                icon: '/assets/icons/icon-192.png'
-            });
-            return true;
-        }
-        return false;
-    } catch (error) {
-        console.error('Update check failed:', error);
-        return false;
-    }
-}
