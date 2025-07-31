@@ -55,7 +55,7 @@ const PRECACHE_URLS = [
 	'/scripts/i18n.js',
 	'/templates/header.html',
 	'/templates/footer.html',
-    '/assets/icons/icon-72.png'
+    '/assets/icons/icon-72.png',
 	'/assets/icons/icon-192.png',
 	'/assets/icons/icon-512.png',
 	'/assets/icons/icon-maskable.png',
