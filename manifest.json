@@ -67,7 +67,7 @@
 			"accept": {
 				"text/plain": [".txt",".cfg",".map"],
 				"image/*": [".jpg", ".jpeg", ".png"],
-				"audios/*": [".ogg", ".wav", ".mp3"]
+				"audio/*": [".ogg", ".wav", ".mp3"]
 			}
 		}
 	]
