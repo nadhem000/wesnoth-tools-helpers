@@ -3,7 +3,7 @@
 	* Version: 1.15
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v15';
+const CACHE_NAME = 'wesnoth-tools-v16';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -85,16 +85,32 @@ self.addEventListener('install', event => {
 		})
 	);
 });
+
 self.addEventListener('push', event => {
-	const data = event.data.json();
-	event.waitUntil(
-		self.registration.showNotification(data.title, {
-			body: data.body,
-			icon: '/assets/icons/icon-192.png',
-			badge: '/assets/icons/icon-72.png',
-			data: { url: data.url }
-		})
-	);
+    let title, body, url;
+    
+    try {
+        // Try to parse as JSON first
+        const data = event.data.json();
+        title = data.title;
+        body = data.body;
+        url = data.url || '/';
+    } catch (e) {
+        // Fallback to text if JSON parsing fails
+        const text = event.data.text();
+        title = 'Wesnoth Tools';
+        body = text;
+        url = '/';
+    }
+
+    event.waitUntil(
+        self.registration.showNotification(title, {
+            body: body,
+            icon: '/assets/icons/icon-192.png',
+            badge: '/assets/icons/icon-72.png',
+            data: { url: url }
+        })
+    );
 });
 
 // Fetch Event
