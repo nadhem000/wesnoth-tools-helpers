@@ -180,83 +180,88 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
     // Navigation handlers
     setupNavigation();
-// Notification toggle
-const notificationToggle = document.getElementById('wts-notification-toggle');
-let notificationsEnabled = localStorage.getItem('wts-notifications') === 'true';
-
-// Update toggle button appearance
-function updateNotificationToggle() {
-    if (notificationsEnabled) {
-        notificationToggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="currentColor"/></svg>`;
-        notificationToggle.style.backgroundColor = 'rgba(52, 152, 219, 0.2)';
-    } else {
-        notificationToggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z" fill="currentColor"/></svg>`;
-        notificationToggle.style.backgroundColor = '';
-    }
-    notificationToggle.title = notificationsEnabled ? 'Disable notifications' : 'Enable notifications';
-}
-
-// Toggle notifications
-notificationToggle.addEventListener('click', () => {
-    notificationsEnabled = !notificationsEnabled;
-    localStorage.setItem('wts-notifications', notificationsEnabled);
-    updateNotificationToggle();
+	// Notification toggle
+	const notificationToggle = document.getElementById('wts-notification-toggle');
+	let notificationsEnabled = localStorage.getItem('wts-notifications') === 'true';
+	
+	// Update toggle button appearance
+	function updateNotificationToggle() {
+		if (notificationsEnabled) {
+			notificationToggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" fill="currentColor"/></svg>`;
+			notificationToggle.style.backgroundColor = 'rgba(52, 152, 219, 0.2)';
+			} else {
+			notificationToggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z" fill="currentColor"/></svg>`;
+			notificationToggle.style.backgroundColor = '';
+		}
+		notificationToggle.title = notificationsEnabled ? 'Disable notifications' : 'Enable notifications';
+	}
+	
+	// Toggle notifications
+	notificationToggle.addEventListener('click', () => {
+		notificationsEnabled = !notificationsEnabled;
+		localStorage.setItem('wts-notifications', notificationsEnabled);
+		updateNotificationToggle();
+		
+		if (notificationsEnabled) {
+			// Request permission
+			Notification.requestPermission().then(permission => {
+				if (permission === 'granted') {
+					console.log('Notification permission granted.');
+					} else {
+					console.log('Unable to get permission to notify.');
+				}
+			});
+		}
+	});
+	
+	// Check for updates
+	function checkForUpdates() {
+    if (!notificationsEnabled) return;
     
-    if (notificationsEnabled) {
-        // Request permission
-        Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-                console.log('Notification permission granted.');
-            } else {
-                console.log('Unable to get permission to notify.');
+    fetch('/version.json')
+        .then(response => response.json())
+        .then(data => {
+            const currentVersion = '1.15'; // Should match CACHE_NAME version
+            const latestVersion = data.version;
+            
+            if (currentVersion !== latestVersion) {
+                showUpdateNotification(latestVersion);
             }
-        });
-    }
-});
-
-// Check for updates
-function checkForUpdates() {
-    if (!notificationsEnabled) return;
-
-    // This would normally fetch from your server
-    const currentVersion = '1.10';
-    const latestVersion = '1.11';
-    
-    if (currentVersion !== latestVersion) {
-        showUpdateNotification(latestVersion);
-    }
+        })
+        .catch(console.error);
 }
 
-// Show update notification
-function showUpdateNotification(version) {
-    if (!notificationsEnabled) return;
-    
-    const title = 'New Version Available!';
-    const body = `Version ${version} is now available. Click to update.`;
-    
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-        navigator.serviceWorker.ready.then(registration => {
-            registration.showNotification(title, {
-                body: body,
-                icon: '/assets/icons/icon-192.png',
-                badge: '/assets/icons/icon-72.png',
-                vibrate: [200, 100, 200],
-                data: { url: window.location.href }
-            });
-        });
-    } else {
-        // Fallback to regular notifications
-        new Notification(title, { body, icon: '/assets/icons/icon-192.png' });
-    }
-}
-
-// Initialize
-updateNotificationToggle();
-setInterval(checkForUpdates, 24 * 60 * 60 * 1000); // Check daily
-
-// Notification click handler
-self.addEventListener('notificationclick', event => {
-    event.notification.close();
-    event.waitUntil(clients.openWindow(event.notification.data.url));
-});
+	
+	// Show update notification
+	function showUpdateNotification(version) {
+		if (!notificationsEnabled) return;
+		
+		const title = 'New Version Available!';
+		const body = `Version ${version} is now available. Click to update.`;
+		
+		if ('serviceWorker' in navigator && 'PushManager' in window) {
+			navigator.serviceWorker.ready.then(registration => {
+				registration.showNotification(title, {
+					body: body,
+					icon: '/assets/icons/icon-192.png',
+					badge: '/assets/icons/icon-72.png',
+					vibrate: [200, 100, 200],
+					data: { url: window.location.href }
+				});
+			});
+			} else {
+			// Fallback to regular notifications
+			new Notification(title, { body, icon: '/assets/icons/icon-192.png' });
+		}
+	}
+	
+	// Initialize
+	updateNotificationToggle();
+	setInterval(checkForUpdates, 24 * 60 * 60 * 1000); // Check daily
+	
+	// Notification click handler
+	self.addEventListener('notificationclick', event => {
+		event.notification.close();
+		event.waitUntil(clients.openWindow(event.notification.data.url));
+	});
 });

@@ -84,20 +84,17 @@ self.addEventListener('install', event => {
 			return cache.addAll(cacheUrls);
 		})
 	);
-	
-	self.addEventListener('push', event => {
-		const data = event.data.json();
-		event.waitUntil(
-			self.registration.showNotification(data.title, {
-				body: data.body,
-				icon: '/assets/icons/icon-192.png',
-				badge: '/assets/icons/icon-72.png',
-				data: { url: data.url }
-			})
-		);
-	});
-	
-	
+});
+self.addEventListener('push', event => {
+	const data = event.data.json();
+	event.waitUntil(
+		self.registration.showNotification(data.title, {
+			body: data.body,
+			icon: '/assets/icons/icon-192.png',
+			badge: '/assets/icons/icon-72.png',
+			data: { url: data.url }
+		})
+	);
 });
 
 // Fetch Event
@@ -147,4 +144,14 @@ self.addEventListener('activate', event => {
 			clients.openWindow(event.notification.data.url)
 		);
 	});
+});
+self.addEventListener('message', event => {
+    if (event.data.type === 'version-update') {
+        self.registration.showNotification(event.data.title, {
+            body: event.data.body,
+            icon: '/assets/icons/icon-192.png',
+            badge: '/assets/icons/icon-72.png',
+            data: { url: event.data.url }
+        });
+    }
 });
