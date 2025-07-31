@@ -12,34 +12,31 @@ let syncMode = 'manual';
 let syncInterval = 'daily';
 // Improved navigation handler
 function setupNavigation() {
-	try {
-		const isInRessources = window.location.pathname.includes('ressources');
-		const isLocalFile = window.location.protocol === 'file:';
-		
-		// Dashboard button
-		document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
-			window.location.href = isInRessources 
-			? (isLocalFile ? '../index.html' : '/index.html')
-			: 'index.html';
-		});
-		
-		// Tools dropdown items
-		document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
-			link.addEventListener('click', (e) => {
-				e.preventDefault();
-				let href = link.getAttribute('href');
-				
-				if (isInRessources) {
-					// Handle paths for ressources section
-					href = isLocalFile 
-					? href.replace('ressources/', '') 
-					: href.replace('ressources/', '/ressources/');
-					} else {
-					// Handle paths from root section
-					href = isLocalFile ? href : '/' + href;
+    try {
+        const isInRessources = window.location.pathname.includes('ressources');
+        const isLocalFile = window.location.protocol === 'file:';
+        
+        // Tools dropdown items
+        document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                let href = link.getAttribute('href');
+                
+                // Handle deployed environment
+                if (!isLocalFile) {
+                    // Always use root-relative paths in deployment
+                    window.location.href = href;
+				} 
+                // Handle local file system
+                else {
+                    if (isInRessources) {
+                        // Handle paths for ressources section
+                        window.location.href = href.replace('ressources/', '');
+						} else {
+                        // Handle paths from root section
+                        window.location.href = href;
+					}
 				}
-				
-				window.location.href = href;
 			});
 		});
 		
@@ -317,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const syncIntervalContainer = document.getElementById('wts-sync-interval-container');
     const syncIntervalSelect = document.getElementById('wts-sync-interval');
     const syncNowBtn = document.getElementById('wts-sync-now');
-
+	
     // Load sync settings
     function loadSyncSettings() {
         syncEnabled = localStorage.getItem('wts-sync-enabled') === 'true';
@@ -330,21 +327,21 @@ document.addEventListener('DOMContentLoaded', () => {
         if (syncMode === 'manual') {
             syncManual.checked = true;
             syncIntervalContainer.style.display = 'none';
-        } else {
+			} else {
             syncAutomatic.checked = true;
             syncIntervalContainer.style.display = 'flex';
-        }
+		}
         
         syncIntervalSelect.value = syncInterval;
-    }
-
+	}
+	
     // Save sync settings
     function saveSyncSettings() {
         localStorage.setItem('wts-sync-enabled', syncEnabled);
         localStorage.setItem('wts-sync-mode', syncMode);
         localStorage.setItem('wts-sync-interval', syncInterval);
-    }
-
+	}
+	
     // Event listeners
     syncEnabledCheck.addEventListener('change', () => {
         syncEnabled = syncEnabledCheck.checked;
@@ -353,34 +350,34 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (syncEnabled) {
             registerSync();
-        } else {
+			} else {
             unregisterSync();
-        }
-    });
-
+		}
+	});
+	
     syncManual.addEventListener('change', () => {
         syncMode = 'manual';
         syncIntervalContainer.style.display = 'none';
         saveSyncSettings();
-    });
-
+	});
+	
     syncAutomatic.addEventListener('change', () => {
         syncMode = 'automatic';
         syncIntervalContainer.style.display = 'flex';
         saveSyncSettings();
         startPeriodicSync();
-    });
-
+	});
+	
     syncIntervalSelect.addEventListener('change', () => {
         syncInterval = syncIntervalSelect.value;
         saveSyncSettings();
         startPeriodicSync();
-    });
-
+	});
+	
     syncNowBtn.addEventListener('click', () => {
         triggerSync();
-    });
-
+	});
+	
     // Register background sync
     async function registerSync() {
         if (!('serviceWorker' in navigator)) return;
@@ -391,14 +388,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if ('sync' in registration) {
             await registration.sync.register('wts-data-sync');
             console.log('Background Sync registered');
-        }
+		}
         
         // Register for periodic sync
         if ('periodicSync' in registration && syncMode === 'automatic') {
             await startPeriodicSync();
-        }
-    }
-
+		}
+	}
+	
     // Unregister sync
     async function unregisterSync() {
         if (!('serviceWorker' in navigator)) return;
@@ -407,13 +404,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if ('sync' in registration) {
             await registration.sync.unregister('wts-data-sync');
-        }
+		}
         
         if ('periodicSync' in registration) {
             await registration.periodicSync.unregister('wts-periodic-sync');
-        }
-    }
-
+		}
+	}
+	
     // Start periodic sync
     async function startPeriodicSync() {
         if (!('periodicSync' in navigator) || !syncEnabled || syncMode !== 'automatic') return;
@@ -423,18 +420,18 @@ document.addEventListener('DOMContentLoaded', () => {
             hourly: 60 * 60 * 1000,
             daily: 24 * 60 * 60 * 1000,
             weekly: 7 * 24 * 60 * 60 * 1000
-        };
+		};
         
         try {
             await registration.periodicSync.register('wts-periodic-sync', {
                 minInterval: intervals[syncInterval]
-            });
+			});
             console.log('Periodic Sync registered');
-        } catch (e) {
+			} catch (e) {
             console.error('Periodic Sync registration failed:', e);
-        }
-    }
-
+		}
+	}
+	
     // Trigger manual sync
     function triggerSync() {
         if (!('serviceWorker' in navigator)) return;
@@ -442,13 +439,13 @@ document.addEventListener('DOMContentLoaded', () => {
         navigator.serviceWorker.ready.then(registration => {
             if ('sync' in registration) {
                 registration.sync.register('wts-data-sync');
-            } else {
+				} else {
                 // Fallback for browsers without Background Sync
                 checkForUpdates();
-            }
-        });
-    }
-
+			}
+		});
+	}
+	
     // Initialize sync settings
     loadSyncSettings();
     

@@ -13,6 +13,7 @@
 	"dir": "ltr",
 	"scope": "/",
     "version": "1.19",
+  "handle_links": "preferred",
 	"edge_side_panel": {
 		"preferred_width": 400
 	},
