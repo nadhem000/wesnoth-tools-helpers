@@ -98,6 +98,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button id="wts-check-now" class="wts-index-card-button outline" data-i18n="update.check_now">Check Now</button>
     </div>
 </div>
+
+<div class="wts-update-setting">
+    <label>
+        <input type="checkbox" id="wts-sync-enabled">
+        <span data-i18n="sync.enable">Enable Data Synchronization</span>
+    </label>
+</div>
+
+<div id="wts-sync-settings" style="display: none">
+    <div class="wts-update-setting">
+        <label>
+            <input type="radio" name="sync-mode" value="manual" id="wts-sync-manual">
+            <span data-i18n="sync.manual">Manual Synchronization</span>
+        </label>
+    </div>
+    <div class="wts-update-setting">
+        <label>
+            <input type="radio" name="sync-mode" value="automatic" id="wts-sync-automatic">
+            <span data-i18n="sync.automatic">Automatic Synchronization</span>
+        </label>
+    </div>
+    
+    <div id="wts-sync-interval-container" style="display: none">
+        <label data-i18n="sync.interval">Sync interval:</label>
+        <select id="wts-sync-interval">
+            <option value="hourly" data-i18n="sync.hourly">Hourly</option>
+            <option value="daily" data-i18n="sync.daily">Daily</option>
+            <option value="weekly" data-i18n="sync.weekly">Weekly</option>
+        </select>
+    </div>
+    
+    <button id="wts-sync-now" class="wts-index-card-button outline" data-i18n="sync.now">Sync Now</button>
+</div>
 				</div>
 			</nav>
 		</header>

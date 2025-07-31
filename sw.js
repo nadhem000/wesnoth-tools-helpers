@@ -171,3 +171,46 @@ self.addEventListener('message', event => {
         });
     }
 });
+// Add to the bottom of the file
+self.addEventListener('sync', event => {
+    if (event.tag === 'wts-data-sync') {
+        console.log('Background Sync triggered');
+        event.waitUntil(handleSync());
+    }
+});
+
+self.addEventListener('periodicsync', event => {
+    if (event.tag === 'wts-periodic-sync') {
+        console.log('Periodic Sync triggered');
+        event.waitUntil(handleSync());
+    }
+});
+
+async function handleSync() {
+    // Add your synchronization logic here
+    // For example: check for updates, sync user data, etc.
+    
+    // Example: Check for app updates
+    return checkForUpdates();
+}
+
+async function checkForUpdates() {
+    try {
+        const response = await fetch('/version.json');
+        const data = await response.json();
+        const currentVersion = '1.16';
+        
+        if (data.version !== currentVersion) {
+            // Notify about update
+            self.registration.showNotification('Update Available', {
+                body: `New version ${data.version} is available!`,
+                icon: '/assets/icons/icon-192.png'
+            });
+            return true;
+        }
+        return false;
+    } catch (error) {
+        console.error('Update check failed:', error);
+        return false;
+    }
+}

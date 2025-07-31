@@ -33,10 +33,20 @@ const i18n = {
 				weekly: "Weekly",
 				check_now: "Check Now"
 			},
-notifications: {
-    enable: "Enable notifications",
-    disable: "Disable notifications"
-},
+			notifications: {
+				enable: "Enable notifications",
+				disable: "Disable notifications"
+			},
+			sync: {
+				enable: "Enable Data Synchronization",
+				manual: "Manual Synchronization",
+				automatic: "Automatic Synchronization",
+				interval: "Sync interval:",
+				hourly: "Hourly",
+				daily: "Daily",
+				weekly: "Weekly",
+				now: "Sync Now"
+			},
             card: {
                 events_manager: "Events Manager",
                 unit_editor: "Unit Editor",
@@ -1519,10 +1529,20 @@ notifications: {
 				weekly: "Hebdomadaire",
 				check_now: "Vérifier maintenant"
 			},
-notifications: {
-    enable: "Activer les notifications",
-    disable: "Désactiver les notifications"
-},
+			notifications: {
+				enable: "Activer les notifications",
+				disable: "Désactiver les notifications"
+			},
+			sync: {
+				enable: "Activer la synchronisation des données",
+				manual: "Synchronisation manuelle",
+				automatic: "Synchronisation automatique",
+				interval: "Intervalle de synchronisation :",
+				hourly: "Toutes les heures",
+				daily: "Quotidiennement",
+				weekly: "Hebdomadairement",
+				now: "Synchroniser maintenant"
+			},
             card: {
 			    events_manager: "Gestionnaire d'événements",
                 story_mode: "Mode Histoire",
