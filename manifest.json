@@ -12,7 +12,7 @@
 	"lang": "en",
 	"dir": "ltr",
 	"scope": "/",
-    "version": "1.18",
+    "version": "1.19",
 	"edge_side_panel": {
 		"preferred_width": 400
 	},
@@ -80,7 +80,7 @@
 			"description": "Edit Events.",
 			"icons": [
 				{
-					"src": "assets/icons/event-icon-192.png",
+					"src": "assets/icons/event-man-icon-192.png",
 					"sizes": "192x192",
 					"type": "image/png",
 					"purpose": "any"
@@ -94,7 +94,7 @@
 			"description": "Read Scenarios Stories.",
 			"icons": [
 				{
-					"src": "assets/icons/story-icon-192.png",
+					"src": "assets/icons/story-mode-icon-192.png",
 					"sizes": "192x192",
 					"type": "image/png",
 					"purpose": "any"
@@ -108,7 +108,7 @@
 			"description": "Edit .po File.",
 			"icons": [
 				{
-					"src": "assets/icons/po-icon-192.png",
+					"src": "assets/icons/po-man-icon-192.png",
 					"sizes": "192x192",
 					"type": "image/png",
 					"purpose": "any"
@@ -122,7 +122,7 @@
 			"description": "Compare Units.",
 			"icons": [
 				{
-					"src": "assets/icons/unit-icon-192.png",
+					"src": "assets/icons/unit-com-icon-192.png",
 					"sizes": "192x192",
 					"type": "image/png",
 					"purpose": "any"

@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.18
+	* Version: 1.19
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v18';
+const CACHE_NAME = 'wesnoth-tools-v19';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -59,6 +59,10 @@ const PRECACHE_URLS = [
 	'/assets/icons/icon-192.png',
 	'/assets/icons/icon-512.png',
 	'/assets/icons/icon-maskable.png',
+	'/assets/icons/unit-com-icon-192.png',
+	'/assets/icons/po-man-icon-192.png',
+	'/assets/icons/story-mode-icon-192.png',
+	'/assets/icons/event-man-icon-192.png',
 	'/assets/halos/fireball-impact-2.png',
 	'/assets/halos/flame-burst-1.png',
 	'/assets/halos/mage-halo1.png',
@@ -198,7 +202,7 @@ async function checkForUpdates() {
     try {
         const response = await fetch('/version.json');
         const data = await response.json();
-        const currentVersion = '1.18';
+        const currentVersion = '1.19';
         
         if (data.version !== currentVersion) {
             // Notify about update

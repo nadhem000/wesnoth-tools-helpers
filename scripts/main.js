@@ -470,7 +470,7 @@ function checkForUpdates() {
     fetch('/version.json')
 	.then(response => response.json())
 	.then(data => {
-		const currentVersion = '1.16';
+		const currentVersion = '1.19';
 		const latestVersion = data.version;
 		
 		if (currentVersion !== latestVersion) {
