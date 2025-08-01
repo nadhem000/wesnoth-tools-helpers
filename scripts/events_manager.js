@@ -1,7 +1,7 @@
 // events_manager.js
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize i18n
-    i18n.init();
+   /*  i18n.init(); */
     
     // Elements
     const fileInput = document.getElementById('manager-event-fileInput');

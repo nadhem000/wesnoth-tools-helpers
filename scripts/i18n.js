@@ -17,23 +17,23 @@ const i18n = {
                 documentation: "Documentation",
                 about: "About",
                 languages: "Languages",
-  settings: "Settings"
+				settings: "Settings"
 			},
-settings: {
-  clear_cache: "Clear Cache",
-  reset_settings: "Reset Settings",
-  export_settings: "Export Settings",
-  import_settings: "Import Settings",
-                        cache_cleared: "WTS cache cleared successfully!",
-                        cache_error: "Error clearing WTS cache. See console for details.",
-                        reset_confirm: "Reset all WTS settings to default?",
-                        reset_success: "WTS settings reset. Page will reload.",
-                        reset_error: "Error resetting WTS settings. See console for details.",
-                        export_success: "WTS settings exported successfully!",
-                        export_error: "Error exporting WTS settings. See console for details.",
-                        import_success: "WTS settings imported successfully! Page will reload.",
-                        import_error: "Error importing WTS settings. See console for details."
-  },
+			settings: {
+				clear_cache: "Clear Cache",
+				reset_settings: "Reset Settings",
+				export_settings: "Export Settings",
+				import_settings: "Import Settings",
+				cache_cleared: "WTS cache cleared successfully!",
+				cache_error: "Error clearing WTS cache. See console for details.",
+				reset_confirm: "Reset all WTS settings to default?",
+				reset_success: "WTS settings reset. Page will reload.",
+				reset_error: "Error resetting WTS settings. See console for details.",
+				export_success: "WTS settings exported successfully!",
+				export_error: "Error exporting WTS settings. See console for details.",
+				import_success: "WTS settings imported successfully! Page will reload.",
+				import_error: "Error importing WTS settings. See console for details."
+			},
             lang: {
                 en: "English",
                 fr: "French",
@@ -1495,9 +1495,9 @@ settings: {
 				alert_error_append: "Error appending tag: "
 			}
 		},
-    
-    // Merge other languages from their respective objects
-    ...(typeof i18n_fr !== 'undefined' ? i18n_fr : {})
+		
+		// Merge other languages from their respective objects
+		...(typeof i18n_fr !== 'undefined' ? i18n_fr : {})
 	},
 	
 	// Helper function to get nested translations
@@ -1516,35 +1516,58 @@ settings: {
 	},
 	
 	init() {
-    let lang = 'en';
-    try {
-        const storedLang = localStorage.getItem('wts-lang');
-        // Handle null/undefined values
-        if (storedLang && storedLang !== 'null') {
-            lang = storedLang;
-        }
-    } catch (e) {
-        console.warn('LocalStorage not available, using default language');
-    }
-    this.setLanguage(lang);
-},
+		/* console.log('[i18n.init] Starting initialization...'); */
+		let lang = 'en';
+		try {
+			const storedLang = localStorage.getItem('wts-lang');
+			/* console.log('[i18n.init] Retrieved from localStorage:', storedLang); */
+			
+			// Handle null/undefined values
+			if (storedLang && storedLang !== 'null') {
+				lang = storedLang;
+				/* console.log('[i18n.init] Using stored language:', lang); */
+				} else {
+				console.log('[i18n.init] No valid stored language, using default:', lang);
+			}
+			} catch (e) {
+			console.warn('[i18n.init] LocalStorage not available, using default language');
+		}
+		/* console.log('[i18n.init] Final language:', lang); */
+		this.setLanguage(lang);
+	},
 	
 	setLanguage(lang) {
-    // Validate language input
-    if (!lang || lang === 'null') {
-        lang = 'en'; // Default to English
-        console.warn('Invalid language, defaulting to English');
-    }
-    
-    this.currentLang = lang;
-    localStorage.setItem('wts-lang', lang);
-    document.documentElement.lang = lang;
+		/* console.log('[i18n.setLanguage] Requested language:', lang); */
+		
+		// Validate language input
+		if (!lang || lang === 'null') {
+			lang = 'en'; // Default to English
+			console.warn('[i18n.setLanguage] Invalid language, defaulting to English');
+		}
+		
+		/* console.log('[i18n.setLanguage] Setting language to:', lang); */
+		this.currentLang = lang;
+		
+		try {
+			localStorage.setItem('wts-lang', lang);
+			/* console.log('[i18n.setLanguage] Saved to localStorage:', lang); */
+			} catch (e) {
+			console.error('[i18n.setLanguage] Error saving to localStorage:', e);
+		}
+		
+		document.documentElement.lang = lang;
+		/* console.log('[i18n.setLanguage] Updated HTML lang attribute'); */
+		
+		// Apply translations
+		/* console.log('[i18n.setLanguage] Applying translations...'); */
+		let translationCount = 0;
 		
 		document.querySelectorAll('[data-i18n]').forEach(el => {
 			const key = el.getAttribute('data-i18n');
 			const translation = this.t(key);
 			
 			if (translation) {
+				translationCount++;
 				if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
 					el.placeholder = translation;
 					} else {
@@ -1552,6 +1575,36 @@ settings: {
 				}
 			}
 		});
+		
+		/* console.log(`[i18n.setLanguage] Applied ${translationCount} translations`); */
+		
+		// Update tooltips
+		/* console.log('[i18n.setLanguage] Updating tooltips...'); */
+		let tooltipCount = 0;
+		document.querySelectorAll('.wts-index-tooltip').forEach(el => {
+			const key = el.getAttribute('data-i18n');
+			if (key) {
+				const translation = this.t(key);
+				if (translation) {
+					el.title = translation;
+					tooltipCount++;
+				}
+			}
+		});
+		/* console.log(`[i18n.setLanguage] Updated ${tooltipCount} tooltips`); */
+		
+		// Log theme toggle update
+		const themeToggle = document.getElementById('wts-theme-toggle');
+		if (themeToggle) {
+			const currentTheme = document.documentElement.hasAttribute('data-theme') ? 'dark' : 'light';
+			const newTitle = currentTheme === 'light' 
+            ? (i18n.t('nav.toggle_dark') || 'Switch to dark mode')
+            : (i18n.t('nav.toggle_light') || 'Switch to light mode');
+			themeToggle.title = newTitle;
+			/* console.log('[i18n.setLanguage] Updated theme toggle title:', newTitle); */
+		}
+		
+		console.log('[i18n.setLanguage] Language change complete');
 	}
 };
 

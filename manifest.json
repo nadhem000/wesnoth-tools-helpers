@@ -52,7 +52,7 @@
 		},
 		{
 			"src": "assets/screenshots/screenshot_02.png",
-			"sizes": "1275x576",
+			"sizes": "1270x576",
 			"type": "image/png",
 			"platform": "narrow"
 		},
@@ -60,7 +60,8 @@
 			"src": "assets/screenshots/screenshot_03.png",
 			"sizes": "1320x586",
 			"type": "image/png",
-			"platform": "narrow"
+			"platform": "wide",
+			"form_factor": "wide"
 		}
 	],
 	"file_handlers": [

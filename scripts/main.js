@@ -19,23 +19,23 @@ function setupNavigation() {
 		
 		// Tools dropdown items
 		document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
-			link.addEventListener('click', (e) => {
-				e.preventDefault();
-				let href = link.getAttribute('href');
-				
-				if (isInRessources) {
-					// Handle paths for ressources section
-					href = isLocalFile 
-					? href.replace('ressources/', '') 
-					: href.replace('ressources/', '/ressources/');
-					} else {
-					// Handle paths from root section
-					href = isLocalFile ? href : '/' + href;
-				}
-				
-				window.location.href = href;
-			});
-		});
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        let href = link.getAttribute('href');
+        
+        if (isInRessources) {
+            // Handle paths for ressources section
+            href = isLocalFile 
+            ? href.replace('ressources/', '') 
+            : `/${href}`; // Fixed: Prepend slash for absolute paths
+        } else {
+            // Handle paths from root section
+            href = isLocalFile ? href : `/${href}`; // Fixed: Prepend slash for absolute paths
+        }
+        
+        window.location.href = href;
+    });
+});
 		
 		// Documentation button
 		document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
@@ -161,14 +161,17 @@ document.addEventListener('DOMContentLoaded', () => {
 	});
 	
 	// Language Selector Update
-	document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
-		link.addEventListener('click', (e) => {
-			e.preventDefault();
-			const lang = link.getAttribute('data-lang');
-			i18n.setLanguage(lang);
-		});
-	});
-	const navRight = document.querySelector('.wts-index-nav-right');
+	document.querySelectorAll('.wts-index-dropdown-content a[data-lang]').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const lang = link.getAttribute('data-lang');
+        if (lang) {
+            /* console.log('[Language Selector] Setting language:', lang); */
+            i18n.setLanguage(lang);
+        }
+    });
+});
+	/* const navRight = document.querySelector('.wts-index-nav-right');
 	if (navRight) {
 		navRight.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
 			link.addEventListener('click', (e) => {
@@ -177,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
 				i18n.setLanguage(lang);
 			});
 		});
-	}
+	} */
 	// Settings dropdown functionality
 document.getElementById('wts-clear-cache')?.addEventListener('click', function(e) {
     e.preventDefault();
@@ -232,28 +235,31 @@ document.getElementById('wts-reset-settings')?.addEventListener('click', functio
     }
 });
 
+// Replace the export settings event handler with this:
 document.getElementById('wts-export-settings')?.addEventListener('click', function(e) {
     e.preventDefault();
     try {
-        const settings = {
-            theme: localStorage.getItem('wts-theme') || 'light',
-            // Handle null/undefined values properly
-            language: localStorage.getItem('wts-lang') || 'en'
-        };
+        const theme = localStorage.getItem('wts-theme') || 'light';
+        const language = localStorage.getItem('wts-lang') || 'en'; // Get directly from localStorage
+        
+        const settings = { theme, language };
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(settings));
         const dlAnchorElem = document.createElement('a');
         dlAnchorElem.setAttribute("href", dataStr);
         dlAnchorElem.setAttribute("download", "wts-settings.json");
         dlAnchorElem.click();
-        alert(i18n.t('settings.export_success') || 'WTS settings exported successfully!');
+        
+        const successMsg = i18n.t('settings.export_success') || 'WTS settings exported successfully!';
+        /* console.log('[Export Settings]', successMsg); */
+        alert(successMsg);
     } catch (e) {
-        console.error('Export failed:', e);
-        alert(i18n.t('settings.export_error') || 'Error exporting WTS settings. See console for details.');
+        console.error('[Export Settings] Error:', e);
+        const errorMsg = i18n.t('settings.export_error') || 'Error exporting WTS settings. See console for details.';
+        alert(errorMsg);
     }
 });
 
 document.getElementById('wts-import-settings')?.addEventListener('click', function(e) {
-    
     e.preventDefault();
     try {
         const input = document.createElement('input');
@@ -269,14 +275,10 @@ document.getElementById('wts-import-settings')?.addEventListener('click', functi
                         localStorage.setItem('wts-theme', settings.theme);
                         document.documentElement.setAttribute('data-theme', settings.theme);
                     }
-                    
-                    // Validate language before setting
-                    const validLang = settings.language && settings.language !== 'null' 
-                                     ? settings.language : 'en';
-                    
-                    localStorage.setItem('wts-lang', validLang);
-                    i18n.setLanguage(validLang);
-                    
+                    if (settings.language) {
+                        localStorage.setItem('wts-lang', settings.language);
+                        i18n.setLanguage(settings.language);
+                    }
                     alert(i18n.t('settings.import_success') || 'WTS settings imported successfully! Page will reload.');
                     setTimeout(() => location.reload(), 1000);
                 } catch (parseError) {

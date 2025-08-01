@@ -53,6 +53,7 @@ const PRECACHE_URLS = [
 	'/scripts/images_animation_manager.js',
 	'/scripts/sample.js',
 	'/scripts/i18n.js',
+	'/scripts/i18n_fr.js',
 	'/templates/header.html',
 	'/templates/footer.html',
     '/assets/icons/icon-72.png',

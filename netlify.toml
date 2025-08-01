@@ -1,7 +1,8 @@
-[[headers]]
-  for = "/sw.js"
-  [headers.values]
-    Cache-Control = "no-cache, no-store, must-revalidate"
+[[redirects]]
+  from = "/ressources/*"
+  to = "/ressources/:splat.html"
+  status = 200
+  force = false
 
 [[redirects]]
   from = "/*"
