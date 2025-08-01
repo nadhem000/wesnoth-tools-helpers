@@ -178,6 +178,120 @@ document.addEventListener('DOMContentLoaded', () => {
 			});
 		});
 	}
+	// Settings dropdown functionality
+document.getElementById('wts-clear-cache')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    try {
+        // Only clear WTS-related items
+        const keysToKeep = [];
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (!key.startsWith('wts-') && !key.startsWith('wts-lang')) {
+                keysToKeep.push(key);
+            }
+        }
+        
+        localStorage.clear();
+        
+        // Restore non-WTS keys
+        keysToKeep.forEach(key => {
+            const value = localStorage.getItem(key);
+            localStorage.setItem(key, value);
+        });
+        
+        if ('caches' in window) {
+            caches.keys().then(cacheNames => {
+                cacheNames.forEach(cacheName => {
+                    if (cacheName.includes('wts-') || cacheName.includes('wesnoth-tools')) {
+                        caches.delete(cacheName);
+                    }
+                });
+            });
+        }
+        alert(i18n.t('settings.cache_cleared') || 'WTS cache cleared successfully!');
+    } catch (e) {
+        console.error('Cache clearing failed:', e);
+        alert(i18n.t('settings.cache_error') || 'Error clearing WTS cache. See console for details.');
+    }
+});
+
+document.getElementById('wts-reset-settings')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    try {
+        if (confirm(i18n.t('settings.reset_confirm') || 'Reset all WTS settings to default?')) {
+            // Only reset WTS settings
+            localStorage.removeItem('wts-theme');
+            localStorage.removeItem('wts-lang');
+            document.documentElement.removeAttribute('data-theme');
+            alert(i18n.t('settings.reset_success') || 'WTS settings reset. Page will reload.');
+            setTimeout(() => location.reload(), 1000);
+        }
+    } catch (e) {
+        console.error('Settings reset failed:', e);
+        alert(i18n.t('settings.reset_error') || 'Error resetting WTS settings. See console for details.');
+    }
+});
+
+document.getElementById('wts-export-settings')?.addEventListener('click', function(e) {
+    e.preventDefault();
+    try {
+        const settings = {
+            theme: localStorage.getItem('wts-theme') || 'light',
+            // Handle null/undefined values properly
+            language: localStorage.getItem('wts-lang') || 'en'
+        };
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(settings));
+        const dlAnchorElem = document.createElement('a');
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download", "wts-settings.json");
+        dlAnchorElem.click();
+        alert(i18n.t('settings.export_success') || 'WTS settings exported successfully!');
+    } catch (e) {
+        console.error('Export failed:', e);
+        alert(i18n.t('settings.export_error') || 'Error exporting WTS settings. See console for details.');
+    }
+});
+
+document.getElementById('wts-import-settings')?.addEventListener('click', function(e) {
+    
+    e.preventDefault();
+    try {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.json';
+        input.onchange = e => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const settings = JSON.parse(e.target.result);
+                    if (settings.theme) {
+                        localStorage.setItem('wts-theme', settings.theme);
+                        document.documentElement.setAttribute('data-theme', settings.theme);
+                    }
+                    
+                    // Validate language before setting
+                    const validLang = settings.language && settings.language !== 'null' 
+                                     ? settings.language : 'en';
+                    
+                    localStorage.setItem('wts-lang', validLang);
+                    i18n.setLanguage(validLang);
+                    
+                    alert(i18n.t('settings.import_success') || 'WTS settings imported successfully! Page will reload.');
+                    setTimeout(() => location.reload(), 1000);
+                } catch (parseError) {
+                    console.error('Invalid settings file:', parseError);
+                    alert(i18n.t('settings.import_error') || 'Error parsing WTS settings file. See console for details.');
+                }
+            };
+            reader.readAsText(file);
+        };
+        input.click();
+    } catch (e) {
+        console.error('Import failed:', e);
+        alert(i18n.t('settings.import_error') || 'Error importing WTS settings. See console for details.');
+    }
+});
     // Navigation handlers
     setupNavigation();
 });
