@@ -421,53 +421,156 @@
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.4);
+  background-color: rgba(0,0,0,0.6);
+  backdrop-filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.wts-modal.show {
+  display: block;
+  opacity: 1;
 }
 
 .wts-modal-content {
   background-color: var(--card-bg);
   margin: 15% auto;
-  padding: 20px;
-  border: 1px solid #888;
-  width: 80%;
+  padding: 30px;
+  width: 90%;
   max-width: 500px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
   position: relative;
   color: var(--card-text);
+  transform: translateY(20px);
+  transition: transform 0.4s cubic-bezier(0.18, 0.89, 0.32, 1.28), 
+              box-shadow 0.3s ease;
+  border: 1px solid var(--border);
+}
+
+.wts-modal.show .wts-modal-content {
+  transform: translateY(0);
 }
 
 .wts-modal-close {
-  color: #aaa;
-  float: right;
+  position: absolute;
+  top: 20px;
+  right: 20px;
   font-size: 28px;
   font-weight: bold;
   cursor: pointer;
+  color: var(--gray);
+  background: transparent;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
 }
 
 .wts-modal-close:hover,
 .wts-modal-close:focus {
-  color: black;
-  text-decoration: none;
+  color: var(--danger);
+  background: rgba(231, 76, 60, 0.1);
+  transform: rotate(90deg);
+}
+
+.wts-modal h2 {
+  margin-top: 0;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--border);
+  color: var(--card-header);
+  font-size: 1.8rem;
 }
 
 .wts-modal-actions {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 15px;
+  margin-top: 25px;
 }
 
 .wts-modal-actions a {
   display: block;
-  padding: 10px;
+  padding: 14px;
   background: var(--button-bg);
   color: var(--button-text);
   text-align: center;
-  border-radius: 4px;
+  border-radius: 8px;
   text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.wts-modal-actions a::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.1);
+  transform: translateX(-100%);
+  transition: transform 0.4s ease;
 }
 
 .wts-modal-actions a:hover {
   background: var(--button-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.wts-modal-actions a:hover::after {
+  transform: translateX(100%);
+}
+
+/* Specific button styles */
+#wts-modal-clear-cache {
+  background: var(--warning);
+}
+
+#wts-modal-clear-cache:hover {
+  background: #d35400;
+}
+
+#wts-modal-reset-settings {
+  background: var(--danger);
+}
+
+#wts-modal-reset-settings:hover {
+  background: #c0392b;
+}
+
+#wts-modal-export-settings {
+  background: var(--success);
+}
+
+#wts-modal-export-settings:hover {
+  background: #219653;
+}
+
+#wts-modal-import-settings {
+  background: var(--primary);
+}
+
+#wts-modal-import-settings:hover {
+  background: var(--primary-dark);
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .wts-modal-content {
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .wts-modal-actions a {
+    padding: 12px;
+  }
 }
