@@ -27,7 +27,22 @@ const i18n_fr = {
 			"export_success": "Paramètres WTS exportés avec succès !",
 			"export_error": "Erreur lors de l'exportation des paramètres WTS. Voir la console pour plus de détails.",
 			"import_success": "Paramètres WTS importés avec succès ! La page va se recharger.",
-			"import_error": "Erreur lors de l'importation des paramètres WTS. Voir la console pour plus de détails."
+			"import_error": "Erreur lors de l'importation des paramètres WTS. Voir la console pour plus de détails.",
+    general: "Général",
+    notifications: "Notifications",
+    sync: "Synchronisation",
+    push_notifications: "Activer les notifications push",
+    sync_method: "Méthode de synchronisation",
+    sync_manual: "Manuelle",
+    sync_auto: "Automatique",
+    sync_interval: "Intervalle de synchronisation",
+    interval_30min: "Toutes les 30 minutes",
+    interval_hourly: "Toutes les heures",
+    interval_daily: "Quotidiennement",
+    interval_weekly: "Hebdomadairement",
+    interval_monthly: "Mensuellement",
+    network_sync: "Synchronisation réseau",
+    periodic_sync: "Synchronisation périodique"
 		},
 		lang: {
 			en: "Anglais",

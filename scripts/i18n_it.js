@@ -39,7 +39,9 @@ const i18n_it = {
     interval_hourly: "Ogni ora",
     interval_daily: "Quotidiana",
     interval_weekly: "Settimanale",
-    interval_monthly: "Mensile"
+    interval_monthly: "Mensile",
+    network_sync: "Sincronizzazione di rete",
+    periodic_sync: "Sincronizzazione periodica"
 		},
 		lang: {
 			en: "Inglese",

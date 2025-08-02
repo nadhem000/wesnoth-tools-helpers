@@ -707,3 +707,21 @@ input:checked + .wts-toggle-slider:before {
     border-color: var(--primary);
     box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
+.wts-sync-section {
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
+}
+
+.wts-sync-section:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+.wts-sync-section h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    color: var(--primary);
+}

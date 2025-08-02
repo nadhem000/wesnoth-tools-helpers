@@ -45,7 +45,9 @@ const i18n = {
    interval_hourly: "Hourly",
    interval_daily: "Daily",
    interval_weekly: "Weekly",
-   interval_monthly: "Monthly"
+   interval_monthly: "Monthly",
+        network_sync: "Network Synchronization",
+        periodic_sync: "Periodic Synchronization"
 			},
             lang: {
                 en: "English",

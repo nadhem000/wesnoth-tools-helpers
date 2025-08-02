@@ -119,20 +119,30 @@ function handleCacheClear() {
 
 function handleSettingsReset() {
     if (confirm(i18n.t('settings.reset_confirm') || 'Reset all WTS settings?')) {
+        // Clear all settings
         localStorage.removeItem('wts-theme');
         localStorage.removeItem('wts-lang');
+        localStorage.removeItem('wts-notifications');
+        localStorage.removeItem('wts-sync-bcg-method');
+        localStorage.removeItem('wts-sync-perio-method');
+        localStorage.removeItem('wts-sync-perio-interval');
+        
         document.documentElement.removeAttribute('data-theme');
         alert(i18n.t('settings.reset_success') || 'Settings reset. Reloading...');
         setTimeout(() => location.reload(), 1000);
-	}
+    }
 }
 
 function exportSettings() {
     try {
         const settings = {
             theme: localStorage.getItem('wts-theme') || 'light',
-            language: localStorage.getItem('wts-lang') || 'en'
-		};
+            language: localStorage.getItem('wts-lang') || 'en',
+            notifications: localStorage.getItem('wts-notifications') || 'false',
+            syncBcgMethod: localStorage.getItem('wts-sync-bcg-method') || 'manual',
+            syncPerioMethod: localStorage.getItem('wts-sync-perio-method') || 'manual',
+            syncPerioInterval: localStorage.getItem('wts-sync-perio-interval') || '60'
+        };
         
         const dataStr = "data:text/json;charset=utf-8," + 
 		encodeURIComponent(JSON.stringify(settings));
@@ -158,18 +168,32 @@ function importSettings() {
             const reader = new FileReader();
             reader.onload = e => {
                 try {
-                    const settings = JSON.parse(e.target.result);
-                    if (settings.theme) {
-                        localStorage.setItem('wts-theme', settings.theme);
-                        setTheme(settings.theme);
-					}
-                    if (settings.language) {
-                        localStorage.setItem('wts-lang', settings.language);
-                        i18n.setLanguage(settings.language);
-					}
-                    alert(i18n.t('settings.import_success') || 'Settings imported! Reloading...');
-                    setTimeout(() => location.reload(), 1000);
-					} catch (parseError) {
+                const settings = JSON.parse(e.target.result);
+                // Set all settings including new ones
+                if (settings.theme) {
+                    localStorage.setItem('wts-theme', settings.theme);
+                    setTheme(settings.theme);
+                }
+                if (settings.language) {
+                    localStorage.setItem('wts-lang', settings.language);
+                    i18n.setLanguage(settings.language);
+                }
+                if (settings.notifications) {
+                    localStorage.setItem('wts-notifications', settings.notifications);
+                }
+                if (settings.syncBcgMethod) {
+                    localStorage.setItem('wts-sync-bcg-method', settings.syncBcgMethod);
+                }
+                if (settings.syncPerioMethod) {
+                    localStorage.setItem('wts-sync-perio-method', settings.syncPerioMethod);
+                }
+                if (settings.syncPerioInterval) {
+                    localStorage.setItem('wts-sync-perio-interval', settings.syncPerioInterval);
+                }
+                
+                alert(i18n.t('settings.import_success') || 'Settings imported! Reloading...');
+                setTimeout(() => location.reload(), 1000);
+            } catch (parseError) {
                     console.error('Invalid file:', parseError);
                     alert(i18n.t('settings.import_error') || 'Invalid settings file.');
 				}
@@ -217,24 +241,32 @@ function setupModal() {
 
 // --- SYNC SETTINGS ---
 function setupSyncSettings() {
-    const syncMethod = document.getElementById('wts-sync-method');
-    const syncInterval = document.getElementById('wts-sync-interval');
-    const intervalContainer = document.getElementById('wts-sync-interval-container');
-	
-    // Initialize from storage
-    syncMethod.value = localStorage.getItem('wts-sync-method') || 'manual';
-    syncInterval.value = localStorage.getItem('wts-sync-interval') || '60';
-    intervalContainer.style.display = syncMethod.value === 'auto' ? 'block' : 'none';
-	
+    // Network Sync
+    const bcgMethod = document.getElementById('wts-sync-bcg-method');
+    bcgMethod.value = localStorage.getItem('wts-sync-bcg-method') || 'manual';
+    
+    // Periodic Sync
+    const perioMethod = document.getElementById('wts-sync-perio-method');
+    const perioInterval = document.getElementById('wts-sync-perio-interval');
+    const intervalContainer = document.getElementById('wts-sync-perio-interval-container');
+    
+    perioMethod.value = localStorage.getItem('wts-sync-perio-method') || 'manual';
+    perioInterval.value = localStorage.getItem('wts-sync-perio-interval') || '60';
+    intervalContainer.style.display = perioMethod.value === 'auto' ? 'block' : 'none';
+
     // Event handlers
-    syncMethod.addEventListener('change', () => {
-        localStorage.setItem('wts-sync-method', syncMethod.value);
-        intervalContainer.style.display = syncMethod.value === 'auto' ? 'block' : 'none';
-	});
-	
-    syncInterval.addEventListener('change', () => {
-        localStorage.setItem('wts-sync-interval', syncInterval.value);
-	});
+    bcgMethod.addEventListener('change', () => {
+        localStorage.setItem('wts-sync-bcg-method', bcgMethod.value);
+    });
+    
+    perioMethod.addEventListener('change', () => {
+        localStorage.setItem('wts-sync-perio-method', perioMethod.value);
+        intervalContainer.style.display = perioMethod.value === 'auto' ? 'block' : 'none';
+    });
+    
+    perioInterval.addEventListener('change', () => {
+        localStorage.setItem('wts-sync-perio-interval', perioInterval.value);
+    });
 }
 
 // --- DOM INITIALIZATION ---

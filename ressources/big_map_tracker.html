@@ -388,31 +388,49 @@
 				
 				<!-- Sync Tab -->
 				<div id="wts-tab-sync" class="wts-modal-tab-content">
-					<div class="wts-toggle-container">
-						<label for="wts-sync-method" class="wts-toggle-label" data-i18n="settings.sync_method">
-							Synchronization Method
-						</label>
-						<select id="wts-sync-method" class="wts-sync-select">
-							<option value="manual" data-i18n="settings.sync_manual">Manual</option>
-							<option value="auto" data-i18n="settings.sync_auto">Automatic</option>
-						</select>
+					<!-- Network Synchronization -->
+					<div class="wts-sync-section">
+						<h3 data-i18n="settings.network_sync">Network Synchronization</h3>
+						<div class="wts-toggle-container">
+							<label for="wts-sync-bcg-method" class="wts-toggle-label" data-i18n="settings.sync_method">
+								Synchronization Method
+							</label>
+							<select id="wts-sync-bcg-method" class="wts-sync-select">
+								<option value="manual" data-i18n="settings.sync_manual">Manual</option>
+								<option value="auto" data-i18n="settings.sync_auto">Automatic</option>
+							</select>
+						</div>
 					</div>
 					
-					<div class="wts-toggle-container" id="wts-sync-interval-container" style="display: none;">
-						<label for="wts-sync-interval" class="wts-toggle-label" data-i18n="settings.sync_interval">
-							Sync Interval
-						</label>
-						<select id="wts-sync-interval" class="wts-sync-select">
-							<option value="30" data-i18n="settings.interval_30min">Every 30 minutes</option>
-							<option value="60" data-i18n="settings.interval_hourly">Hourly</option>
-							<option value="1440" data-i18n="settings.interval_daily">Daily</option>
-							<option value="10080" data-i18n="settings.interval_weekly">Weekly</option>
-							<option value="43200" data-i18n="settings.interval_monthly">Monthly</option>
-						</select>
+					<!-- Periodic Synchronization -->
+					<div class="wts-sync-section">
+						<h3 data-i18n="settings.periodic_sync">Periodic Synchronization</h3>
+						<div class="wts-toggle-container">
+							<label for="wts-sync-perio-method" class="wts-toggle-label" data-i18n="settings.sync_method">
+								Synchronization Method
+							</label>
+							<select id="wts-sync-perio-method" class="wts-sync-select">
+								<option value="manual" data-i18n="settings.sync_manual">Manual</option>
+								<option value="auto" data-i18n="settings.sync_auto">Automatic</option>
+							</select>
+						</div>
+						<div class="wts-toggle-container" id="wts-sync-perio-interval-container" style="display: none;">
+							<label for="wts-sync-perio-interval" class="wts-toggle-label" data-i18n="settings.sync_interval">
+								Sync Interval
+							</label>
+							<select id="wts-sync-perio-interval" class="wts-sync-select">
+								<option value="30" data-i18n="settings.interval_30min">Every 30 minutes</option>
+								<option value="60" data-i18n="settings.interval_hourly">Hourly</option>
+								<option value="1440" data-i18n="settings.interval_daily">Daily</option>
+								<option value="10080" data-i18n="settings.interval_weekly">Weekly</option>
+								<option value="43200" data-i18n="settings.interval_monthly">Monthly</option>
+							</select>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
+		
 		
 		<script src="../scripts/big_map_tracker.js"></script>
 		<script src="../scripts/main.js"></script>
