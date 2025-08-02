@@ -12,7 +12,7 @@
 	"lang": "en",
 	"dir": "ltr",
 	"scope": "/",
-    "version": "1.20",
+    "version": "1.21",
   "handle_links": "preferred",
 	"edge_side_panel": {
 		"preferred_width": 400

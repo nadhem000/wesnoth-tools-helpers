@@ -26,7 +26,20 @@ const i18n_it = {
 			"export_success": "Impostazioni WTS esportate con successo!",
 			"export_error": "Errore durante l'esportazione delle impostazioni WTS. Consulta la console per i dettagli.",
 			"import_success": "Impostazioni WTS importate con successo! La pagina verrà ricaricata.",
-			"import_error": "Errore durante l'importazione delle impostazioni WTS. Consulta la console per i dettagli."
+			"import_error": "Errore durante l'importazione delle impostazioni WTS. Consulta la console per i dettagli.",
+    general: "Generale",
+    notifications: "Notifiche",
+    sync: "Sincronizzazione",
+    push_notifications: "Attiva notifiche push",
+    sync_method: "Metodo di sincronizzazione",
+    sync_manual: "Manuale",
+    sync_auto: "Automatica",
+    sync_interval: "Intervallo sincronizzazione",
+    interval_30min: "Ogni 30 minuti",
+    interval_hourly: "Ogni ora",
+    interval_daily: "Quotidiana",
+    interval_weekly: "Settimanale",
+    interval_monthly: "Mensile"
 		},
 		lang: {
 			en: "Inglese",

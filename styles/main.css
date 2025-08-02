@@ -574,3 +574,136 @@
     padding: 12px;
   }
 }
+
+/* Tab Styles */
+.wts-modal-tabs {
+    display: flex;
+    border-bottom: 2px solid var(--border);
+    margin-bottom: 20px;
+}
+
+.wts-modal-tab {
+    background: none;
+    border: none;
+    padding: 12px 20px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.wts-modal-tab.active {
+    color: var(--primary);
+}
+
+.wts-modal-tab::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--primary);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.wts-modal-tab.active::after {
+    transform: scaleX(1);
+}
+
+.wts-modal-tab:hover:not(.active) {
+    color: var(--primary-dark);
+    background: rgba(52, 152, 219, 0.05);
+}
+
+.wts-modal-tab-content {
+    display: none;
+}
+
+.wts-modal-tab-content.active {
+    display: block;
+}
+
+/* Toggle Switch Styles */
+.wts-toggle-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.wts-toggle-container:last-child {
+    border-bottom: none;
+}
+
+.wts-toggle-label {
+    flex: 1;
+    font-size: 1rem;
+    color: var(--card-text);
+}
+
+.wts-toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.wts-toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.wts-toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--gray);
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.wts-toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .wts-toggle-slider {
+    background-color: var(--success);
+}
+
+input:checked + .wts-toggle-slider:before {
+    transform: translateX(26px);
+}
+
+/* Select Styles */
+.wts-sync-select {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    color: var(--card-text);
+    min-width: 180px;
+    font-size: 0.9rem;
+}
+
+.wts-sync-select:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}

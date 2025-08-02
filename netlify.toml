@@ -2,9 +2,14 @@
   from = "/ressources/*"
   to = "/ressources/:splat.html"
   status = 200
-  force = false
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = true
+
+[[redirects]]
+  from = "/ressources/:tool"
+  to = "/ressources/:tool.html"
+  status = 301

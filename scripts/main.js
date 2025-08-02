@@ -1,358 +1,314 @@
-/** 
+/**
 	* Main JavaScript for Index Page 
 	* @file Handles core functionality for the main dashboard 
-	* @version 1.2 
-*/ 
+	* @version 1.3 
+*/
 
-// Add this helper function at the top
+// --- PATH UTILITIES ---
 function normalizePath(path) {
-  if (!path.includes('.') && !path.endsWith('/')) {
-    return path + '.html';
-  }
-  return path;
+    return (!path.includes('.') && !path.endsWith('/')) 
+	? path + '.html'
+	: path;
 }
 
-// Then in your setupNavigation function:
-document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    let href = link.getAttribute('href');
-    
-    // Normalize href first
-    href = normalizePath(href);
-    
-    if (isInRessources) {
-      href = isLocalFile 
-        ? href.replace('ressources/', '') 
-        : `/${href}`;
-    } else {
-      href = isLocalFile ? href : `/${href}`;
-    }
-    
-    window.location.href = href;
-  });
-});
+// --- NAVIGATION HANDLERS ---
 function setupNavigation() {
-	try {
-		const isInRessources = window.location.pathname.includes('ressources');
-		const isLocalFile = window.location.protocol === 'file:';
+    try {
+        const isInRessources = window.location.pathname.includes('ressources');
+        const isLocalFile = window.location.protocol === 'file:';
 		
-		// Dashboard button
-		document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
-			window.location.href = isInRessources 
+        // Dashboard button
+        document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
+            window.location.href = isInRessources 
 			? (isLocalFile ? '../index.html' : '/index.html')
 			: 'index.html';
 		});
 		
-		// Tools dropdown items
-		document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        let href = link.getAttribute('href');
-        
-        if (isInRessources) {
-            // Handle paths for ressources section
-            href = isLocalFile 
-            ? href.replace('ressources/', '') 
-            : `/${href}`; // Fixed: Prepend slash for absolute paths
-        } else {
-            // Handle paths from root section
-            href = isLocalFile ? href : `/${href}`; // Fixed: Prepend slash for absolute paths
-        }
-        
-        window.location.href = href;
-    });
-});
-		
-		// Documentation button
-		document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
-			window.location.href = isInRessources 
-			? (isLocalFile ? 'documentation.html' : '/documentation.html')
-			: (isLocalFile ? 'ressources/documentation.html' : '/ressources/documentation.html');
+        // Tools dropdown items
+        document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
+            link.addEventListener('click', e => {
+                e.preventDefault();
+                let href = normalizePath(link.getAttribute('href'));
+                
+                if (isInRessources) {
+                    href = isLocalFile 
+					? href.replace('ressources/', '') 
+					: `/${href}`;
+					} else {
+                    href = isLocalFile ? href : `/${href}`;
+				}
+                
+                window.location.href = href;
+			});
 		});
 		
-		// About button
-		document.getElementById('wts-index-about')?.addEventListener('click', () => {
-			window.location.href = isInRessources 
-			? (isLocalFile ? 'about.html' : '/about.html')
-			: (isLocalFile ? 'ressources/about.html' : '/ressources/about.html');
+        // Documentation button
+        document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
+            const path = isInRessources ? 'documentation.html' : 'ressources/documentation.html';
+            window.location.href = isLocalFile ? path : `/${path}`;
+		});
+		
+        // About button
+        document.getElementById('wts-index-about')?.addEventListener('click', () => {
+            const path = isInRessources ? 'about.html' : 'ressources/about.html';
+            window.location.href = isLocalFile ? path : `/${path}`;
 		});
 		} catch (e) {
-		console.warn('Navigation setup failure', e);
+        console.warn('Navigation setup failure', e);
 	}
 }
 
-// Unified service worker registration
+// --- SERVICE WORKER REGISTRATION ---
 if ('serviceWorker' in navigator) {
-	window.addEventListener('load', () => {
-		const isLocalFile = window.location.protocol === 'file:';
-		const isInRessources = window.location.pathname.includes('ressources');
+    window.addEventListener('load', () => {
+        const isLocalFile = window.location.protocol === 'file:';
+        const isInRessources = window.location.pathname.includes('ressources');
+        const swPath = isLocalFile 
+		? (isInRessources ? '../sw.js' : 'sw.js')
+		: '/sw.js';
 		
-		let swPath;
-		if (isLocalFile) {
-			swPath = isInRessources ? '../sw.js' : 'sw.js';
-			} else {
-			swPath = '/sw.js';
-		}
-		
-		navigator.serviceWorker.register(swPath)
+        navigator.serviceWorker.register(swPath)
 		.then(reg => console.log('SW registered: ', reg))
 		.catch(err => console.log('SW registration failed: ', err));
 	});
 }
 
-// DOM Ready Handler (rest of code remains the same)
-document.addEventListener('DOMContentLoaded', () => {
-	
-	/* i18n.init(); */
-    // Tooltip initialization 
-    document.querySelectorAll('.wts-index-tooltip').forEach(el => {
-		const key = el.getAttribute('data-i18n');
-		if (key) { // Add null check
-			const translation = i18n.t(key);
-			el.title = translation || 'Tooltip';
-		}
-	}); 
-	
-	// Theme Toggle 
-	const themeToggle = document.getElementById('wts-theme-toggle'); 
-	const themeIcon = themeToggle.querySelector('svg'); 
-	
-	// Function to set theme 
-	function setTheme(theme) {
-		if (theme === 'dark') {
-			document.documentElement.setAttribute('data-theme', 'dark');
-			// Update toggle button SVG for dark mode
-			const themeToggle = document.getElementById('wts-theme-toggle');
-			themeToggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>`;
-			} else {
-			document.documentElement.removeAttribute('data-theme');
-			// Update toggle button SVG for light mode
-			const themeToggle = document.getElementById('wts-theme-toggle');
-			themeToggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/></svg>`;
-		}
-		localStorage.setItem('wts-theme', theme);
-		themeToggle.title = theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
-	}
-	
-	// Initialize theme 
-	const savedTheme = localStorage.getItem('wts-theme') || 'light'; 
-	setTheme(savedTheme); 
-	
-	// Toggle theme on button click 
-	themeToggle.addEventListener('click', () => { 
-		const currentTheme = document.documentElement.hasAttribute('data-theme') ? 'dark' : 'light'; 
-		const newTheme = currentTheme === 'light' ? 'dark' : 'light'; 
-		setTheme(newTheme); 
-	}); 
-	
-	// Add tooltip for theme button
-	themeToggle.title = savedTheme === 'light' ? 'Switch to dark mode' : 'Switch to light mode';
+// --- THEME MANAGEMENT ---
+function setTheme(theme) {
+    const themeToggle = document.getElementById('wts-theme-toggle');
     
-	
-    // Offline detection
-    if (!navigator.onLine) {
-        const offlineMsg = document.createElement('p');
-        offlineMsg.className = 'wts-index-offline';
-        offlineMsg.setAttribute('data-i18n', 'offline.message');
-		offlineMsg.textContent = i18n.t('offline.message') || 'Offline Mode';
-        document.querySelector('.wts-index-footer').appendChild(offlineMsg);
+    if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        themeToggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-.46-.04-.92-.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81.89-3.42 2.26-4.4-.44-.06-.9-.1-1.36-.1z"/></svg>`;
+		} else {
+        document.documentElement.removeAttribute('data-theme');
+        themeToggle.innerHTML = `<svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z"/></svg>`;
 	}
-	let deferredPrompt;
-	
-	// Install App button functionality
-	document.getElementById('wts-install-btn')?.addEventListener('click', async () => {
-		if (deferredPrompt) {
-			deferredPrompt.prompt();
-			const { outcome } = await deferredPrompt.userChoice;
-			console.log(`User response to the install prompt: ${outcome}`);
-			deferredPrompt = null;
-		}
-	});
-	
-	// Capture install event
-	window.addEventListener('beforeinstallprompt', (e) => {
-		e.preventDefault();
-		deferredPrompt = e;
-		
-		// Show install button
-		const installBtn = document.getElementById('wts-install-btn');
-		if (installBtn) installBtn.style.display = 'block';
-	});
-	
-	// Track app installation
-	window.addEventListener('appinstalled', () => {
-		console.log('PWA was installed');
-		const installBtn = document.getElementById('wts-install-btn');
-		if (installBtn) installBtn.style.display = 'none';
-	});
-	
-	// Language Selector Update
-	document.querySelectorAll('.wts-index-dropdown-content a[data-lang]').forEach(link => {
-    link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const lang = link.getAttribute('data-lang');
-        if (lang) {
-            /* console.log('[Language Selector] Setting language:', lang); */
-            i18n.setLanguage(lang);
-        }
-    });
-});
-	/* const navRight = document.querySelector('.wts-index-nav-right');
-	if (navRight) {
-		navRight.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
-			link.addEventListener('click', (e) => {
-				e.preventDefault();
-				const lang = link.getAttribute('data-lang');
-				i18n.setLanguage(lang);
-			});
-		});
-	} */
-// Get the settings-modal
-const modal = document.getElementById('wts-settings-modal');
-
-// Get the button that opens the modal
-const btn = document.getElementById("wts-index-settings");
-
-// Get the <span> element that closes the modal
-const span = document.getElementsByClassName("wts-modal-close")[0];
-
-// Open modal
-btn.onclick = function() {
-  modal.style.display = "block";
-  setTimeout(() => modal.classList.add('show'), 10);
+    
+    localStorage.setItem('wts-theme', theme);
+    themeToggle.title = theme === 'light' 
+	? 'Switch to dark mode' 
+	: 'Switch to light mode';
 }
 
-// Close modal
-function closeModal() {
-  modal.classList.remove('show');
-  setTimeout(() => modal.style.display = "none", 300); // Wait for transition
-}
-
-span.onclick = closeModal;
-window.onclick = function(event) {
-  if (event.target === modal) closeModal();
-}
-
-// When the user clicks anywhere outside of the modal, close it
-window.onclick = function(event) {
-  if (event.target === modal) {
-    modal.classList.remove('show');
-  }
-}
-	// Settings dropdown functionality
-document.getElementById('wts-modal-clear-cache')?.addEventListener('click', function(e) {
-    e.preventDefault();
+// --- SETTINGS MANAGEMENT ---
+function handleCacheClear() {
     try {
-        // Only clear WTS-related items
-        const keysToKeep = [];
-        for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            if (!key.startsWith('wts-') && !key.startsWith('wts-lang')) {
-                keysToKeep.push(key);
-            }
-        }
-        
+        const keysToKeep = Array.from(localStorage)
+		.filter(([key]) => !key.startsWith('wts-') && !key.startsWith('wts-lang'))
+		.map(([key]) => key);
+		
         localStorage.clear();
-        
-        // Restore non-WTS keys
-        keysToKeep.forEach(key => {
-            const value = localStorage.getItem(key);
-            localStorage.setItem(key, value);
-        });
-        
+        keysToKeep.forEach(key => localStorage.setItem(key, localStorage.getItem(key)));
+		
         if ('caches' in window) {
             caches.keys().then(cacheNames => {
                 cacheNames.forEach(cacheName => {
                     if (cacheName.includes('wts-') || cacheName.includes('wesnoth-tools')) {
                         caches.delete(cacheName);
-                    }
-                });
-            });
-        }
+					}
+				});
+			});
+		}
         alert(i18n.t('settings.cache_cleared') || 'WTS cache cleared successfully!');
-    } catch (e) {
+		} catch (e) {
         console.error('Cache clearing failed:', e);
-        alert(i18n.t('settings.cache_error') || 'Error clearing WTS cache. See console for details.');
-    }
-});
+        alert(i18n.t('settings.cache_error') || 'Error clearing WTS cache.');
+	}
+}
 
-document.getElementById('wts-modal-reset-settings')?.addEventListener('click', function(e) {
-    e.preventDefault();
-    try {
-        if (confirm(i18n.t('settings.reset_confirm') || 'Reset all WTS settings to default?')) {
-            // Only reset WTS settings
-            localStorage.removeItem('wts-theme');
-            localStorage.removeItem('wts-lang');
-            document.documentElement.removeAttribute('data-theme');
-            alert(i18n.t('settings.reset_success') || 'WTS settings reset. Page will reload.');
-            setTimeout(() => location.reload(), 1000);
-        }
-    } catch (e) {
-        console.error('Settings reset failed:', e);
-        alert(i18n.t('settings.reset_error') || 'Error resetting WTS settings. See console for details.');
-    }
-});
+function handleSettingsReset() {
+    if (confirm(i18n.t('settings.reset_confirm') || 'Reset all WTS settings?')) {
+        localStorage.removeItem('wts-theme');
+        localStorage.removeItem('wts-lang');
+        document.documentElement.removeAttribute('data-theme');
+        alert(i18n.t('settings.reset_success') || 'Settings reset. Reloading...');
+        setTimeout(() => location.reload(), 1000);
+	}
+}
 
-// Replace the export settings event handler with this:
-document.getElementById('wts-modal-export-settings')?.addEventListener('click', function(e) {
-    e.preventDefault();
+function exportSettings() {
     try {
-        const theme = localStorage.getItem('wts-theme') || 'light';
-        const language = localStorage.getItem('wts-lang') || 'en'; // Get directly from localStorage
+        const settings = {
+            theme: localStorage.getItem('wts-theme') || 'light',
+            language: localStorage.getItem('wts-lang') || 'en'
+		};
         
-        const settings = { theme, language };
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(settings));
+        const dataStr = "data:text/json;charset=utf-8," + 
+		encodeURIComponent(JSON.stringify(settings));
         const dlAnchorElem = document.createElement('a');
         dlAnchorElem.setAttribute("href", dataStr);
         dlAnchorElem.setAttribute("download", "wts-settings.json");
         dlAnchorElem.click();
         
-        const successMsg = i18n.t('settings.export_success') || 'WTS settings exported successfully!';
-        /* console.log('[Export Settings]', successMsg); */
-        alert(successMsg);
-    } catch (e) {
-        console.error('[Export Settings] Error:', e);
-        const errorMsg = i18n.t('settings.export_error') || 'Error exporting WTS settings. See console for details.';
-        alert(errorMsg);
-    }
-});
+        alert(i18n.t('settings.export_success') || 'Settings exported!');
+		} catch (e) {
+        console.error('Export error:', e);
+        alert(i18n.t('settings.export_error') || 'Export failed.');
+	}
+}
 
-document.getElementById('wts-modal-import-settings')?.addEventListener('click', function(e) {
-    e.preventDefault();
+function importSettings() {
     try {
         const input = document.createElement('input');
         input.type = 'file';
         input.accept = '.json';
+        
         input.onchange = e => {
-            const file = e.target.files[0];
             const reader = new FileReader();
-            reader.onload = function(e) {
+            reader.onload = e => {
                 try {
                     const settings = JSON.parse(e.target.result);
                     if (settings.theme) {
                         localStorage.setItem('wts-theme', settings.theme);
-                        document.documentElement.setAttribute('data-theme', settings.theme);
-                    }
+                        setTheme(settings.theme);
+					}
                     if (settings.language) {
                         localStorage.setItem('wts-lang', settings.language);
                         i18n.setLanguage(settings.language);
-                    }
-                    alert(i18n.t('settings.import_success') || 'WTS settings imported successfully! Page will reload.');
+					}
+                    alert(i18n.t('settings.import_success') || 'Settings imported! Reloading...');
                     setTimeout(() => location.reload(), 1000);
-                } catch (parseError) {
-                    console.error('Invalid settings file:', parseError);
-                    alert(i18n.t('settings.import_error') || 'Error parsing WTS settings file. See console for details.');
-                }
-            };
-            reader.readAsText(file);
-        };
+					} catch (parseError) {
+                    console.error('Invalid file:', parseError);
+                    alert(i18n.t('settings.import_error') || 'Invalid settings file.');
+				}
+			};
+            reader.readAsText(e.target.files[0]);
+		};
         input.click();
-    } catch (e) {
+		} catch (e) {
         console.error('Import failed:', e);
-        alert(i18n.t('settings.import_error') || 'Error importing WTS settings. See console for details.');
-    }
-});
-    // Navigation handlers
+        alert(i18n.t('settings.import_error') || 'Import failed.');
+	}
+}
+
+// --- MODAL MANAGEMENT ---
+function setupModal() {
+    const modal = document.getElementById('wts-settings-modal');
+    const btn = document.getElementById('wts-index-settings');
+    const closeBtn = document.querySelector('.wts-modal-close');
+	
+    function openModal() {
+        modal.style.display = "block";
+        setTimeout(() => modal.classList.add('show'), 10);
+	}
+	
+    function closeModal() {
+        modal.classList.remove('show');
+        setTimeout(() => modal.style.display = "none", 300);
+	}
+	
+    btn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+    window.addEventListener('click', e => e.target === modal && closeModal());
+	
+    // Tab switching
+    document.querySelectorAll('.wts-modal-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            document.querySelectorAll('.wts-modal-tab, .wts-modal-tab-content')
+			.forEach(el => el.classList.remove('active'));
+            
+            tab.classList.add('active');
+            document.getElementById(`wts-tab-${tab.dataset.tab}`).classList.add('active');
+		});
+	});
+}
+
+// --- SYNC SETTINGS ---
+function setupSyncSettings() {
+    const syncMethod = document.getElementById('wts-sync-method');
+    const syncInterval = document.getElementById('wts-sync-interval');
+    const intervalContainer = document.getElementById('wts-sync-interval-container');
+	
+    // Initialize from storage
+    syncMethod.value = localStorage.getItem('wts-sync-method') || 'manual';
+    syncInterval.value = localStorage.getItem('wts-sync-interval') || '60';
+    intervalContainer.style.display = syncMethod.value === 'auto' ? 'block' : 'none';
+	
+    // Event handlers
+    syncMethod.addEventListener('change', () => {
+        localStorage.setItem('wts-sync-method', syncMethod.value);
+        intervalContainer.style.display = syncMethod.value === 'auto' ? 'block' : 'none';
+	});
+	
+    syncInterval.addEventListener('change', () => {
+        localStorage.setItem('wts-sync-interval', syncInterval.value);
+	});
+}
+
+// --- DOM INITIALIZATION ---
+document.addEventListener('DOMContentLoaded', () => {
+    // Tooltips
+    document.querySelectorAll('.wts-index-tooltip').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (key) {
+            el.title = i18n.t(key) || 'Tooltip';
+		}
+	});
+	
+    // Theme initialization
+    const savedTheme = localStorage.getItem('wts-theme') || 'light';
+    setTheme(savedTheme);
+    
+    document.getElementById('wts-theme-toggle').addEventListener('click', () => {
+        const newTheme = document.documentElement.hasAttribute('data-theme') 
+		? 'light' 
+		: 'dark';
+        setTheme(newTheme);
+	});
+	
+    // Offline detection
+    if (!navigator.onLine) {
+        const offlineMsg = document.createElement('p');
+        offlineMsg.className = 'wts-index-offline';
+        offlineMsg.textContent = i18n.t('offline.message') || 'Offline Mode';
+        document.querySelector('.wts-index-footer').appendChild(offlineMsg);
+	}
+	
+	// PWA Installation
+	let deferredPrompt;
+	window.addEventListener('beforeinstallprompt', e => {
+		e.preventDefault();
+		deferredPrompt = e;
+		const installBtn = document.getElementById('wts-install-btn');
+		if (installBtn) {
+			installBtn.style.display = 'block';
+		}
+	});
+	
+	window.addEventListener('appinstalled', () => {
+		const installBtn = document.getElementById('wts-install-btn');
+		if (installBtn) {
+			installBtn.style.display = 'none';
+		}
+	});
+	
+    // Language selection
+    document.querySelectorAll('.wts-index-dropdown-content a[data-lang]').forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            i18n.setLanguage(link.dataset.lang);
+		});
+	});
+	
+    // Settings modal
+    setupModal();
+    setupSyncSettings();
+	
+    // Notification toggle
+    const notifToggle = document.getElementById('wts-notifications-toggle');
+    notifToggle.checked = localStorage.getItem('wts-notifications') === 'true';
+    notifToggle.addEventListener('change', () => {
+        localStorage.setItem('wts-notifications', notifToggle.checked);
+	});
+	
+    // Settings actions
+    document.getElementById('wts-modal-clear-cache')?.addEventListener('click', handleCacheClear);
+    document.getElementById('wts-modal-reset-settings')?.addEventListener('click', handleSettingsReset);
+    document.getElementById('wts-modal-export-settings')?.addEventListener('click', exportSettings);
+    document.getElementById('wts-modal-import-settings')?.addEventListener('click', importSettings);
+	
+    // Navigation
     setupNavigation();
 });

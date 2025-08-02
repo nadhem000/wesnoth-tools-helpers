@@ -32,7 +32,20 @@ const i18n = {
 				export_success: "WTS settings exported successfully!",
 				export_error: "Error exporting WTS settings. See console for details.",
 				import_success: "WTS settings imported successfully! Page will reload.",
-				import_error: "Error importing WTS settings. See console for details."
+				import_error: "Error importing WTS settings. See console for details.",
+   general: "General",
+   notifications: "Notifications",
+   sync: "Synchronization",
+   push_notifications: "Enable Push Notifications",
+   sync_method: "Synchronization Method",
+   sync_manual: "Manual",
+   sync_auto: "Automatic",
+   sync_interval: "Sync Interval",
+   interval_30min: "Every 30 minutes",
+   interval_hourly: "Hourly",
+   interval_daily: "Daily",
+   interval_weekly: "Weekly",
+   interval_monthly: "Monthly"
 			},
             lang: {
                 en: "English",
