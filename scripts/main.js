@@ -4,7 +4,34 @@
 	* @version 1.2 
 */ 
 
-// Improved navigation handler
+// Add this helper function at the top
+function normalizePath(path) {
+  if (!path.includes('.') && !path.endsWith('/')) {
+    return path + '.html';
+  }
+  return path;
+}
+
+// Then in your setupNavigation function:
+document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    let href = link.getAttribute('href');
+    
+    // Normalize href first
+    href = normalizePath(href);
+    
+    if (isInRessources) {
+      href = isLocalFile 
+        ? href.replace('ressources/', '') 
+        : `/${href}`;
+    } else {
+      href = isLocalFile ? href : `/${href}`;
+    }
+    
+    window.location.href = href;
+  });
+});
 function setupNavigation() {
 	try {
 		const isInRessources = window.location.pathname.includes('ressources');

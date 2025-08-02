@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.20
+	* Version: 1.21
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v20';
+const CACHE_NAME = 'wesnoth-tools-v21';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -91,23 +91,36 @@ self.addEventListener('install', event => {
 	);
 });
 
-// Fetch Event
-// Update the fetch handler
+// Fetch Event with path normalization
 self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   
   const requestUrl = new URL(event.request.url);
+  let requestPath = requestUrl.pathname;
   
-  // Unified handling for both file:// and https://
+  // Normalize request path (remove trailing slash, add .html if missing)
+  if (requestPath.endsWith('/')) {
+    requestPath = requestPath.slice(0, -1);
+  }
+  
+  if (!requestPath.endsWith('.html') && 
+      !requestPath.includes('.') && 
+      !requestPath.endsWith('/')) {
+    requestPath += '.html';
+  }
+
+  // Create a new request with normalized path
+  const normalizedRequest = new Request(new URL(requestPath, requestUrl.origin));
+  
   event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
+    caches.match(normalizedRequest).then(cachedResponse => {
       if (cachedResponse) return cachedResponse;
       
       return fetch(event.request).then(response => {
         if (response && response.status === 200) {
           const responseToCache = response.clone();
           caches.open(CACHE_NAME).then(cache => {
-            cache.put(event.request, responseToCache);
+            cache.put(normalizedRequest, responseToCache);
           });
         }
         return response;
