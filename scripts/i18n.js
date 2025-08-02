@@ -47,7 +47,9 @@ const i18n = {
    interval_weekly: "Weekly",
    interval_monthly: "Monthly",
         network_sync: "Network Synchronization",
-        periodic_sync: "Periodic Synchronization"
+        periodic_sync: "Periodic Synchronization",
+    version_notifications: "New Version Notifications",
+    new_version_available: "New version {{version}} is available!"
 			},
             lang: {
                 en: "English",

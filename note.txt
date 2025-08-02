@@ -1,0 +1,8 @@
+The notification will only appear if:
+	User has enabled notifications in settings
+	The version is different from the last notified version
+	The app is active (no notification when closed)
+To update for new releases:
+	Update the version in manifest.json
+	Update the version in the currentVersion constant in main.js
+	Deploy the update - existing users will see the notification when they next use the app

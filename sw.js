@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.21
+	* Version: 1.22
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v21';
+const CACHE_NAME = 'wesnoth-tools-v22';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -146,4 +146,49 @@ self.addEventListener('activate', event => {
 			);
 		})
 	);
+});
+
+// Push Notification Event
+self.addEventListener('push', event => {
+  const version = self.registration.scope.match(/v(\d+)/)[1]; // Extract version from scope
+  const title = 'Wesnoth Tools Update';
+  const options = {
+    body: `New version ${version} is available! Click to learn more.`,
+    icon: '/assets/icons/icon-192.png',
+    badge: '/assets/icons/icon-72.png',
+    data: {
+      url: '/documentation.html?version=' + version
+    }
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
+// Notification Click Event
+self.addEventListener('notificationclick', event => {
+  event.notification.close();
+  const url = event.notification.data.url || '/';
+  event.waitUntil(
+    clients.openWindow(url)
+  );
+});
+
+// Message Event Handler
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'VERSION_UPDATE') {
+    const title = 'Wesnoth Tools Update';
+    const options = {
+      body: `New version ${event.data.version} is available!`,
+      icon: '/assets/icons/icon-192.png',
+      data: {
+        url: '/documentation.html?version=' + event.data.version
+      }
+    };
+    
+    event.waitUntil(
+      self.registration.showNotification(title, options)
+    );
+  }
 });

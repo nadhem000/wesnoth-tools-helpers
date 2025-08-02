@@ -690,6 +690,7 @@
 				<button id="wts-install-btn" class="wts-index-tooltip" data-i18n="install.button" style="display:none">Install App</button>
 			</footer>
 		</div>
+		
 		<!-- Settings Tab -->
 		<div id="wts-settings-modal" class="wts-modal">
 			<div class="wts-modal-content">
@@ -720,6 +721,15 @@
 						</label>
 						<label class="wts-toggle-switch">
 							<input type="checkbox" id="wts-notifications-toggle">
+							<span class="wts-toggle-slider"></span>
+						</label>
+					</div>
+					<div class="wts-toggle-container">
+						<label for="wts-version-notifications-toggle" class="wts-toggle-label" data-i18n="settings.version_notifications">
+							New Version Notifications
+						</label>
+						<label class="wts-toggle-switch">
+							<input type="checkbox" id="wts-version-notifications-toggle">
 							<span class="wts-toggle-slider"></span>
 						</label>
 					</div>
@@ -769,6 +779,11 @@
 				</div>
 			</div>
 		</div>
+		<div id="wts-version-toast" class="wts-version-toast" style="display: none;">
+			<span id="wts-version-message"></span>
+			<button class="wts-version-toast-close">&times;</button>
+		</div>
+		
 		
 		<script src="scripts/main.js"></script>
 	</body>

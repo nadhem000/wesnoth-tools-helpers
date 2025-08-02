@@ -1,4 +1,3 @@
-
 const i18n_fr = {
 	fr: {
 		title: "Suite d'Outils Wesnoth",
@@ -42,7 +41,9 @@ const i18n_fr = {
     interval_weekly: "Hebdomadairement",
     interval_monthly: "Mensuellement",
     network_sync: "Synchronisation réseau",
-    periodic_sync: "Synchronisation périodique"
+    periodic_sync: "Synchronisation périodique",
+    version_notifications: "Notifications de nouvelle version",
+    new_version_available: "La nouvelle version {{version}} est disponible !"
 		},
 		lang: {
 			en: "Anglais",

@@ -130,7 +130,7 @@ function handleSettingsReset() {
         document.documentElement.removeAttribute('data-theme');
         alert(i18n.t('settings.reset_success') || 'Settings reset. Reloading...');
         setTimeout(() => location.reload(), 1000);
-    }
+	}
 }
 
 function exportSettings() {
@@ -142,7 +142,7 @@ function exportSettings() {
             syncBcgMethod: localStorage.getItem('wts-sync-bcg-method') || 'manual',
             syncPerioMethod: localStorage.getItem('wts-sync-perio-method') || 'manual',
             syncPerioInterval: localStorage.getItem('wts-sync-perio-interval') || '60'
-        };
+		};
         
         const dataStr = "data:text/json;charset=utf-8," + 
 		encodeURIComponent(JSON.stringify(settings));
@@ -168,32 +168,32 @@ function importSettings() {
             const reader = new FileReader();
             reader.onload = e => {
                 try {
-                const settings = JSON.parse(e.target.result);
-                // Set all settings including new ones
-                if (settings.theme) {
-                    localStorage.setItem('wts-theme', settings.theme);
-                    setTheme(settings.theme);
-                }
-                if (settings.language) {
-                    localStorage.setItem('wts-lang', settings.language);
-                    i18n.setLanguage(settings.language);
-                }
-                if (settings.notifications) {
-                    localStorage.setItem('wts-notifications', settings.notifications);
-                }
-                if (settings.syncBcgMethod) {
-                    localStorage.setItem('wts-sync-bcg-method', settings.syncBcgMethod);
-                }
-                if (settings.syncPerioMethod) {
-                    localStorage.setItem('wts-sync-perio-method', settings.syncPerioMethod);
-                }
-                if (settings.syncPerioInterval) {
-                    localStorage.setItem('wts-sync-perio-interval', settings.syncPerioInterval);
-                }
-                
-                alert(i18n.t('settings.import_success') || 'Settings imported! Reloading...');
-                setTimeout(() => location.reload(), 1000);
-            } catch (parseError) {
+					const settings = JSON.parse(e.target.result);
+					// Set all settings including new ones
+					if (settings.theme) {
+						localStorage.setItem('wts-theme', settings.theme);
+						setTheme(settings.theme);
+					}
+					if (settings.language) {
+						localStorage.setItem('wts-lang', settings.language);
+						i18n.setLanguage(settings.language);
+					}
+					if (settings.notifications) {
+						localStorage.setItem('wts-notifications', settings.notifications);
+					}
+					if (settings.syncBcgMethod) {
+						localStorage.setItem('wts-sync-bcg-method', settings.syncBcgMethod);
+					}
+					if (settings.syncPerioMethod) {
+						localStorage.setItem('wts-sync-perio-method', settings.syncPerioMethod);
+					}
+					if (settings.syncPerioInterval) {
+						localStorage.setItem('wts-sync-perio-interval', settings.syncPerioInterval);
+					}
+					
+					alert(i18n.t('settings.import_success') || 'Settings imported! Reloading...');
+					setTimeout(() => location.reload(), 1000);
+					} catch (parseError) {
                     console.error('Invalid file:', parseError);
                     alert(i18n.t('settings.import_error') || 'Invalid settings file.');
 				}
@@ -253,22 +253,83 @@ function setupSyncSettings() {
     perioMethod.value = localStorage.getItem('wts-sync-perio-method') || 'manual';
     perioInterval.value = localStorage.getItem('wts-sync-perio-interval') || '60';
     intervalContainer.style.display = perioMethod.value === 'auto' ? 'block' : 'none';
-
+	
     // Event handlers
     bcgMethod.addEventListener('change', () => {
         localStorage.setItem('wts-sync-bcg-method', bcgMethod.value);
-    });
+	});
     
     perioMethod.addEventListener('change', () => {
         localStorage.setItem('wts-sync-perio-method', perioMethod.value);
         intervalContainer.style.display = perioMethod.value === 'auto' ? 'block' : 'none';
-    });
+	});
     
     perioInterval.addEventListener('change', () => {
         localStorage.setItem('wts-sync-perio-interval', perioInterval.value);
-    });
+	});
 }
 
+
+// --- NOTIFICATIONS SETTINGS ---
+function checkForVersionUpdates() {
+  try {
+    const notifyEnabled = localStorage.getItem('wts-version-notifications') === 'true';
+    const pushEnabled = localStorage.getItem('wts-notifications') === 'true';
+    
+    if (!notifyEnabled) return;
+
+    const currentVersion = "1.22"; // Should match manifest version
+    const lastNotifiedVersion = localStorage.getItem('wts-last-notified-version');
+    
+    if (lastNotifiedVersion !== currentVersion) {
+      showVersionNotification(currentVersion);
+      
+      // Trigger push notification if enabled
+      if (pushEnabled && navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'VERSION_UPDATE',
+          version: currentVersion
+        });
+      }
+      
+      localStorage.setItem('wts-last-notified-version', currentVersion);
+    }
+  } catch (e) {
+    console.error('Version check failed:', e);
+  }
+}
+
+function showVersionNotification(version) {
+	try {
+		const toast = document.getElementById('wts-version-toast');
+		const message = document.getElementById('wts-version-message');
+		
+		message.textContent = i18n.t('settings.new_version_available', { version }) || 
+		`New version ${version} is available!`;
+		
+		toast.style.display = 'flex';
+		
+		// Add close button functionality
+		document.querySelector('.wts-version-toast-close').onclick = () => {
+			toast.style.display = 'none';
+		};
+		
+		// Auto-hide after 10 seconds
+		setTimeout(() => {
+			toast.style.display = 'none';
+		}, 10000);
+		} catch (e) {
+		console.error('Failed to show version notification:', e);
+	}
+}
+function requestNotificationPermission() {
+  Notification.requestPermission().then(permission => {
+    if (permission !== 'granted') {
+      document.getElementById('wts-notifications-toggle').checked = false;
+      localStorage.setItem('wts-notifications', 'false');
+    }
+  });
+}
 // --- DOM INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
     // Tooltips
@@ -335,6 +396,21 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('wts-notifications', notifToggle.checked);
 	});
 	
+	// Initialize version notification toggle
+	const versionNotifToggle = document.getElementById('wts-version-notifications-toggle');
+	versionNotifToggle.checked = localStorage.getItem('wts-version-notifications') === 'true';
+	versionNotifToggle.addEventListener('change', () => {
+		localStorage.setItem('wts-version-notifications', versionNotifToggle.checked);
+	});
+	
+	// Check for version updates
+	setTimeout(checkForVersionUpdates, 3000);
+	
+	document.getElementById('wts-notifications-toggle')?.addEventListener('change', function() {
+		if (this.checked && Notification.permission !== 'granted') {
+			requestNotificationPermission();
+		}
+	});
     // Settings actions
     document.getElementById('wts-modal-clear-cache')?.addEventListener('click', handleCacheClear);
     document.getElementById('wts-modal-reset-settings')?.addEventListener('click', handleSettingsReset);
