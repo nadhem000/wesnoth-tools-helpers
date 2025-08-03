@@ -1,10 +1,11 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.29
+	* Version: 1.30
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v29';
+const CACHE_NAME = 'wesnoth-tools-v30';
 const OFFLINE_URL = 'offline.html';
+const SYNC_TAG = 'wts-background-sync';
 const PRECACHE_URLS = [
 	'/',
 	'/index.html',
@@ -76,7 +77,7 @@ const PRECACHE_URLS = [
 	'/assets/sounds/magic-holy-1.ogg',
 	'/assets/sounds/sword-1.ogg'
 ];
-const APP_VERSION = "1.29";
+const APP_VERSION = "1.30";
 
 // Install Event
 self.addEventListener('install', event => {
@@ -112,6 +113,18 @@ self.addEventListener('fetch', event => {
         return;
     }
 
+    if (event.request.url.includes('/sync-data') && event.request.method === 'POST') {
+        event.respondWith(
+            handleSyncRequest(event.request).catch(err => {
+                console.error('Sync request failed:', err);
+                return new Response(JSON.stringify({ error: 'Sync failed' }), { 
+                    status: 500,
+                    headers: { 'Content-Type': 'application/json' }
+                });
+            })
+        );
+        return;
+    }
     // For all other requests, use cache first with network fallback
     event.respondWith(
         caches.match(event.request).then(cachedResponse => {
@@ -191,4 +204,144 @@ self.addEventListener('message', event => {
 			self.registration.showNotification(title, options)
 		);
 	}
+});
+function handleSyncRequest(request) {
+    return request.json().then(syncData => {
+        // Store sync data in IndexedDB
+        return idbKeyVal.set('syncQueue', syncData).then(() => {
+            // Trigger background sync
+            return self.registration.sync.register(SYNC_TAG);
+        });
+    }).then(() => {
+        return new Response(JSON.stringify({ status: 'queued' }), {
+            status: 202,
+            headers: { 'Content-Type': 'application/json' }
+        });
+    });
+}
+
+self.addEventListener('sync', event => {
+    if (event.tag === SYNC_TAG) {
+        event.waitUntil(processSyncQueue());
+    }
+});
+
+async function processSyncQueue() {
+    const syncData = await idbKeyVal.get('syncQueue');
+    if (!syncData) return;
+    
+    try {
+        // Get user's sync settings
+        const settings = await idbKeyVal.get('syncSettings') || {};
+        const syncMethod = settings.method || 'manual';
+        const syncInterval = settings.interval || 60;
+        
+        // Process based on settings
+        if (syncMethod === 'auto') {
+            await processAutoSync(syncData, syncInterval);
+        } else {
+            await processManualSync(syncData);
+        }
+        
+        // Clear queue after successful sync
+        await idbKeyVal.del('syncQueue');
+    } catch (error) {
+        console.error('Sync processing failed:', error);
+        // Retry later
+        setTimeout(() => self.registration.sync.register(SYNC_TAG), 60000);
+    }
+}
+
+async function processAutoSync(data, interval) {
+    // Implement actual sync logic with your server
+    // This is a placeholder for the real implementation
+    const response = await fetch('/api/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    });
+    
+    if (!response.ok) {
+        throw new Error('Auto sync failed');
+    }
+    
+    // Schedule next sync if periodic sync is enabled
+    if (interval > 0) {
+        setTimeout(() => self.registration.sync.register(SYNC_TAG), interval * 60000);
+    }
+}
+
+async function processManualSync(data) {
+    // Store for manual sync trigger
+    await idbKeyVal.set('pendingManualSync', data);
+    
+    // Show notification to user
+    await self.registration.showNotification('Sync Ready', {
+        body: 'You have pending sync operations',
+        actions: [{ action: 'sync', title: 'Sync Now' }]
+    });
+}
+
+// Add IndexedDB helper
+const idbKeyVal = {
+    db: null,
+    init() {
+        if (this.db) return Promise.resolve();
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('wts-sync-db', 1);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => {
+                this.db = request.result;
+                resolve();
+            };
+            request.onupgradeneeded = e => {
+                const db = e.target.result;
+                if (!db.objectStoreNames.contains('syncStore')) {
+                    db.createObjectStore('syncStore');
+                }
+            };
+        });
+    },
+    async get(key) {
+        await this.init();
+        return new Promise((resolve, reject) => {
+            const tx = this.db.transaction('syncStore', 'readonly');
+            const store = tx.objectStore('syncStore');
+            const request = store.get(key);
+            request.onerror = () => reject(request.error);
+            request.onsuccess = () => resolve(request.result);
+        });
+    },
+    async set(key, value) {
+        await this.init();
+        return new Promise((resolve, reject) => {
+            const tx = this.db.transaction('syncStore', 'readwrite');
+            const store = tx.objectStore('syncStore');
+            store.put(value, key);
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => reject(tx.error);
+        });
+    },
+    async del(key) {
+        await this.init();
+        return new Promise((resolve, reject) => {
+            const tx = this.db.transaction('syncStore', 'readwrite');
+            const store = tx.objectStore('syncStore');
+            store.delete(key);
+            tx.oncomplete = () => resolve();
+            tx.onerror = () => reject(tx.error);
+        });
+    }
+};
+
+// Add notification click handler
+self.addEventListener('notificationclick', event => {
+    event.notification.close();
+    if (event.action === 'sync') {
+        event.waitUntil(
+            self.registration.sync.register(SYNC_TAG).then(() => {
+                console.log('Manual sync triggered');
+            })
+        );
+    }
 });

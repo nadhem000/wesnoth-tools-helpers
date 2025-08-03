@@ -260,6 +260,21 @@ function setupSyncSettings() {
 	// Network Sync
 	const bcgMethod = document.getElementById('wts-sync-bcg-method');
 	bcgMethod.value = localStorage.getItem('wts-sync-bcg-method') || 'manual';
+const manualSyncBtn = document.createElement('button');
+manualSyncBtn.id = 'wts-manual-sync';
+manualSyncBtn.textContent = i18n.t('settings.manual_sync') || 'Sync Now';
+manualSyncBtn.className = 'wts-sync-button';
+const syncTab = document.getElementById('wts-tab-sync');
+if (syncTab) {
+    syncTab.appendChild(manualSyncBtn);
+} else {
+    console.error('wts-tab-sync not found');
+}
+// Add manual sync button handler
+manualSyncBtn.addEventListener('click', async () => {
+    await triggerSync();
+    alert(i18n.t('settings.sync_triggered') || 'Sync started successfully!');
+});
 	
 	// Periodic Sync
 	const perioMethod = document.getElementById('wts-sync-perio-method');
@@ -285,6 +300,48 @@ function setupSyncSettings() {
 	});
 }
 
+async function queueSyncAction(action) {
+    // Get current queue or create new
+    const queue = JSON.parse(localStorage.getItem('syncQueue')) || [];
+    queue.push({
+        ...action,
+        timestamp: new Date().toISOString()
+    });
+    
+    // Save to local storage
+    localStorage.setItem('syncQueue', JSON.stringify(queue));
+    
+    // Check if we should trigger sync
+    const syncMethod = localStorage.getItem('wts-sync-bcg-method') || 'manual';
+    
+    if (syncMethod === 'auto' && navigator.onLine) {
+        await triggerSync();
+    } else if (syncMethod === 'auto') {
+        // Schedule sync when online
+        window.addEventListener('online', triggerSync);
+    }
+}
+
+async function triggerSync() {
+    const queue = JSON.parse(localStorage.getItem('syncQueue')) || [];
+    if (queue.length === 0) return;
+    
+    try {
+        const response = await fetch('/sync-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(queue)
+        });
+        
+        if (response.ok) {
+            localStorage.removeItem('syncQueue');
+        }
+    } catch (error) {
+        console.error('Sync request failed:', error);
+    }
+}
+
+
 
 // --- NOTIFICATIONS SETTINGS ---
 function checkForVersionUpdates() {
@@ -294,7 +351,7 @@ function checkForVersionUpdates() {
 		
 		if (!notifyEnabled) return;
 		
-		const currentVersion = "1.29"; // Should match APP_VERSION version
+		const currentVersion = "1.30"; // Should match APP_VERSION version
 		const lastNotifiedVersion = localStorage.getItem('wts-last-notified-version');
 		
 		if (lastNotifiedVersion !== currentVersion) {
@@ -461,6 +518,13 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('wts-modal-reset-settings')?.addEventListener('click', handleSettingsReset);
 	document.getElementById('wts-modal-export-settings')?.addEventListener('click', exportSettings);
 	document.getElementById('wts-modal-import-settings')?.addEventListener('click', importSettings);
+// Initialize sync settings
+if (!localStorage.getItem('wts-sync-bcg-method')) {
+    localStorage.setItem('wts-sync-bcg-method', 'manual');
+}
+if (!localStorage.getItem('wts-sync-perio-method')) {
+    localStorage.setItem('wts-sync-perio-method', 'manual');
+	}
 	
 	// Navigation
 	setupNavigation();
