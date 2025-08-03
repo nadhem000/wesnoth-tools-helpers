@@ -760,3 +760,10 @@ input:checked + .wts-toggle-slider:before {
 .wts-version-toast-close:hover {
   color: #3498db;
 }
+
+/* Hide .html extension in address bar */
+@media all {
+  .html-extension-hide {
+    display: none !important;
+  }
+}

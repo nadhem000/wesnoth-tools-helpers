@@ -1515,7 +1515,8 @@ const i18n = {
 		
 		// Merge other languages from their respective objects
 		...(typeof i18n_fr !== 'undefined' ? i18n_fr : {}),
-		...(typeof i18n_it !== 'undefined' ? i18n_it : {})
+		...(typeof i18n_it !== 'undefined' ? i18n_it : {}),
+		...(typeof i18n_de !== 'undefined' ? i18n_de : {})
 	},
 	
 	// Helper function to get nested translations

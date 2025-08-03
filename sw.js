@@ -96,7 +96,25 @@ self.addEventListener('fetch', event => {
   if (event.request.method !== 'GET') return;
   
   const requestUrl = new URL(event.request.url);
-  let requestPath = requestUrl.pathname;
+  
+  // Special handling for file:// protocol
+  if (requestUrl.protocol === 'file:') {
+    let requestPath = requestUrl.pathname;
+    
+    // Remove duplicate 'ressources' segments
+    requestPath = requestPath.replace(/ressources\/ressources\//, 'ressources/');
+    
+    // Create new request with normalized path
+    const normalizedRequest = new Request(new URL(requestPath, requestUrl.origin));
+    
+    event.respondWith(
+      caches.match(normalizedRequest).then(cachedResponse => {
+        if (cachedResponse) return cachedResponse;
+        return fetch(event.request);
+      })
+    );
+    return;
+  }
   
   // Normalize request path (remove trailing slash, add .html if missing)
   if (requestPath.endsWith('/')) {
