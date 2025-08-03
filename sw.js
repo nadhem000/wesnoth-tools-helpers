@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.25
+	* Version: 1.26
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v25';
+const CACHE_NAME = 'wesnoth-tools-v26';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -76,23 +76,18 @@ const PRECACHE_URLS = [
 	'/assets/sounds/magic-holy-1.ogg',
 	'/assets/sounds/sword-1.ogg'
 ];
-const APP_VERSION = "1.25";
+const APP_VERSION = "1.26";
 
 // Install Event
-
-self.addEventListener('push', event => {
-  const title = 'Wesnoth Tools Update';
-  const options = {
-    body: `New version ${APP_VERSION} is available! Click to learn more.`,
-    icon: '/assets/icons/icon-192.png',
-    badge: '/assets/icons/icon-72.png',
-    data: {
-      url: '/documentation.html?version=' + APP_VERSION
-    }
-  };
-
+self.addEventListener('install', event => {
   event.waitUntil(
-    self.registration.showNotification(title, options)
+    caches.open(CACHE_NAME).then(cache => {
+      // Add manifest to precache
+      return cache.addAll([
+        ...PRECACHE_URLS,
+        '/manifest.json'
+      ]);
+    })
   );
 });
 
@@ -173,14 +168,13 @@ self.addEventListener('activate', event => {
 
 // Push Notification Event
 self.addEventListener('push', event => {
-  const version = self.registration.scope.match(/v(\d+)/)[1]; // Extract version from scope
   const title = 'Wesnoth Tools Update';
   const options = {
-    body: `New version ${version} is available! Click to learn more.`,
+    body: `New version ${APP_VERSION} is available! Click to learn more.`, // ✅ Use APP_VERSION
     icon: '/assets/icons/icon-192.png',
     badge: '/assets/icons/icon-72.png',
     data: {
-      url: '/documentation.html?version=' + version
+      url: '/documentation.html?version=' + APP_VERSION // ✅ Use APP_VERSION
     }
   };
 
