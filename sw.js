@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.26
+	* Version: 1.27
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v26';
+const CACHE_NAME = 'wesnoth-tools-v27';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -76,7 +76,7 @@ const PRECACHE_URLS = [
 	'/assets/sounds/magic-holy-1.ogg',
 	'/assets/sounds/sword-1.ogg'
 ];
-const APP_VERSION = "1.26";
+const APP_VERSION = "1.27";
 
 // Install Event
 self.addEventListener('install', event => {
