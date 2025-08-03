@@ -45,16 +45,16 @@ function setupNavigation() {
 		
 		// Dashboard button
 		document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
-    if (isLocalFile) {
-        const currentPath = window.location.href;
-        const basePath = currentPath.includes('ressources') 
-            ? currentPath.replace(/\/ressources\/[^/]*$/, '/')
-            : currentPath.replace(/[^/]*$/, '');
-        window.location.href = basePath + 'index.html';
-    } else {
-        window.location.href = '/';
-    }
-});
+			if (isLocalFile) {
+				const currentPath = window.location.href;
+				const basePath = currentPath.includes('ressources') 
+				? currentPath.replace(/\/ressources\/[^/]*$/, '/')
+				: currentPath.replace(/[^/]*$/, '');
+				window.location.href = basePath + 'index.html';
+				} else {
+				window.location.href = '/';
+			}
+		});
 		
         // Documentation button
         document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
@@ -343,6 +343,43 @@ function requestNotificationPermission() {
 		}
 	});
 }
+
+// --- PWA INSTALLATION HANDLER ---
+function setupPWAInstall() {
+    let deferredPrompt;
+    
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        
+        const installBtn = document.getElementById('wts-install-btn');
+        if (installBtn) {
+            installBtn.style.display = 'block';
+            
+            // Add click handler for install button
+            installBtn.addEventListener('click', async () => {
+                if (!deferredPrompt) return;
+                
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    console.log('User accepted install');
+                }
+                
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            });
+        }
+    });
+
+    window.addEventListener('appinstalled', () => {
+        const installBtn = document.getElementById('wts-install-btn');
+        if (installBtn) installBtn.style.display = 'none';
+        deferredPrompt = null;
+    });
+}
+
 // --- DOM INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
 	// Tooltips
@@ -372,16 +409,8 @@ document.addEventListener('DOMContentLoaded', () => {
 		document.querySelector('.wts-index-footer').appendChild(offlineMsg);
 	}
 	
-	// PWA Installation
-	let deferredPrompt;
-	window.addEventListener('beforeinstallprompt', e => {
-		e.preventDefault();
-		deferredPrompt = e;
-		const installBtn = document.getElementById('wts-install-btn');
-		if (installBtn) {
-			installBtn.style.display = 'block';
-		}
-	});
+	// --- PWA INSTALLATION HANDLER ---
+    setupPWAInstall();
 	
 	window.addEventListener('appinstalled', () => {
 		const installBtn = document.getElementById('wts-install-btn');
