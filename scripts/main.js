@@ -45,9 +45,16 @@ function setupNavigation() {
 		
 		// Dashboard button
 		document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
-			// Always go to root index.html
-			window.location.href = isLocalFile ? '../index.html' : '/';
-		});
+    if (isLocalFile) {
+        const currentPath = window.location.href;
+        const basePath = currentPath.includes('ressources') 
+            ? currentPath.replace(/\/ressources\/[^/]*$/, '/')
+            : currentPath.replace(/[^/]*$/, '');
+        window.location.href = basePath + 'index.html';
+    } else {
+        window.location.href = '/';
+    }
+});
 		
         // Documentation button
         document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
@@ -284,7 +291,7 @@ function checkForVersionUpdates() {
 		
 		if (!notifyEnabled) return;
 		
-		const currentVersion = "1.22"; // Should match manifest version
+		const currentVersion = "1.23"; // Should match manifest version
 		const lastNotifiedVersion = localStorage.getItem('wts-last-notified-version');
 		
 		if (lastNotifiedVersion !== currentVersion) {

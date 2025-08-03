@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.22
+	* Version: 1.23
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v22';
+const CACHE_NAME = 'wesnoth-tools-v23';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
