@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.23
+	* Version: 1.24
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v23';
+const CACHE_NAME = 'wesnoth-tools-v24';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -79,16 +79,15 @@ const PRECACHE_URLS = [
 
 // Install Event
 self.addEventListener('install', event => {
-	event.waitUntil(
-		caches.open(CACHE_NAME)
-		.then(cache => {
-			// Normalize paths for deployment
-			const cacheUrls = PRECACHE_URLS.map(url => 
-				url.startsWith('/') ? url : '/' + url
-			);
-			return cache.addAll(cacheUrls);
-		})
-	);
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      // Add manifest to precache
+      return cache.addAll([
+        ...PRECACHE_URLS,
+        '/manifest.json'
+      ]);
+    })
+  );
 });
 
 // Fetch Event with path normalization
