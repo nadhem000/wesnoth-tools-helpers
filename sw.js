@@ -96,15 +96,11 @@ self.addEventListener('fetch', event => {
 	if (event.request.method !== 'GET') return;
 	
 	const requestUrl = new URL(event.request.url);
+	let requestPath;  // Declare in parent scope
 	
-	// Special handling for file:// protocol
 	if (requestUrl.protocol === 'file:') {
-		let requestPath = requestUrl.pathname;
-		
-		// Remove duplicate 'ressources' segments
+		requestPath = requestUrl.pathname;
 		requestPath = requestPath.replace(/ressources\/ressources\//, 'ressources/');
-		
-		// Create new request with normalized path
 		const normalizedRequest = new Request(new URL(requestPath, requestUrl.origin));
 		
 		event.respondWith(
@@ -116,10 +112,10 @@ self.addEventListener('fetch', event => {
 		return;
 	}
 	
-	// Initialize requestPath for non-file requests
-	let requestPath = requestUrl.pathname; // Add this line
+	// Now accessible in non-file block
+	requestPath = requestUrl.pathname; 
 	
-	// Normalize request path (remove trailing slash, add .html if missing)
+	// Normalize request path
 	if (requestPath.endsWith('/')) {
 		requestPath = requestPath.slice(0, -1);
 	}
