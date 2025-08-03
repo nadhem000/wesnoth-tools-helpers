@@ -291,7 +291,7 @@ function checkForVersionUpdates() {
 		
 		if (!notifyEnabled) return;
 		
-		const currentVersion = "1.23"; // Should match manifest version
+		const currentVersion = "1.25"; // Should match manifest version
 		const lastNotifiedVersion = localStorage.getItem('wts-last-notified-version');
 		
 		if (lastNotifiedVersion !== currentVersion) {

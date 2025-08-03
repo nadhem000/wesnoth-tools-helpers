@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.24
+	* Version: 1.25
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v24';
+const CACHE_NAME = 'wesnoth-tools-v25';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -76,17 +76,23 @@ const PRECACHE_URLS = [
 	'/assets/sounds/magic-holy-1.ogg',
 	'/assets/sounds/sword-1.ogg'
 ];
+const APP_VERSION = "1.25";
 
 // Install Event
-self.addEventListener('install', event => {
+
+self.addEventListener('push', event => {
+  const title = 'Wesnoth Tools Update';
+  const options = {
+    body: `New version ${APP_VERSION} is available! Click to learn more.`,
+    icon: '/assets/icons/icon-192.png',
+    badge: '/assets/icons/icon-72.png',
+    data: {
+      url: '/documentation.html?version=' + APP_VERSION
+    }
+  };
+
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      // Add manifest to precache
-      return cache.addAll([
-        ...PRECACHE_URLS,
-        '/manifest.json'
-      ]);
-    })
+    self.registration.showNotification(title, options)
   );
 });
 
