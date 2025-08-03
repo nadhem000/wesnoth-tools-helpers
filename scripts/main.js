@@ -19,19 +19,22 @@ function setupNavigation() {
         
         // Unified navigation handler
         function navigateTo(path) {
-            let finalPath;
-            
-            if (isLocalFile) {
-                // Remove duplicate 'ressources/' if needed
-                finalPath = isInRessources 
-				? path.replace('ressources/', '') 
-				: path;
-				} else {
-                finalPath = `/${path}`;
-			}
-            
-            window.location.href = finalPath;
-		}
+    const isLocalFile = window.location.protocol === 'file:';
+    
+    if (isLocalFile) {
+        // Local file handling
+        const isInRessources = window.location.pathname.includes('ressources');
+        const finalPath = isInRessources 
+            ? path.replace('ressources/', '') 
+            : path;
+        window.location.href = finalPath;
+    } else {
+        // Server handling - use absolute paths
+        const basePath = window.location.origin;
+        const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+        window.location.href = `${basePath}${normalizedPath}`;
+    }
+}
 		
         // Tools dropdown items
         document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
@@ -291,7 +294,7 @@ function checkForVersionUpdates() {
 		
 		if (!notifyEnabled) return;
 		
-		const currentVersion = "1.26"; // Should match APP_VERSION version
+		const currentVersion = "1.29"; // Should match APP_VERSION version
 		const lastNotifiedVersion = localStorage.getItem('wts-last-notified-version');
 		
 		if (lastNotifiedVersion !== currentVersion) {

@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.28
+	* Version: 1.29
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v28';
+const CACHE_NAME = 'wesnoth-tools-v29';
 const OFFLINE_URL = 'offline.html';
 const PRECACHE_URLS = [
 	'/',
@@ -76,7 +76,7 @@ const PRECACHE_URLS = [
 	'/assets/sounds/magic-holy-1.ogg',
 	'/assets/sounds/sword-1.ogg'
 ];
-const APP_VERSION = "1.28";
+const APP_VERSION = "1.29";
 
 // Install Event
 self.addEventListener('install', event => {
@@ -93,61 +93,45 @@ self.addEventListener('install', event => {
 
 // Fetch Event with path normalization
 self.addEventListener('fetch', event => {
-	if (event.request.method !== 'GET') return;
-	
-	const requestUrl = new URL(event.request.url);
-	let requestPath;  // Declare in parent scope
-	
-	if (requestUrl.protocol === 'file:') {
-		requestPath = requestUrl.pathname;
-		requestPath = requestPath.replace(/ressources\/ressources\//, 'ressources/');
-		const normalizedRequest = new Request(new URL(requestPath, requestUrl.origin));
-		
-		event.respondWith(
-			caches.match(normalizedRequest).then(cachedResponse => {
-				if (cachedResponse) return cachedResponse;
-				return fetch(event.request);
-			})
-		);
-		return;
-	}
-	
-	// Now accessible in non-file block
-	requestPath = requestUrl.pathname; 
-	
-	// Normalize request path
-	if (requestPath.endsWith('/')) {
-		requestPath = requestPath.slice(0, -1);
-	}
-	
-	if (!requestPath.endsWith('.html') && 
-		!requestPath.includes('.') && 
-		!requestPath.endsWith('/')) {
-		requestPath += '.html';
-	}
-	
-	// Create a new request with normalized path
-	const normalizedRequest = new Request(new URL(requestPath, requestUrl.origin));
-	
-	event.respondWith(
-		caches.match(normalizedRequest).then(cachedResponse => {
-			if (cachedResponse) return cachedResponse;
-			
-			return fetch(event.request).then(response => {
-				if (response && response.status === 200) {
-					const responseToCache = response.clone();
-					caches.open(CACHE_NAME).then(cache => {
-						cache.put(normalizedRequest, responseToCache);
-					});
-				}
-				return response;
-				}).catch(() => {
-				if (event.request.mode === 'navigate') {
-					return caches.match(OFFLINE_URL);
-				}
-			});
-		})
-	);
+    if (event.request.method !== 'GET') return;
+    
+    const requestUrl = new URL(event.request.url);
+    
+    // Skip non-HTTP requests and chrome-extension
+    if (!requestUrl.protocol.startsWith('http') || requestUrl.protocol === 'chrome-extension:') {
+        return;
+    }
+
+    // Handle navigation requests
+    if (event.request.mode === 'navigate') {
+        event.respondWith(
+            fetch(event.request).catch(() => {
+                return caches.match(OFFLINE_URL);
+            })
+        );
+        return;
+    }
+
+    // For all other requests, use cache first with network fallback
+    event.respondWith(
+        caches.match(event.request).then(cachedResponse => {
+            return cachedResponse || fetch(event.request).then(response => {
+                // Cache new responses
+                if (response && response.status === 200) {
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
+                }
+                return response;
+            }).catch(() => {
+                // Return offline page only for HTML requests
+                if (event.request.headers.get('accept').includes('text/html')) {
+                    return caches.match(OFFLINE_URL);
+                }
+            });
+        })
+    );
 });
 
 // Activate Event (Clean old caches)
