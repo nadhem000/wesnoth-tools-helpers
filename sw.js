@@ -80,75 +80,78 @@ const APP_VERSION = "1.26";
 
 // Install Event
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      // Add manifest to precache
-      return cache.addAll([
-        ...PRECACHE_URLS,
-        '/manifest.json'
-      ]);
-    })
-  );
+	event.waitUntil(
+		caches.open(CACHE_NAME).then(cache => {
+			// Add manifest to precache
+			return cache.addAll([
+				...PRECACHE_URLS,
+				'/manifest.json'
+			]);
+		})
+	);
 });
 
 // Fetch Event with path normalization
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-  
-  const requestUrl = new URL(event.request.url);
-  
-  // Special handling for file:// protocol
-  if (requestUrl.protocol === 'file:') {
-    let requestPath = requestUrl.pathname;
-    
-    // Remove duplicate 'ressources' segments
-    requestPath = requestPath.replace(/ressources\/ressources\//, 'ressources/');
-    
-    // Create new request with normalized path
-    const normalizedRequest = new Request(new URL(requestPath, requestUrl.origin));
-    
-    event.respondWith(
-      caches.match(normalizedRequest).then(cachedResponse => {
-        if (cachedResponse) return cachedResponse;
-        return fetch(event.request);
-      })
-    );
-    return;
-  }
-  
-  // Normalize request path (remove trailing slash, add .html if missing)
-  if (requestPath.endsWith('/')) {
-    requestPath = requestPath.slice(0, -1);
-  }
-  
-  if (!requestPath.endsWith('.html') && 
-      !requestPath.includes('.') && 
-      !requestPath.endsWith('/')) {
-    requestPath += '.html';
-  }
-
-  // Create a new request with normalized path
-  const normalizedRequest = new Request(new URL(requestPath, requestUrl.origin));
-  
-  event.respondWith(
-    caches.match(normalizedRequest).then(cachedResponse => {
-      if (cachedResponse) return cachedResponse;
-      
-      return fetch(event.request).then(response => {
-        if (response && response.status === 200) {
-          const responseToCache = response.clone();
-          caches.open(CACHE_NAME).then(cache => {
-            cache.put(normalizedRequest, responseToCache);
-          });
-        }
-        return response;
-      }).catch(() => {
-        if (event.request.mode === 'navigate') {
-          return caches.match(OFFLINE_URL);
-        }
-      });
-    })
-  );
+	if (event.request.method !== 'GET') return;
+	
+	const requestUrl = new URL(event.request.url);
+	
+	// Special handling for file:// protocol
+	if (requestUrl.protocol === 'file:') {
+		let requestPath = requestUrl.pathname;
+		
+		// Remove duplicate 'ressources' segments
+		requestPath = requestPath.replace(/ressources\/ressources\//, 'ressources/');
+		
+		// Create new request with normalized path
+		const normalizedRequest = new Request(new URL(requestPath, requestUrl.origin));
+		
+		event.respondWith(
+			caches.match(normalizedRequest).then(cachedResponse => {
+				if (cachedResponse) return cachedResponse;
+				return fetch(event.request);
+			})
+		);
+		return;
+	}
+	
+	// Initialize requestPath for non-file requests
+	let requestPath = requestUrl.pathname; // Add this line
+	
+	// Normalize request path (remove trailing slash, add .html if missing)
+	if (requestPath.endsWith('/')) {
+		requestPath = requestPath.slice(0, -1);
+	}
+	
+	if (!requestPath.endsWith('.html') && 
+		!requestPath.includes('.') && 
+		!requestPath.endsWith('/')) {
+		requestPath += '.html';
+	}
+	
+	// Create a new request with normalized path
+	const normalizedRequest = new Request(new URL(requestPath, requestUrl.origin));
+	
+	event.respondWith(
+		caches.match(normalizedRequest).then(cachedResponse => {
+			if (cachedResponse) return cachedResponse;
+			
+			return fetch(event.request).then(response => {
+				if (response && response.status === 200) {
+					const responseToCache = response.clone();
+					caches.open(CACHE_NAME).then(cache => {
+						cache.put(normalizedRequest, responseToCache);
+					});
+				}
+				return response;
+				}).catch(() => {
+				if (event.request.mode === 'navigate') {
+					return caches.match(OFFLINE_URL);
+				}
+			});
+		})
+	);
 });
 
 // Activate Event (Clean old caches)
@@ -168,44 +171,44 @@ self.addEventListener('activate', event => {
 
 // Push Notification Event
 self.addEventListener('push', event => {
-  const title = 'Wesnoth Tools Update';
-  const options = {
-    body: `New version ${APP_VERSION} is available! Click to learn more.`, // ✅ Use APP_VERSION
-    icon: '/assets/icons/icon-192.png',
-    badge: '/assets/icons/icon-72.png',
-    data: {
-      url: '/documentation.html?version=' + APP_VERSION // ✅ Use APP_VERSION
-    }
-  };
-
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
+	const title = 'Wesnoth Tools Update';
+	const options = {
+		body: `New version ${APP_VERSION} is available! Click to learn more.`, // ✅ Use APP_VERSION
+		icon: '/assets/icons/icon-192.png',
+		badge: '/assets/icons/icon-72.png',
+		data: {
+			url: '/documentation.html?version=' + APP_VERSION // ✅ Use APP_VERSION
+		}
+	};
+	
+	event.waitUntil(
+		self.registration.showNotification(title, options)
+	);
 });
 
 // Notification Click Event
 self.addEventListener('notificationclick', event => {
-  event.notification.close();
-  const url = event.notification.data.url || '/';
-  event.waitUntil(
-    clients.openWindow(url)
-  );
+	event.notification.close();
+	const url = event.notification.data.url || '/';
+	event.waitUntil(
+		clients.openWindow(url)
+	);
 });
 
 // Message Event Handler
 self.addEventListener('message', event => {
-  if (event.data && event.data.type === 'VERSION_UPDATE') {
-    const title = 'Wesnoth Tools Update';
-    const options = {
-      body: `New version ${event.data.version} is available!`,
-      icon: '/assets/icons/icon-192.png',
-      data: {
-        url: '/documentation.html?version=' + event.data.version
-      }
-    };
-    
-    event.waitUntil(
-      self.registration.showNotification(title, options)
-    );
-  }
+	if (event.data && event.data.type === 'VERSION_UPDATE') {
+		const title = 'Wesnoth Tools Update';
+		const options = {
+			body: `New version ${event.data.version} is available!`,
+			icon: '/assets/icons/icon-192.png',
+			data: {
+				url: '/documentation.html?version=' + event.data.version
+			}
+		};
+		
+		event.waitUntil(
+			self.registration.showNotification(title, options)
+		);
+	}
 });
