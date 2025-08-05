@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.32
+	* Version: 1.33
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v32';
+const CACHE_NAME = 'wesnoth-tools-v33';
 const OFFLINE_URL = 'offline.html';
 const SYNC_TAG = 'wts-background-sync';
 const PRECACHE_URLS = [
@@ -77,7 +77,7 @@ const PRECACHE_URLS = [
 	'/assets/sounds/magic-holy-1.ogg',
 	'/assets/sounds/sword-1.ogg'
 ];
-const APP_VERSION = "1.32";
+const APP_VERSION = "1.33";
 
 // Install Event
 self.addEventListener('install', event => {
@@ -105,13 +105,20 @@ self.addEventListener('fetch', event => {
 
     // Handle navigation requests
     if (event.request.mode === 'navigate') {
-        event.respondWith(
-            fetch(event.request).catch(() => {
-                return caches.match(OFFLINE_URL);
-            })
-        );
-        return;
-    }
+    // Handle path normalization for server/PWA
+    const normalizedPath = requestUrl.pathname.endsWith('/') 
+        ? 'index.html'
+        : !requestUrl.pathname.includes('.') 
+            ? requestUrl.pathname + '.html'
+            : requestUrl.pathname;
+
+    event.respondWith(
+        fetch(normalizedPath).catch(() => {
+            return caches.match(OFFLINE_URL);
+        })
+    );
+    return;
+}
 
     if (event.request.url.includes('/sync-data') && event.request.method === 'POST') {
         event.respondWith(
