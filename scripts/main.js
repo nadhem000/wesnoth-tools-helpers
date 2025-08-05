@@ -7,8 +7,8 @@
 // --- PATH UTILITIES ---
 function normalizePath(path) {
     return (!path.includes('.') && !path.endsWith('/')) 
-	? path + '.html'
-	: path;
+        ? path + '.html'
+        : path;
 }
 
 // --- NAVIGATION HANDLERS ---
@@ -19,22 +19,37 @@ function setupNavigation() {
         
         // Unified navigation handler
         function navigateTo(path) {
-    const isLocalFile = window.location.protocol === 'file:';
-    
-    if (isLocalFile) {
-        // Local file handling
-        const isInRessources = window.location.pathname.includes('ressources');
-        const finalPath = isInRessources 
-            ? path.replace('ressources/', '') 
-            : path;
-        window.location.href = finalPath;
-    } else {
-        // Server handling - use absolute paths
-        const basePath = window.location.origin;
-        const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-        window.location.href = `${basePath}${normalizedPath}`;
-    }
-}
+			const isLocalFile = window.location.protocol === 'file:';
+			if (isLocalFile) {
+				// Handle local file navigation
+				const currentPath = window.location.pathname;
+				const isInRessources = currentPath.includes('ressources');
+				let finalPath;
+				
+				if (path.startsWith('http://') || path.startsWith('https://')) {
+					// External link, open directly
+					window.open(path, '_blank');
+					return;
+				}
+				
+				if (isInRessources) {
+					// Remove 'ressources/' if present in path
+					finalPath = path.replace(/^.*?ressources\//, '');
+					// Build the full path
+					finalPath = normalizePath(`ressources/${finalPath}`);
+					window.location.href = currentPath.replace(/\/ressources\/[^/]*$/, `/${finalPath}`);
+					} else {
+					// Not in ressources, assume root
+					finalPath = normalizePath(path);
+					window.location.href = currentPath.replace(/[^/]*$/, '') + finalPath;
+				}
+				} else {
+				// Server URL handling
+				const basePath = window.location.origin;
+				const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+				window.location.href = `${basePath}${normalizedPath}`;
+			}
+		}
 		
         // Tools dropdown items
         document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
@@ -260,21 +275,21 @@ function setupSyncSettings() {
 	// Network Sync
 	const bcgMethod = document.getElementById('wts-sync-bcg-method');
 	bcgMethod.value = localStorage.getItem('wts-sync-bcg-method') || 'manual';
-const manualSyncBtn = document.createElement('button');
-manualSyncBtn.id = 'wts-manual-sync';
-manualSyncBtn.textContent = i18n.t('settings.manual_sync') || 'Sync Now';
-manualSyncBtn.className = 'wts-sync-button';
-const syncTab = document.getElementById('wts-tab-sync');
-if (syncTab) {
-    syncTab.appendChild(manualSyncBtn);
-} else {
-    console.error('wts-tab-sync not found');
-}
-// Add manual sync button handler
-manualSyncBtn.addEventListener('click', async () => {
-    await triggerSync();
-    alert(i18n.t('settings.sync_triggered') || 'Sync started successfully!');
-});
+	const manualSyncBtn = document.createElement('button');
+	manualSyncBtn.id = 'wts-manual-sync';
+	manualSyncBtn.textContent = i18n.t('settings.manual_sync') || 'Sync Now';
+	manualSyncBtn.className = 'wts-sync-button';
+	const syncTab = document.getElementById('wts-tab-sync');
+	if (syncTab) {
+		syncTab.appendChild(manualSyncBtn);
+		} else {
+		console.error('wts-tab-sync not found');
+	}
+	// Add manual sync button handler
+	manualSyncBtn.addEventListener('click', async () => {
+		await triggerSync();
+		alert(i18n.t('settings.sync_triggered') || 'Sync started successfully!');
+	});
 	
 	// Periodic Sync
 	const perioMethod = document.getElementById('wts-sync-perio-method');
@@ -306,7 +321,7 @@ async function queueSyncAction(action) {
     queue.push({
         ...action,
         timestamp: new Date().toISOString()
-    });
+	});
     
     // Save to local storage
     localStorage.setItem('syncQueue', JSON.stringify(queue));
@@ -316,10 +331,10 @@ async function queueSyncAction(action) {
     
     if (syncMethod === 'auto' && navigator.onLine) {
         await triggerSync();
-    } else if (syncMethod === 'auto') {
+		} else if (syncMethod === 'auto') {
         // Schedule sync when online
         window.addEventListener('online', triggerSync);
-    }
+	}
 }
 
 async function triggerSync() {
@@ -331,14 +346,14 @@ async function triggerSync() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(queue)
-        });
+		});
         
         if (response.ok) {
             localStorage.removeItem('syncQueue');
-        }
-    } catch (error) {
+		}
+		} catch (error) {
         console.error('Sync request failed:', error);
-    }
+	}
 }
 
 
@@ -351,7 +366,7 @@ function checkForVersionUpdates() {
 		
 		if (!notifyEnabled) return;
 		
-		const currentVersion = "1.30"; // Should match APP_VERSION version
+		const currentVersion = "1.31"; // Should match APP_VERSION version
 		const lastNotifiedVersion = localStorage.getItem('wts-last-notified-version');
 		
 		if (lastNotifiedVersion !== currentVersion) {
@@ -425,19 +440,19 @@ function setupPWAInstall() {
                 
                 if (outcome === 'accepted') {
                     console.log('User accepted install');
-                }
+				}
                 
                 deferredPrompt = null;
                 installBtn.style.display = 'none';
-            });
-        }
-    });
-
+			});
+		}
+	});
+	
     window.addEventListener('appinstalled', () => {
         const installBtn = document.getElementById('wts-install-btn');
         if (installBtn) installBtn.style.display = 'none';
         deferredPrompt = null;
-    });
+	});
 }
 
 // --- DOM INITIALIZATION ---
@@ -518,12 +533,12 @@ document.addEventListener('DOMContentLoaded', () => {
 	document.getElementById('wts-modal-reset-settings')?.addEventListener('click', handleSettingsReset);
 	document.getElementById('wts-modal-export-settings')?.addEventListener('click', exportSettings);
 	document.getElementById('wts-modal-import-settings')?.addEventListener('click', importSettings);
-// Initialize sync settings
-if (!localStorage.getItem('wts-sync-bcg-method')) {
-    localStorage.setItem('wts-sync-bcg-method', 'manual');
-}
-if (!localStorage.getItem('wts-sync-perio-method')) {
-    localStorage.setItem('wts-sync-perio-method', 'manual');
+	// Initialize sync settings
+	if (!localStorage.getItem('wts-sync-bcg-method')) {
+		localStorage.setItem('wts-sync-bcg-method', 'manual');
+	}
+	if (!localStorage.getItem('wts-sync-perio-method')) {
+		localStorage.setItem('wts-sync-perio-method', 'manual');
 	}
 	
 	// Navigation
