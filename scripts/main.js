@@ -22,20 +22,17 @@ function setupNavigation() {
     const isLocalFile = window.location.protocol === 'file:';
     
     if (isLocalFile) {
-        // Keep local file behavior unchanged
+        // Local file handling
         const isInRessources = window.location.pathname.includes('ressources');
         const finalPath = isInRessources 
             ? path.replace('ressources/', '') 
             : path;
         window.location.href = finalPath;
     } else {
-        // Server/PWA handling with .html extension
+        // Server handling - use absolute paths
         const basePath = window.location.origin;
-        const normalizedPath = path.startsWith('/') 
-            ? path 
-            : `/${path}`;
-        const extension = normalizedPath.includes('.') ? '' : '.html';
-        window.location.href = `${basePath}${normalizedPath}${extension}`;
+        const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+        window.location.href = `${basePath}${normalizedPath}`;
     }
 }
 		
@@ -354,7 +351,7 @@ function checkForVersionUpdates() {
 		
 		if (!notifyEnabled) return;
 		
-		const currentVersion = "1.33"; // Should match APP_VERSION version
+		const currentVersion = "1.40"; // Should match APP_VERSION version
 		const lastNotifiedVersion = localStorage.getItem('wts-last-notified-version');
 		
 		if (lastNotifiedVersion !== currentVersion) {

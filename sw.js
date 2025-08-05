@@ -1,15 +1,18 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.33
+	* Version: 1.40
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v33';
-const OFFLINE_URL = 'offline.html';
+const CACHE_NAME = 'wesnoth-tools-v40';
+const OFFLINE_URL = '/offline.html';
 const SYNC_TAG = 'wts-background-sync';
 const PRECACHE_URLS = [
 	'/',
 	'/index.html',
+	'/_redirects',
 	'/offline.html',
+	'/manifest.json',
+	'/netlify.toml',
 	'/ressources/about.html',
 	'/ressources/documentation.html',
 	'/ressources/events_manager.html',
@@ -55,6 +58,8 @@ const PRECACHE_URLS = [
 	'/scripts/sample.js',
 	'/scripts/i18n.js',
 	'/scripts/i18n_fr.js',
+	'/scripts/i18n_it.js',
+	'/scripts/i18n_de.js',
 	'/templates/header.html',
 	'/templates/footer.html',
     '/assets/icons/icon-72.png',
@@ -77,7 +82,7 @@ const PRECACHE_URLS = [
 	'/assets/sounds/magic-holy-1.ogg',
 	'/assets/sounds/sword-1.ogg'
 ];
-const APP_VERSION = "1.33";
+const APP_VERSION = "1.40";
 
 // Install Event
 self.addEventListener('install', event => {
@@ -94,79 +99,79 @@ self.addEventListener('install', event => {
 
 // Fetch Event with path normalization
 self.addEventListener('fetch', event => {
-    if (event.request.method !== 'GET') return;
-    
-    const requestUrl = new URL(event.request.url);
-    
-    // Skip non-HTTP requests and chrome-extension
-    if (!requestUrl.protocol.startsWith('http') || requestUrl.protocol === 'chrome-extension:') {
-        return;
-    }
+  // Skip non-GET requests
+  if (event.request.method !== 'GET') return;
 
-    // Handle navigation requests
-    if (event.request.mode === 'navigate') {
-    // Handle path normalization for server/PWA
-    const normalizedPath = requestUrl.pathname.endsWith('/') 
-        ? 'index.html'
-        : !requestUrl.pathname.includes('.') 
-            ? requestUrl.pathname + '.html'
-            : requestUrl.pathname;
+  const requestUrl = new URL(event.request.url);
+  
+  // Skip non-HTTP requests
+  if (!requestUrl.protocol.startsWith('http')) return;
 
+  // Handle navigation requests
+  if (event.request.mode === 'navigate') {
     event.respondWith(
-        fetch(normalizedPath).catch(() => {
+      caches.match(event.request).then(cachedResponse => {
+        // Return cached HTML if available
+        if (cachedResponse) return cachedResponse;
+        
+        // Fetch from network
+        return fetch(event.request)
+          .then(networkResponse => {
+            // Cache the response
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then(cache => {
+              cache.put(event.request, responseClone);
+            });
+            return networkResponse;
+          })
+          .catch(() => {
+            // Fallback to offline page
             return caches.match(OFFLINE_URL);
-        })
+          });
+      })
     );
     return;
-}
+  }
 
-    if (event.request.url.includes('/sync-data') && event.request.method === 'POST') {
-        event.respondWith(
-            handleSyncRequest(event.request).catch(err => {
-                console.error('Sync request failed:', err);
-                return new Response(JSON.stringify({ error: 'Sync failed' }), { 
-                    status: 500,
-                    headers: { 'Content-Type': 'application/json' }
-                });
-            })
-        );
-        return;
-    }
-    // For all other requests, use cache first with network fallback
-    event.respondWith(
-        caches.match(event.request).then(cachedResponse => {
-            return cachedResponse || fetch(event.request).then(response => {
-                // Cache new responses
-                if (response && response.status === 200) {
-                    const responseToCache = response.clone();
-                    caches.open(CACHE_NAME).then(cache => {
-                        cache.put(event.request, responseToCache);
-                    });
-                }
-                return response;
-            }).catch(() => {
-                // Return offline page only for HTML requests
-                if (event.request.headers.get('accept').includes('text/html')) {
-                    return caches.match(OFFLINE_URL);
-                }
-            });
-        })
-    );
+  // For all other requests
+  event.respondWith(
+    caches.match(event.request).then(cachedResponse => {
+      // Return cached version if available
+      if (cachedResponse) return cachedResponse;
+      
+      // Otherwise go to network
+      return fetch(event.request).then(response => {
+        // Cache successful responses
+        if (response && response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return response;
+      }).catch(error => {
+        // Return error response for non-HTML
+        if (!event.request.headers.get('accept').includes('text/html')) {
+          return new Response('Offline', { status: 408 });
+        }
+      });
+    })
+  );
 });
 
 // Activate Event (Clean old caches)
 self.addEventListener('activate', event => {
-	event.waitUntil(
-		caches.keys().then(cacheNames => {
-			return Promise.all(
-				cacheNames.map(cacheName => {
-					if (cacheName !== CACHE_NAME) {
-						return caches.delete(cacheName);
-					}
-				})
-			);
-		})
-	);
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    })
+  );
 });
 
 // Push Notification Event
