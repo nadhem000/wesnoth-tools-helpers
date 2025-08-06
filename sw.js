@@ -1,18 +1,15 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.40
+	* Version: 1.41
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v40';
+const CACHE_NAME = 'wesnoth-tools-v41';
 const OFFLINE_URL = '/offline.html';
 const SYNC_TAG = 'wts-background-sync';
 const PRECACHE_URLS = [
 	'/',
 	'/index.html',
-	'/_redirects',
 	'/offline.html',
-	'/manifest.json',
-	'/netlify.toml',
 	'/ressources/about.html',
 	'/ressources/documentation.html',
 	'/ressources/events_manager.html',
@@ -82,58 +79,69 @@ const PRECACHE_URLS = [
 	'/assets/sounds/magic-holy-1.ogg',
 	'/assets/sounds/sword-1.ogg'
 ];
-const APP_VERSION = "1.40";
+const APP_VERSION = "1.41";
 
-// Install Event
+
+// Install Event - Cache core assets
 self.addEventListener('install', event => {
-	event.waitUntil(
-		caches.open(CACHE_NAME).then(cache => {
-			// Add manifest to precache
-			return cache.addAll([
-				...PRECACHE_URLS,
-				'/manifest.json'
-			]);
-		})
-	);
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(PRECACHE_URLS);
+    }).then(() => self.skipWaiting())
+  );
 });
 
-// Fetch Event with path normalization
+// Activate Event - Clean old caches
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(cacheNames => {
+      return Promise.all(
+        cacheNames.map(cacheName => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+    }).then(() => self.clients.claim())
+  );
+});
+
+// Fetch Event - Cache-first strategy
 self.addEventListener('fetch', event => {
   // Skip non-GET requests
   if (event.request.method !== 'GET') return;
 
   const requestUrl = new URL(event.request.url);
   
-  // Skip non-HTTP requests
-  if (!requestUrl.protocol.startsWith('http')) return;
-
   // Handle navigation requests
   if (event.request.mode === 'navigate') {
     event.respondWith(
-      caches.match(event.request).then(cachedResponse => {
-        // Return cached HTML if available
-        if (cachedResponse) return cachedResponse;
-        
-        // Fetch from network
-        return fetch(event.request)
-          .then(networkResponse => {
-            // Cache the response
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then(cache => {
-              cache.put(event.request, responseClone);
-            });
-            return networkResponse;
-          })
-          .catch(() => {
-            // Fallback to offline page
-            return caches.match(OFFLINE_URL);
+      (async () => {
+        try {
+          // Try network first
+          const networkResponse = await fetch(event.request);
+          const responseClone = networkResponse.clone();
+          
+          // Cache the response
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
           });
-      })
+          
+          return networkResponse;
+        } catch (error) {
+          // Network failed - try cache
+          const cachedResponse = await caches.match(event.request);
+          if (cachedResponse) return cachedResponse;
+          
+          // Fallback to offline page
+          return caches.match(OFFLINE_URL);
+        }
+      })()
     );
     return;
   }
 
-  // For all other requests
+  // Handle all other requests
   event.respondWith(
     caches.match(event.request).then(cachedResponse => {
       // Return cached version if available
@@ -151,25 +159,8 @@ self.addEventListener('fetch', event => {
         return response;
       }).catch(error => {
         // Return error response for non-HTML
-        if (!event.request.headers.get('accept').includes('text/html')) {
-          return new Response('Offline', { status: 408 });
-        }
+        return new Response('Offline', { status: 503, statusText: 'Service Unavailable' });
       });
-    })
-  );
-});
-
-// Activate Event (Clean old caches)
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys().then(cacheNames => {
-      return Promise.all(
-        cacheNames.map(cacheName => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
-        })
-      );
     })
   );
 });

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Wesnoth Events Manager</title>
+		<link rel="stylesheet" href="../styles/main.css">
+		<link rel="stylesheet" href="../styles/events_manager.css">
+		<script src="../scripts/wesnoth-wml-utils.js"></script>
+		<script src="../scripts/i18n_fr.js"></script>
+		<script src="../scripts/i18n_it.js"></script>
+		<script src="../scripts/i18n_de.js"></script>
+		<script src="../scripts/i18n.js"></script>
+	</head>
+	<body class="wts-index-body">
+		<header class="wts-index-header">
+			<nav class="wts-index-nav">
+				<div>
+					<button id="wts-index-dashboard" class="wts-index-tooltip" data-i18n="nav.dashboard">Dashboard</button>
+					<!-- Updated Tools Dropdown -->
+					<div class="wts-index-dropdown">
+						<button id="wts-index-tools" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.tools">Tools</button>
+						<div class="wts-index-dropdown-content">
+							<a href="ressources/events_manager.html" data-i18n="card.events_manager">Events Manager</a>
+							<a href="ressources/story_mode.html" data-i18n="card.story_mode">Story Mode</a>
+							<a href="ressources/sounds_manager.html" data-i18n="card.sound_manager">Sound Manager</a>
+							<a href="ressources/gif_creator.html" data-i18n="card.gif_creator">GIF Creator</a>
+							<a href="ressources/images_manager.html" data-i18n="card.images_manager">Image Manager</a>
+							<a href="ressources/images_animation_manager.html" data-i18n="card.images_animation_manager">Image Animation Manager</a>
+							<a href="ressources/big_map_tracker.html" data-i18n="card.big_map_tracker">Big Map Coordinate Tracker</a>
+							<a href="ressources/unit_comparator.html" data-i18n="card.unit_comparator">Unit Comparator</a>
+							<a href="ressources/po_dictionary_manager.html" data-i18n="card.dictionary_manager">Dictionary Manager</a>
+							<a href="ressources/po_manager.html" data-i18n="card.po_manager">PO Manager</a>
+							<a href="ressources/sample.html" data-i18n="card.unit_editor">Unit Editor</a>
+							<a href="ressources/sample.html" data-i18n="card.scenario_builder">Scenario Builder</a>
+							<a href="ressources/sample.html" data-i18n="card.wml_validator">WML Validator</a>
+						</div>
+					</div>
+					<button id="wts-index-community" class="wts-index-tooltip" data-i18n="nav.community">Community</button>
+					<button id="wts-index-documentation" class="wts-index-tooltip" data-i18n="nav.documentation">Documentation</button>
+					<button id="wts-index-about" class="wts-index-tooltip" data-i18n="nav.about">About</button>
+				</div>
+				<div class="wts-index-nav-right">
+					<button id="wts-theme-toggle" class="wts-index-tooltip" title="Toggle theme" aria-label="Toggle theme">
+						<svg viewBox="0 0 24 24" width="24" height="24">
+							<path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10zm0-18a8 8 0 1 1 0 16 8 8 0 0 1 0-16z" 
+							fill="none" 
+							stroke="currentColor" 
+							stroke-width="2"/>
+						</svg>
+					</button>
+					<div>
+						<button id="wts-index-settings" class="wts-index-tooltip wts-index-icon-button" 
+						title="Settings" aria-label="Settings" data-i18n="nav.settings">
+							<svg viewBox="0 0 24 24" width="24" height="24">
+								<path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+							</svg>
+						</button>
+					</div>
+					<div class="wts-index-dropdown">
+						<button id="wts-index-languages" class="wts-index-tooltip wts-index-dropbtn" data-i18n="nav.languages">Languages</button>
+						<div class="wts-index-dropdown-content">
+							<a href="#" data-lang="en" data-i18n="lang.en">English</a>
+							<a href="#" data-lang="fr" data-i18n="lang.fr">Français</a>
+							<a href="#" data-lang="de" data-i18n="lang.de">Deutsch</a>
+							<a href="#" data-lang="es" data-i18n="lang.es">Español</a>
+							<a href="#" data-lang="it" data-i18n="lang.it">Italiano</a>
+						</div>
+					</div>
+				</div>
+			</nav>
+		</header>
+		<div class="manager-event-container">
+		</div>
+		<div class="wts-content-container">
+			<footer class="wts-index-footer">
+				<div class="wts-index-footer-links">
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/tree/main" class="wts-index-tooltip" data-i18n="footer.github">GitHub</a>
+					<a href="https://forums.wesnoth.org/index.php" class="wts-index-tooltip" data-i18n="footer.forums">Forums</a>
+					<a href="https://github.com/nadhem000/wesnoth-tools-helpers/issues" class="wts-index-tooltip" data-i18n="footer.report">Report Issues</a>
+				</div>
+				<span data-i18n="footer.copyright">Wesnoth Campaign Tools Suite © 2025 | Created for Battle for Wesnoth developers</span>
+				<button id="wts-install-btn" class="wts-index-tooltip" data-i18n="install.button" style="display:none">Install App</button>
+			</footer>
+		</div>
+		<script src="../scripts/events_manager.js"></script>
+		<script src="../scripts/main.js"></script>
+	</body>
+</html>

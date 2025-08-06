@@ -5,88 +5,72 @@
 */
 
 // --- PATH UTILITIES ---
+function getBasePath() {
+  if (window.location.protocol === 'file:') {
+    const path = window.location.pathname;
+    return path.includes('ressources') 
+      ? path.split('ressources/')[0] 
+      : path.substring(0, path.lastIndexOf('/') + 1);
+  }
+  return '/';
+}
+
 function normalizePath(path) {
-    return (!path.includes('.') && !path.endsWith('/')) 
-	? path + '.html'
-	: path;
+  const base = getBasePath();
+  
+  // Handle absolute paths
+  if (path.startsWith('/')) {
+    return base + path.substring(1);
+  }
+  
+  // Handle relative paths
+  return base + path;
 }
 
 // --- NAVIGATION HANDLERS ---
 function setupNavigation() {
-    try {
-        const isLocalFile = window.location.protocol === 'file:';
-        const isInRessources = window.location.pathname.includes('ressources');
-        
-        // Unified navigation handler
-        function navigateTo(path) {
-    const isLocalFile = window.location.protocol === 'file:';
-    
-    if (isLocalFile) {
-        // Local file handling
-        const isInRessources = window.location.pathname.includes('ressources');
-        const finalPath = isInRessources 
-            ? path.replace('ressources/', '') 
-            : path;
-        window.location.href = finalPath;
-    } else {
-        // Server handling - use absolute paths
-        const basePath = window.location.origin;
-        const normalizedPath = path.startsWith('/') ? path : `/${path}`;
-        window.location.href = `${basePath}${normalizedPath}`;
+  try {
+    // Unified navigation handler
+    function navigateTo(path) {
+      const finalPath = normalizePath(path);
+      window.location.href = finalPath;
     }
-}
-		
-        // Tools dropdown items
-        document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
-            link.addEventListener('click', e => {
-                e.preventDefault();
-                const toolPath = link.getAttribute('href');
-                // Use the path directly without adding extra 'ressources/'
-                navigateTo(toolPath);
-			});
-		});
-		
-		// Dashboard button
-		document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
-			if (isLocalFile) {
-				const currentPath = window.location.href;
-				const basePath = currentPath.includes('ressources') 
-				? currentPath.replace(/\/ressources\/[^/]*$/, '/')
-				: currentPath.replace(/[^/]*$/, '');
-				window.location.href = basePath + 'index.html';
-				} else {
-				window.location.href = '/';
-			}
-		});
-		
-        // Documentation button
-        document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
-            navigateTo('ressources/documentation.html');
-		});
-		
-        // About button
-        document.getElementById('wts-index-about')?.addEventListener('click', () => {
-            navigateTo('ressources/about.html');
-		});
-        
-		} catch (e) {
-        console.warn('Navigation setup failure', e);
-	}
+
+    // Tools dropdown items
+    document.querySelectorAll('.wts-index-dropdown-content a').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        navigateTo(link.getAttribute('href'));
+      });
+    });
+
+    // Dashboard button
+    document.getElementById('wts-index-dashboard')?.addEventListener('click', () => {
+      navigateTo('index.html');
+    });
+
+    // Documentation button
+    document.getElementById('wts-index-documentation')?.addEventListener('click', () => {
+      navigateTo('ressources/documentation.html');
+    });
+
+    // About button
+    document.getElementById('wts-index-about')?.addEventListener('click', () => {
+      navigateTo('ressources/about.html');
+    });
+  } catch (e) {
+    console.warn('Navigation setup failure', e);
+  }
 }
 
 // --- SERVICE WORKER REGISTRATION ---
 if ('serviceWorker' in navigator) {
-	window.addEventListener('load', () => {
-		const isLocalFile = window.location.protocol === 'file:';
-		const isInRessources = window.location.pathname.includes('ressources');
-		const swPath = isLocalFile 
-		? (isInRessources ? '../sw.js' : 'sw.js')
-		: '/sw.js';
-		
-		navigator.serviceWorker.register(swPath)
-		.then(reg => console.log('SW registered: ', reg))
-		.catch(err => console.log('SW registration failed: ', err));
-	});
+  window.addEventListener('load', () => {
+    const swPath = normalizePath('sw.js');
+    navigator.serviceWorker.register(swPath)
+      .then(reg => console.log('SW registered: ', reg))
+      .catch(err => console.log('SW registration failed: ', err));
+  });
 }
 
 // --- THEME MANAGEMENT ---
@@ -351,7 +335,7 @@ function checkForVersionUpdates() {
 		
 		if (!notifyEnabled) return;
 		
-		const currentVersion = "1.40"; // Should match APP_VERSION version
+		const currentVersion = "1.41"; // Should match APP_VERSION version
 		const lastNotifiedVersion = localStorage.getItem('wts-last-notified-version');
 		
 		if (lastNotifiedVersion !== currentVersion) {
