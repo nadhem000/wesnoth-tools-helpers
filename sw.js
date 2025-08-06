@@ -1,9 +1,9 @@
 /**
 	* Service Worker for Wesnoth Tools Suite
-	* Version: 1.41
+	* Version: 1.42
 	* Cache Strategy: Cache First, then Network
 */
-const CACHE_NAME = 'wesnoth-tools-v41';
+const CACHE_NAME = 'wesnoth-tools-v42';
 const OFFLINE_URL = '/offline.html';
 const SYNC_TAG = 'wts-background-sync';
 const PRECACHE_URLS = [
@@ -79,7 +79,7 @@ const PRECACHE_URLS = [
 	'/assets/sounds/magic-holy-1.ogg',
 	'/assets/sounds/sword-1.ogg'
 ];
-const APP_VERSION = "1.41";
+const APP_VERSION = "1.42";
 
 
 // Install Event - Cache core assets
